@@ -226,14 +226,17 @@ export default function ContactSection() {
                 ))}
               </div>
 
-              {/* Map placeholder */}
-              <div className="bg-gray-200 rounded-2xl h-48 flex flex-col items-center justify-center border border-gray-200 shadow-sm overflow-hidden relative">
-                <div className="absolute inset-0 bg-gradient-to-br from-gray-100 to-gray-300 opacity-60" />
-                <div className="relative z-10 flex flex-col items-center gap-2 text-gray-500">
-                  <MapPin className="w-8 h-8 text-[#FF6F00]" strokeWidth={1.5} />
-                  <p className="font-semibold text-sm text-gray-600">Peta Lokasi</p>
-                  <p className="text-xs text-gray-400">Jl. Asia Afrika No. 8, Bandung</p>
-                </div>
+              <div className="bg-gray-200 rounded-2xl h-48 sm:h-64 flex flex-col items-center justify-center border border-gray-200 shadow-sm overflow-hidden relative">
+                <iframe 
+                  src="https://maps.google.com/maps?q=Jl.%20Asia%20Afrika%20No.8,%20Bandung&t=&z=15&ie=UTF8&iwloc=&output=embed" 
+                  width="100%" 
+                  height="100%" 
+                  style={{ border: 0 }} 
+                  allowFullScreen="" 
+                  loading="lazy"
+                  referrerPolicy="no-referrer-when-downgrade"
+                  title="Peta Lokasi Kantor"
+                />
               </div>
             </div>
 

@@ -88,12 +88,11 @@ export default function Footer() {
           <div className="sm:col-span-2 lg:col-span-1">
             {/* Logo */}
             <Link to="/" className="inline-flex items-center gap-2 mb-4 group">
-              <span className="flex items-center justify-center w-9 h-9 rounded-xl bg-primary group-hover:bg-primary-hover transition-colors duration-200 shadow-md flex-shrink-0">
-                <Plane className="w-5 h-5 text-dark" strokeWidth={2.5} />
-              </span>
-              <span className="font-bold text-xl text-white leading-tight">
-                Amoures<span className="text-primary"> Tour</span>
-              </span>
+              <img 
+                src="/logo.png" 
+                alt="Amoures Logo" 
+                className="h-10 w-auto object-contain group-hover:scale-105 transition-transform duration-200"
+              />
             </Link>
             <p className="text-sm text-gray-400 leading-relaxed mb-6 max-w-xs">
               Menghadirkan pengalaman perjalanan tak terlupakan sejak 2011. Kami percaya setiap perjalanan adalah cerita yang layak untuk dikenang.

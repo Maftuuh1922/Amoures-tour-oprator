@@ -1080,6 +1080,25 @@ function OverviewTab({ onNavigate }) {
     },
   ];
 
+  const handleExport = () => {
+    // Generate simple CSV for bookings
+    const headers = "ID,Code,Customer,Package,Date,Pax,Total,Status";
+    const rows = DEMO_BOOKINGS.map(b => `${b.id},${b.code},${b.customer},${b.package},${b.date},${b.pax},${b.total},${b.status}`);
+    const csvContent = "data:text/csv;charset=utf-8," + [headers, ...rows].join("\n");
+    
+    const encodedUri = encodeURI(csvContent);
+    const link = document.createElement("a");
+    link.setAttribute("href", encodedUri);
+    link.setAttribute("download", "laporan_booking.csv");
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+    
+    import('react-hot-toast').then(({ default: toast }) => {
+      toast.success("Laporan berhasil diunduh!");
+    });
+  };
+
   return (
     <div>
       {/* Stat Cards */}
@@ -1183,7 +1202,10 @@ function OverviewTab({ onNavigate }) {
         >
           <ClipboardList size={16} /> Lihat Booking Baru
         </button>
-        <button className="flex items-center gap-2 bg-white border border-gray-200 hover:bg-gray-50 text-dark font-semibold px-5 py-2.5 rounded-xl text-sm transition-colors">
+        <button 
+          onClick={handleExport}
+          className="flex items-center gap-2 bg-white border border-gray-200 hover:bg-gray-50 text-dark font-semibold px-5 py-2.5 rounded-xl text-sm transition-colors"
+        >
           <BarChart3 size={16} /> Export Laporan
         </button>
       </div>
@@ -2143,8 +2165,8 @@ export default function AdminPage() {
         {/* Logo */}
         <div className="px-5 py-5 border-b border-white/10">
           <div className="flex items-center gap-3">
-            <div className="w-8 h-8 bg-primary rounded-lg flex items-center justify-center shrink-0">
-              <Plane size={16} className="text-dark" />
+            <div className="w-8 h-8 rounded-lg flex items-center justify-center shrink-0">
+              <img src="/logo.png" alt="Logo" className="w-full h-full object-contain" />
             </div>
             <div>
               <p className="font-bold text-white text-sm leading-none">

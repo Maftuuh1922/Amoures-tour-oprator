@@ -123,14 +123,11 @@ export default function Navbar() {
               onClick={() => setMobileOpen(false)}
               className="flex items-center gap-2 group flex-shrink-0"
             >
-              <div className="flex items-center justify-center w-8 h-8 rounded-lg bg-primary shadow-md group-hover:scale-105 transition-transform duration-200">
-                <Plane className="w-4 h-4 text-dark" strokeWidth={2.5} />
-              </div>
-              <span
-                className={`font-black text-lg tracking-tight ${logoColor}`}
-              >
-                Amoures<span className="text-primary">.</span>
-              </span>
+              <img 
+                src="/logo.png" 
+                alt="Amoures Logo" 
+                className="h-8 md:h-10 w-auto object-contain group-hover:scale-105 transition-transform duration-200" 
+              />
             </Link>
 
             {/* ── Desktop nav links ── */}
