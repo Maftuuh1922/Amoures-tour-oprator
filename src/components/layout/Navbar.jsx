@@ -110,7 +110,7 @@ export default function Navbar() {
           fixed z-50
           top-4 left-1/2 -translate-x-1/2
           w-[calc(100%-2rem)] max-w-7xl
-          rounded-full
+          ${mobileOpen ? "rounded-3xl" : "rounded-full"}
           ${glassBase}
           ${effectiveScrolled || mobileOpen ? glassScrolled : glassIdle}
         `}
