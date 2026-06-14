@@ -1841,6 +1841,109 @@ function BookingsTab() {
   );
 }
 
+// ─── B2B Detail Modal ──────────────────────────────────────────────────────────
+
+function B2BDetailModal({ isOpen, onClose, partner, onActivate, onReject }) {
+  if (!isOpen || !partner) return null;
+
+  const status = partner.role === 'travel_agent_approved' ? 'approved'
+               : partner.role === 'travel_agent_pending' ? 'pending'
+               : partner.role === 'travel_agent_rejected' ? 'rejected' : 'unverified';
+
+  const statusColor = {
+    approved: 'bg-green-100 text-green-700 border-green-200',
+    pending: 'bg-yellow-100 text-yellow-700 border-yellow-200',
+    rejected: 'bg-red-100 text-red-700 border-red-200',
+    unverified: 'bg-gray-100 text-gray-600 border-gray-200',
+  };
+  const statusLabel = { approved: 'Disetujui', pending: 'Menunggu Review', rejected: 'Ditolak', unverified: 'Belum Dikirim' };
+
+  return (
+    <div className="fixed inset-0 bg-black/60 z-50 flex items-center justify-center p-4" onClick={onClose}>
+      <div
+        className="bg-white rounded-2xl w-full max-w-lg shadow-2xl overflow-hidden"
+        onClick={(e) => e.stopPropagation()}
+      >
+        {/* Header */}
+        <div className="bg-gradient-to-r from-dark to-gray-800 px-6 py-5 flex items-center justify-between">
+          <div>
+            <h3 className="text-white font-bold text-lg">Detail Mitra B2B</h3>
+            <p className="text-gray-400 text-sm mt-0.5">Data verifikasi agen travel</p>
+          </div>
+          <button onClick={onClose} className="text-gray-400 hover:text-white transition-colors p-1.5 hover:bg-white/10 rounded-lg">
+            <X size={20} />
+          </button>
+        </div>
+
+        <div className="p-6 space-y-5">
+          {/* Status Badge */}
+          <div className="flex items-center justify-between">
+            <span className={`inline-flex items-center px-3 py-1 rounded-full text-xs font-semibold border ${statusColor[status]}`}>
+              {statusLabel[status]}
+            </span>
+            <span className="text-xs text-gray-400">ID: {partner.id?.slice(0,8)}...</span>
+          </div>
+
+          {/* Info Grid */}
+          <div className="grid grid-cols-2 gap-4">
+            <div className="bg-gray-50 rounded-xl p-3">
+              <p className="text-[10px] font-semibold text-gray-400 uppercase tracking-wide mb-1">Nama PIC</p>
+              <p className="text-sm font-semibold text-dark">{partner.full_name || '-'}</p>
+            </div>
+            <div className="bg-gray-50 rounded-xl p-3">
+              <p className="text-[10px] font-semibold text-gray-400 uppercase tracking-wide mb-1">No. Telepon</p>
+              <p className="text-sm font-semibold text-dark">{partner.phone || '-'}</p>
+            </div>
+            <div className="bg-gray-50 rounded-xl p-3 col-span-2">
+              <p className="text-[10px] font-semibold text-gray-400 uppercase tracking-wide mb-1">Email</p>
+              <p className="text-sm font-semibold text-dark break-all">{partner.email || '-'}</p>
+            </div>
+            <div className="bg-gray-50 rounded-xl p-3 col-span-2">
+              <p className="text-[10px] font-semibold text-gray-400 uppercase tracking-wide mb-1">Nama Perusahaan</p>
+              <p className="text-sm font-semibold text-dark">{partner.company_name || <span className="text-gray-400 italic font-normal">Belum diisi</span>}</p>
+            </div>
+            <div className="bg-gray-50 rounded-xl p-3 col-span-2">
+              <p className="text-[10px] font-semibold text-gray-400 uppercase tracking-wide mb-1">Alamat Perusahaan</p>
+              <p className="text-sm text-dark">{partner.address || <span className="text-gray-400 italic font-normal">Belum diisi</span>}</p>
+            </div>
+          </div>
+
+          {/* Tanggal Daftar */}
+          <div className="text-xs text-gray-400 border-t border-gray-100 pt-3">
+            Terdaftar: {formatDate(partner.created_at || new Date().toISOString())}
+          </div>
+
+          {/* Action Buttons */}
+          {status === 'pending' && (
+            <div className="flex gap-3 pt-1">
+              <button
+                onClick={() => { onActivate(partner.id); onClose(); }}
+                className="flex-1 flex items-center justify-center gap-2 px-4 py-2.5 bg-green-600 hover:bg-green-700 text-white font-bold rounded-xl text-sm transition-colors"
+              >
+                <Check size={16} /> Setujui Mitra
+              </button>
+              <button
+                onClick={() => { onReject(partner.id); onClose(); }}
+                className="flex-1 flex items-center justify-center gap-2 px-4 py-2.5 bg-red-100 hover:bg-red-200 text-red-700 font-bold rounded-xl text-sm transition-colors"
+              >
+                <X size={16} /> Tolak
+              </button>
+            </div>
+          )}
+          {status !== 'pending' && (
+            <button
+              onClick={onClose}
+              className="w-full px-4 py-2.5 border border-gray-200 rounded-xl text-sm font-medium text-gray-600 hover:bg-gray-50 transition-colors"
+            >
+              Tutup
+            </button>
+          )}
+        </div>
+      </div>
+    </div>
+  );
+}
+
 // ─── Tab: Mitra B2B ────────────────────────────────────────────────────────────
 
 function B2BTab() {
@@ -1911,6 +2014,8 @@ function B2BTab() {
         isOpen={!!selectedPartner}
         onClose={() => setSelectedPartner(null)}
         partner={selectedPartner}
+        onActivate={activatePartner}
+        onReject={rejectPartner}
       />
 
       <div className="bg-white rounded-2xl border border-gray-100 shadow-sm overflow-hidden">
@@ -2165,7 +2270,25 @@ export default function AdminPage() {
   const { user, profile, loading, logout } = useAuthStore();
   const [activeTab, setActiveTab] = useState("overview");
   const [sidebarOpen, setSidebarOpen] = useState(false);
+  const [pendingCount, setPendingCount] = useState(0);
   const sidebarRef = useRef(null);
+
+  // Fetch pending B2B count for notification badge
+  useEffect(() => {
+    const fetchPendingCount = async () => {
+      try {
+        const { data } = await supabase
+          .from("profiles")
+          .select("id")
+          .eq("role", "travel_agent_pending");
+        setPendingCount(data?.length || 0);
+      } catch (_) {}
+    };
+    fetchPendingCount();
+    // Refresh every 30 seconds
+    const interval = setInterval(fetchPendingCount, 30000);
+    return () => clearInterval(interval);
+  }, []);
 
   // ── Auth Guard ───────────────────────────────────────────────────────────────
   useEffect(() => {
@@ -2250,7 +2373,12 @@ export default function AdminPage() {
               }`}
             >
               <Icon size={17} />
-              {label}
+              <span className="flex-1 text-left">{label}</span>
+              {key === 'b2b' && pendingCount > 0 && (
+                <span className="bg-red-500 text-white text-[10px] font-bold min-w-[18px] h-[18px] rounded-full flex items-center justify-center px-1 animate-pulse">
+                  {pendingCount > 9 ? '9+' : pendingCount}
+                </span>
+              )}
             </button>
           ))}
         </nav>

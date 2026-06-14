@@ -869,6 +869,19 @@ export default function DashboardPage() {
     }
   }, [profile, user, navigate])
 
+  // ── Notifikasi saat status berubah menjadi approved/rejected ──────────────────
+  useEffect(() => {
+    const prevStatus = sessionStorage.getItem('agent_notif_status');
+    if (prevStatus && prevStatus !== status) {
+      if (status === 'approved') {
+        toast.success('🎉 Selamat! Akun Anda telah disetujui oleh admin. Akses penuh telah aktif!', { duration: 6000 });
+      } else if (status === 'rejected') {
+        toast.error('❌ Verifikasi Anda ditolak oleh admin. Silakan periksa kembali dokumen Anda.', { duration: 6000 });
+      }
+    }
+    sessionStorage.setItem('agent_notif_status', status);
+  }, [status]);
+
   const displayName = profile?.full_name || user?.user_metadata?.full_name || user?.email || 'Pengguna'
   const initials = displayName
     .split(' ')
@@ -1070,8 +1083,9 @@ export default function DashboardPage() {
                     user={user}
                     profile={profile} 
                     onVerify={() => {
+                      // Optimistically update role in store
                       useAuthStore.setState((s) => ({
-                        profile: { ...s.profile, status: 'pending' }
+                        profile: { ...s.profile, role: 'travel_agent_pending' }
                       }));
                       window.location.reload();
                     }} 
