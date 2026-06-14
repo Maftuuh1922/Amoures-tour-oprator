@@ -9,6 +9,7 @@ import useAuthStore from "./store/authStore";
 
 // Lazy-loaded untuk code splitting
 const TourDetailPage = lazy(() => import("./pages/TourDetailPage"));
+const ToursPage = lazy(() => import("./pages/ToursPage"));
 const BookingPage = lazy(() => import("./pages/BookingPage"));
 const RegisterPage = lazy(() => import("./pages/RegisterPage"));
 const DashboardPage = lazy(() => import("./pages/DashboardPage"));
@@ -51,6 +52,7 @@ function App() {
       <Suspense fallback={<Loader />}>
         <Routes>
           <Route path="/" element={<HomePage />} />
+          <Route path="/tours" element={<ToursPage />} />
           <Route path="/tour/:id" element={<TourDetailPage />} />
           <Route path="/login" element={<LoginPage />} />
           <Route path="/register" element={<RegisterPage />} />

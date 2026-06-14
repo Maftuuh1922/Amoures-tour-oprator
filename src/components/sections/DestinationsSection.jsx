@@ -59,8 +59,9 @@ const row2 = [
 
 function DestinationCard({ dest, height }) {
   return (
-    <div
-      className={`relative overflow-hidden rounded-2xl cursor-pointer group ${height}`}
+    <Link
+      to={`/tours?q=${encodeURIComponent(dest.name)}`}
+      className={`relative overflow-hidden rounded-2xl cursor-pointer group ${height} block`}
     >
       {/* Real <img> tag — lazy loaded, proper width/height for no layout shift */}
       <img
@@ -93,13 +94,13 @@ function DestinationCard({ dest, height }) {
 
         {/* Slide-up "Lihat Paket" button on hover */}
         <div className="overflow-hidden h-0 group-hover:h-9 transition-all duration-300 ease-out">
-          <button className="inline-flex items-center gap-2 bg-primary hover:bg-primary-hover text-dark text-sm font-semibold px-4 py-2 rounded-xl transition-colors">
+          <span className="inline-flex items-center gap-2 bg-primary hover:bg-primary-hover text-dark text-sm font-semibold px-4 py-2 rounded-xl transition-colors">
             Lihat Paket
             <ArrowRight className="w-4 h-4" />
-          </button>
+          </span>
         </div>
       </div>
-    </div>
+    </Link>
   );
 }
 

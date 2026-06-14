@@ -133,22 +133,45 @@ const DUMMY_TESTIMONIALS = [
 
 // ─── Hooks ────────────────────────────────────────────────────────────────────
 
+import { supabase } from '../lib/supabase'
+
 export function useTours(limit = null) {
   const [tours, setTours] = useState([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState(null)
 
-  useEffect(() => {
-    // Simulasi async fetch
-    const timer = setTimeout(() => {
-      const result = limit ? DUMMY_TOURS.slice(0, limit) : DUMMY_TOURS
-      setTours(result)
+  const fetchTours = async () => {
+    try {
+      setLoading(true)
+      let query = supabase
+        .from('tour_packages')
+        .select('id,title,destination,description,price,duration_days,quota,departure_date,image_url,is_active')
+        .eq('is_active', true)
+        .order('created_at', { ascending: false })
+
+      if (limit) query = query.limit(limit)
+
+      const { data, error: err } = await query
+      if (err) throw err
+
+      // Jika tidak ada data di Supabase, pakai dummy data
+      setTours(data && data.length > 0 ? data : DUMMY_TOURS.slice(0, limit || undefined))
+    } catch (err) {
+      console.error('useTours error:', err)
+      setError(err)
+      // Fallback ke dummy data jika error
+      setTours(limit ? DUMMY_TOURS.slice(0, limit) : DUMMY_TOURS)
+    } finally {
       setLoading(false)
-    }, 400)
-    return () => clearTimeout(timer)
+    }
+  }
+
+  useEffect(() => {
+    fetchTours()
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [limit])
 
-  return { tours, loading, error, refetch: () => {} }
+  return { tours, loading, error, refetch: fetchTours }
 }
 
 export function useTour(id) {
@@ -158,13 +181,29 @@ export function useTour(id) {
 
   useEffect(() => {
     if (!id) return
-    const timer = setTimeout(() => {
-      const found = DUMMY_TOURS.find((t) => t.id === id) || null
-      setTour(found)
-      if (!found) setError('Tour not found')
-      setLoading(false)
-    }, 300)
-    return () => clearTimeout(timer)
+
+    const fetchTour = async () => {
+      try {
+        setLoading(true)
+        const { data, error: err } = await supabase
+          .from('tour_packages')
+          .select('*')
+          .eq('id', id)
+          .single()
+
+        if (err) throw err
+        setTour(data)
+      } catch (err) {
+        // Fallback ke dummy data
+        const found = DUMMY_TOURS.find((t) => t.id === id) || null
+        setTour(found)
+        if (!found) setError('Tour not found')
+      } finally {
+        setLoading(false)
+      }
+    }
+
+    fetchTour()
   }, [id])
 
   return { tour, loading, error }

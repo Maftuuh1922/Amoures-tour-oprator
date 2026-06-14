@@ -177,9 +177,9 @@ export default function ToursPage() {
     if (!searchQuery) return true
     const q = searchQuery.toLowerCase()
     return (
-      t.title.toLowerCase().includes(q) ||
-      t.destination.toLowerCase().includes(q) ||
-      t.description.toLowerCase().includes(q)
+      (t.title || '').toLowerCase().includes(q) ||
+      (t.destination || '').toLowerCase().includes(q) ||
+      (t.description || '').toLowerCase().includes(q)
     )
   })
 
