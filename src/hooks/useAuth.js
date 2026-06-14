@@ -22,6 +22,7 @@ export function useAuth() {
       password,
       options: {
         data: { full_name, phone },
+        emailRedirectTo: `${window.location.origin}/login`,
       },
     });
     if (error) throw new Error(error.message);
@@ -45,7 +46,19 @@ export function useAuth() {
     toast.success("Berhasil keluar");
   };
 
-  return { user, profile, loading, login, register, signOut };
+  // ── Resend Email ───────────────────────────────────────────────────────────
+  const resendEmail = async (email) => {
+    const { error } = await supabase.auth.resend({
+      type: 'signup',
+      email: email,
+      options: {
+        emailRedirectTo: `${window.location.origin}/login`,
+      }
+    });
+    if (error) throw new Error(error.message);
+  };
+
+  return { user, profile, loading, login, register, signOut, resendEmail };
 }
 
 export default useAuth;

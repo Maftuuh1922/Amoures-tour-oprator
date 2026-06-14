@@ -134,7 +134,7 @@ export default function RegisterForm() {
   const [showPassword, setShowPassword] = useState(false)
   const [showConfirmPassword, setShowConfirmPassword] = useState(false)
 
-  const { register: registerUser } = useAuth()
+  const { register: registerUser, resendEmail } = useAuth()
   const navigate = useNavigate()
 
   const {
@@ -157,7 +157,18 @@ export default function RegisterForm() {
       toast.success('Registrasi berhasil! Silakan cek email untuk verifikasi.')
       navigate('/login')
     } catch (error) {
-      toast.error(error?.message || 'Registrasi gagal. Silakan coba lagi.')
+      const msg = error?.message?.toLowerCase() || '';
+      if (msg.includes('already registered')) {
+        try {
+          await resendEmail(data.email);
+          toast.success('Email sudah terdaftar tapi belum diverifikasi. Kami telah mengirim ulang link verifikasi ke email Anda!');
+          navigate('/login');
+        } catch (resendErr) {
+          toast.error('Akun sudah terdaftar. Gagal mengirim ulang verifikasi: ' + resendErr.message);
+        }
+      } else {
+        toast.error(error?.message || 'Registrasi gagal. Silakan coba lagi.')
+      }
     }
   }
 
