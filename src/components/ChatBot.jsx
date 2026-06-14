@@ -284,9 +284,9 @@ function buildResponse(intent, sentiment, text, tours, conversationCtx) {
         text: `Selamat ${salam}! Saya *Aira*, asisten virtual Amoures Tour yang siap membantu Anda.\n\nSaya bisa bantu informasi paket wisata, proses pemesanan, program kemitraan B2B, dan masih banyak lagi. Ada yang bisa saya bantu hari ini?`,
         quickReplies: [
           "Lihat paket wisata",
-          "Cara pemesanan",
-          "Program mitra B2B",
-          "Info perusahaan",
+          "Apa itu Mitra B2B?",
+          "Cara daftar mitra",
+          "Cek status B2B saya",
         ],
         nextCtx: { lastIntent: "greeting" },
       };
@@ -437,10 +437,10 @@ function buildResponse(intent, sentiment, text, tours, conversationCtx) {
 
     case "b2b":
       return {
-        text: `${prefix}*Program Kemitraan B2B Amoures Tour*\n\nSudah *${KB.b2b.partners} perusahaan* menjadi mitra kami!\n\nKeuntungan Menjadi Mitra:\n${KB.b2b.benefits.map((b) => `• ${b}`).join("\n")}\n\nCocok untuk: Travel Agency, Perusahaan, Event Organizer, Sekolah/Universitas.\n\nIngin tahu cara mendaftar?`,
+        text: `${prefix}*Apa itu Program Kemitraan B2B Amoures Tour?*\n\nProgram B2B (Business to Business) adalah layanan khusus bagi Travel Agent, Korporat, atau Event Organizer untuk mendapatkan harga modal (Diskon hingga 25%) dan menjual kembali paket kami.\n\nKeuntungan Menjadi Mitra:\n${KB.b2b.benefits.map((b) => `• ${b}`).join("\n")}\n\nIngin tahu cara mendaftar?`,
         quickReplies: [
           "Cara daftar mitra",
-          "Syarat pendaftaran",
+          "Akses Dashboard Agent",
           "Hubungi kami",
         ],
         nextCtx: { lastIntent: "b2b" },
@@ -448,15 +448,15 @@ function buildResponse(intent, sentiment, text, tours, conversationCtx) {
 
     case "b2b_register":
       return {
-        text: `${prefix}*Cara Daftar Program Mitra B2B:*\n\n1. Buka halaman *Kemitraan B2B* di website\n2. Isi formulir data perusahaan\n3. Masukkan data PIC (Person in Charge)\n4. Tunggu verifikasi tim kami\n\nPersyaratan Dokumen:\n${KB.b2b.requirements.map((r) => `• ${r}`).join("\n")}\n\n*${KB.b2b.process}*\n\nSetelah disetujui, Anda langsung bisa akses portal B2B dan menikmati semua keuntungan mitra!`,
-        quickReplies: ["Daftar sekarang", "Keuntungan mitra", "Hubungi kami"],
+        text: `${prefix}*Cara Daftar Program Mitra B2B:*\n\n1. Klik menu *Mitra B2B* di navigasi atas website\n2. Isi formulir pendaftaran perusahaan\n3. Unggah Dokumen (NIB, NPWP, SIUP)\n4. Tunggu verifikasi tim kami (1-3 hari)\n\nSetelah mendaftar, Anda bisa memantau status verifikasi melalui *Dashboard Agent*.\n\nSetelah disetujui, Anda langsung bisa menikmati semua keuntungan mitra!`,
+        quickReplies: ["Akses Dashboard Agent", "Keuntungan mitra", "Hubungi kami"],
         nextCtx: { lastIntent: "b2b_register" },
       };
 
     case "agent_dashboard":
       return {
-        text: `${prefix}*Status & Dokumen Verifikasi B2B*\n\nAnda dapat mengecek status persetujuan akun B2B Anda langsung di **Dashboard Agent**.\n\nJika status Anda "Menunggu Review", tim kami sedang memverifikasi dokumen (NIB, NPWP, SIUP) yang Anda unggah dalam 1-3 hari kerja.\n\nAnda juga dapat melihat kembali data perusahaan dan link dokumen yang telah Anda kirimkan di halaman tersebut.`,
-        quickReplies: ["Syarat pendaftaran", "Hubungi kami"],
+        text: `${prefix}*Cara Mengakses Dashboard Agent B2B:*\n\nAnda dapat mengakses Dashboard Agent dengan cara:\n1. Pastikan Anda sudah *Login* ke akun Anda.\n2. Klik *Foto Profil / Nama Anda* di pojok kanan atas layar.\n3. Pilih menu *Dashboard*.\n\nDi Dashboard, Anda dapat mengecek status persetujuan akun B2B, melihat data perusahaan, atau mengelola pemesanan paket B2B Anda.`,
+        quickReplies: ["Cara daftar mitra", "Apa itu Mitra B2B?", "Hubungi kami"],
         nextCtx: { lastIntent: "agent_dashboard" },
       };
 
