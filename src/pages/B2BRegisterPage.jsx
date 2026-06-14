@@ -82,7 +82,7 @@ const DESTINATION_OPTIONS = [
 ]
 
 const STEPS_META = [
-  { label: 'Data Perusahaan', icon: Building2 },
+  { label: 'Perusahaan & Legal', icon: Building2 },
   { label: 'Data PIC', icon: User },
   { label: 'Kebutuhan', icon: Briefcase },
 ]
@@ -330,8 +330,8 @@ export default function B2BRegisterPage() {
               {currentStep === 1 && (
                 <div className="space-y-5">
                   <div>
-                    <h2 className="text-2xl font-black text-dark mb-1">Data Perusahaan</h2>
-                    <p className="text-gray-500 text-sm">Informasi umum tentang perusahaan Anda</p>
+                    <h2 className="text-2xl font-black text-dark mb-1">Perusahaan & Legal</h2>
+                    <p className="text-gray-500 text-sm">Informasi dan dokumen legalitas perusahaan Anda</p>
                   </div>
 
                   <div>
@@ -400,6 +400,29 @@ export default function B2BRegisterPage() {
                         <ChevronRight className="absolute right-4 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400 rotate-90 pointer-events-none" />
                       </div>
                       <FieldError message={errors.province?.message} />
+                    </div>
+                  </div>
+
+                  {/* ── Dokumen Legalitas ── */}
+                  <div className="pt-4 mt-6 border-t border-gray-200">
+                    <h3 className="font-bold text-dark mb-4 text-base">Unggah Berkas Legalitas</h3>
+                    <p className="text-xs text-gray-500 mb-4 leading-relaxed">
+                      Untuk memastikan keamanan dan validitas mitra B2B, mohon unggah dokumen legalitas perusahaan Anda (format PDF/JPG, maks 5MB per file).
+                    </p>
+                    
+                    <div className="space-y-4">
+                      <div>
+                        <Label required>NIB (Nomor Induk Berusaha)</Label>
+                        <input type="file" accept=".pdf,.jpg,.jpeg,.png" className="w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-xl file:border-0 file:text-sm file:font-semibold file:bg-primary/10 file:text-primary hover:file:bg-primary/20 transition-colors" />
+                      </div>
+                      <div>
+                        <Label required>NPWP Perusahaan</Label>
+                        <input type="file" accept=".pdf,.jpg,.jpeg,.png" className="w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-xl file:border-0 file:text-sm file:font-semibold file:bg-primary/10 file:text-primary hover:file:bg-primary/20 transition-colors" />
+                      </div>
+                      <div>
+                        <Label required>KTP Direktur / Penanggung Jawab</Label>
+                        <input type="file" accept=".pdf,.jpg,.jpeg,.png" className="w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-xl file:border-0 file:text-sm file:font-semibold file:bg-primary/10 file:text-primary hover:file:bg-primary/20 transition-colors" />
+                      </div>
                     </div>
                   </div>
                 </div>

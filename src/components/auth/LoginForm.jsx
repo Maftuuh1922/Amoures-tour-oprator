@@ -167,6 +167,42 @@ export default function LoginForm() {
           "Masuk"
         )}
       </button>
+
+      {/* ── Dummy Credentials Helpers ── */}
+      <div className="mt-6 p-4 bg-primary/5 border border-primary/20 rounded-xl space-y-3">
+        <p className="text-xs text-center font-semibold text-gray-500 uppercase tracking-widest">
+          Data Buatan (Testing)
+        </p>
+        <div className="grid grid-cols-2 gap-3">
+          <button
+            type="button"
+            onClick={() => {
+              const elEmail = document.getElementById("login-email");
+              const elPass = document.getElementById("login-password");
+              if (elEmail) elEmail.value = "admin@moures.com";
+              if (elPass) elPass.value = "admin123";
+              toast.success("Kredensial Admin diisi otomatis.");
+            }}
+            className="py-2 px-3 bg-white border border-gray-200 hover:bg-gray-50 text-xs font-semibold text-gray-700 rounded-lg transition-colors"
+          >
+            Isi Admin
+          </button>
+          <button
+            type="button"
+            onClick={() => {
+              const elEmail = document.getElementById("login-email");
+              const elPass = document.getElementById("login-password");
+              if (elEmail) elEmail.value = "agent@b2b.com";
+              if (elPass) elPass.value = "agent123";
+              toast.success("Kredensial B2B diisi otomatis.");
+            }}
+            className="py-2 px-3 bg-white border border-gray-200 hover:bg-gray-50 text-xs font-semibold text-gray-700 rounded-lg transition-colors"
+          >
+            Isi B2B Agent
+          </button>
+        </div>
+        <p className="text-[10px] text-gray-400 text-center">Klik tombol di atas, lalu klik "Masuk". Gunakan sembarang password jika Supabase tidak terhubung.</p>
+      </div>
     </form>
   );
 }

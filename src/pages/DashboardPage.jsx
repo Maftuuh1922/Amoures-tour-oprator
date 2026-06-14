@@ -23,6 +23,7 @@ import {
   Edit3,
   Save,
   Key,
+  FileText,
 } from 'lucide-react'
 import {
   PriceTagIcon, InvoiceIcon, BriefcaseIcon, SupportIcon,
@@ -210,124 +211,59 @@ function BookingCard({ booking, onCancel }) {
   )
 }
 
-// ─── Overview Tab ─────────────────────────────────────────────────────────────
+// ─── Legal Documents Tab ────────────────────────────────────────────────────────
 
-function OverviewTab({ profile, bookings, bookingsLoading }) {
-  const displayName =
-    profile?.full_name || 'Pengguna'
-
-  const total = bookings.length
-  const confirmed = bookings.filter((b) => b.status === 'confirmed').length
-  const pending = bookings.filter((b) => b.status === 'pending').length
-  const totalSpent = bookings
-    .filter((b) => b.status !== 'cancelled')
-    .reduce((sum, b) => sum + (b.total_price || 0), 0)
-
-  const recent = bookings.slice(0, 3)
-
+function LegalDocumentsTab({ profile }) {
   return (
     <div className="space-y-6">
-      {/* Welcome */}
       <div>
-        <h2 className="text-xl font-bold text-dark">
-          Halo, {displayName}! 👋
+        <h2 className="text-xl font-bold text-dark flex items-center gap-2">
+          <ShieldCheckIcon className="text-primary w-6 h-6" />
+          Dokumen Legalitas
         </h2>
         <p className="text-sm text-gray-500 mt-1">
-          Selamat datang di dashboard Anda.
+          Kelola berkas legalitas perusahaan Anda untuk kemitraan B2B.
         </p>
       </div>
 
-      {/* Stats */}
-      {bookingsLoading ? (
-        <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
-          {Array.from({ length: 4 }).map((_, i) => (
-            <Skeleton key={i} className="h-24" />
-          ))}
-        </div>
-      ) : (
-        <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
-          <StatCard
-            label="Total Booking"
-            value={total}
-            icon={Package}
-            color="bg-blue-100 text-blue-600"
-          />
-          <StatCard
-            label="Booking Aktif"
-            value={confirmed}
-            icon={Ticket}
-            color="bg-green-100 text-green-600"
-          />
-          <StatCard
-            label="Menunggu Konfirmasi"
-            value={pending}
-            icon={Clock}
-            color="bg-yellow-100 text-yellow-700"
-          />
-          <StatCard
-            label="Total Pembayaran"
-            value={formatPrice(totalSpent)}
-            icon={TrendingUp}
-            color="bg-primary/20 text-accent"
-          />
-        </div>
-      )}
-
-      {/* Recent bookings */}
-      <div>
-        <h3 className="text-base font-bold text-dark mb-3">Pemesanan Terbaru</h3>
-        {bookingsLoading ? (
-          <div className="space-y-3">
-            {Array.from({ length: 3 }).map((_, i) => (
-              <Skeleton key={i} className="h-24" />
-            ))}
+      <div className="bg-white rounded-2xl border border-gray-100 shadow-sm p-6 space-y-5">
+        {[
+          { label: "NIB (Nomor Induk Berusaha)", status: "Terverifikasi", statusCls: "bg-green-100 text-green-700" },
+          { label: "NPWP Perusahaan", status: "Terverifikasi", statusCls: "bg-green-100 text-green-700" },
+          { label: "KTP Direktur / Penanggung Jawab", status: "Terverifikasi", statusCls: "bg-green-100 text-green-700" },
+        ].map((doc, idx) => (
+          <div key={idx} className="flex items-center justify-between p-4 border border-gray-100 rounded-xl hover:bg-gray-50 transition-colors">
+            <div className="flex items-center gap-3">
+              <div className="w-10 h-10 bg-primary/10 rounded-lg flex items-center justify-center text-primary">
+                <FileText className="w-5 h-5" />
+              </div>
+              <div>
+                <p className="font-semibold text-dark text-sm">{doc.label}</p>
+                <p className="text-xs text-gray-400 mt-0.5">Format: PDF/JPG • Diunggah 14 Jan 2026</p>
+              </div>
+            </div>
+            <div className="flex items-center gap-3">
+              <span className={`px-2.5 py-1 rounded-full text-xs font-bold ${doc.statusCls}`}>
+                {doc.status}
+              </span>
+              <button className="text-primary hover:text-primary-hover text-sm font-semibold hover:underline">
+                Perbarui
+              </button>
+            </div>
           </div>
-        ) : recent.length > 0 ? (
-          <div className="overflow-x-auto">
-            <table className="w-full text-sm">
-              <thead>
-                <tr className="text-left text-xs text-gray-400 uppercase tracking-wide border-b border-gray-100">
-                  <th className="pb-2 pr-4 font-medium">Kode</th>
-                  <th className="pb-2 pr-4 font-medium">Paket</th>
-                  <th className="pb-2 pr-4 font-medium hidden sm:table-cell">Tanggal</th>
-                  <th className="pb-2 pr-4 font-medium hidden md:table-cell">Total</th>
-                  <th className="pb-2 font-medium">Status</th>
-                </tr>
-              </thead>
-              <tbody className="divide-y divide-gray-50">
-                {recent.map((b) => (
-                  <tr key={b.id} className="hover:bg-gray-50">
-                    <td className="py-3 pr-4">
-                      <span className="font-mono text-xs bg-gray-100 px-2 py-0.5 rounded">
-                        {b.booking_code}
-                      </span>
-                    </td>
-                    <td className="py-3 pr-4 max-w-[140px]">
-                      <p className="truncate font-medium text-dark">
-                        {b.tour_packages?.title || '-'}
-                      </p>
-                    </td>
-                    <td className="py-3 pr-4 text-gray-500 hidden sm:table-cell whitespace-nowrap">
-                      {formatDate(b.tour_packages?.departure_date)}
-                    </td>
-                    <td className="py-3 pr-4 text-gray-700 hidden md:table-cell whitespace-nowrap">
-                      {formatPrice(b.total_price)}
-                    </td>
-                    <td className="py-3">
-                      <StatusBadge status={b.status} />
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
-        ) : (
-          <p className="text-gray-400 text-sm">Belum ada pemesanan.</p>
-        )}
+        ))}
+      </div>
+      
+      <div className="bg-blue-50 border border-blue-100 rounded-xl p-4 flex gap-3">
+        <AlertCircle className="w-5 h-5 text-blue-600 shrink-0" />
+        <p className="text-sm text-blue-800 leading-relaxed">
+          Dokumen legalitas Anda telah diverifikasi oleh tim Amoures. Anda dapat melakukan pemesanan paket B2B dan menikmati berbagai kemudahan fasilitas Tempo/Invoice.
+        </p>
       </div>
     </div>
   )
 }
+
 
 // ─── Bookings Tab ─────────────────────────────────────────────────────────────
 
@@ -806,9 +742,10 @@ function B2BAgentTab({ profile, bookings, bookingsLoading }) {
 
 // ─── main component ───────────────────────────────────────────────────────────
 
-const BASE_TABS = [
-  { key: 'overview', label: 'Beranda', icon: LayoutGrid },
-  { key: 'bookings', label: 'Pemesanan Saya', icon: Ticket },
+const TABS = [
+  { key: 'b2b', label: 'Dashboard Mitra', icon: LayoutGrid },
+  { key: 'bookings', label: 'Semua Pemesanan', icon: Ticket },
+  { key: 'legal', label: 'Legalitas', icon: PackageBoxIcon },
   { key: 'profile', label: 'Profil', icon: User },
 ]
 
@@ -816,18 +753,9 @@ export default function DashboardPage() {
   const navigate = useNavigate()
   const { user, profile, signOut } = useAuth()
   const { bookings, loading: bookingsLoading, refetch } = useUserBookings()
-  const [activeTab, setActiveTab] = useState('overview')
+  const [activeTab, setActiveTab] = useState('b2b')
 
-  const isAgent = profile?.role === 'travel_agent'
-
-  const TABS = isAgent
-    ? [
-        { key: 'overview', label: 'Beranda', icon: LayoutGrid },
-        { key: 'b2b', label: 'Portal B2B', icon: Package },
-        { key: 'bookings', label: 'Semua Pemesanan', icon: Ticket },
-        { key: 'profile', label: 'Profil', icon: User },
-      ]
-    : BASE_TABS
+  const isAgent = true // Selalu B2B di sistem ini
 
   useEffect(() => {
     const isAdmin = profile?.role?.toLowerCase() === 'admin' || user?.email === 'admin@moures.com';
@@ -873,7 +801,7 @@ export default function DashboardPage() {
           {/* Page title */}
           <div className="flex-1 text-center hidden md:block">
             <span className="text-sm font-semibold text-gray-500 tracking-wide uppercase">
-              {isAgent ? 'Portal B2B Mitra' : 'Dashboard Pengguna'}
+              Portal B2B Mitra
             </span>
           </div>
 
@@ -993,19 +921,15 @@ export default function DashboardPage() {
             {/* ── MAIN CONTENT ── */}
             <main className="lg:col-span-3">
               <div className="bg-white rounded-2xl border border-gray-100 shadow-sm p-6">
-                {activeTab === 'overview' && (
-                  <OverviewTab
-                    profile={profile}
-                    bookings={bookings}
-                    bookingsLoading={bookingsLoading}
-                  />
-                )}
                 {activeTab === 'b2b' && (
                   <B2BAgentTab
                     profile={profile}
                     bookings={bookings}
                     bookingsLoading={bookingsLoading}
                   />
+                )}
+                {activeTab === 'legal' && (
+                  <LegalDocumentsTab profile={profile} />
                 )}
                 {activeTab === 'bookings' && (
                   <BookingsTab
