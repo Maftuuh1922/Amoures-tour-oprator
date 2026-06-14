@@ -995,62 +995,6 @@ function GalleryModal({ isOpen, onClose, onSave }) {
   );
 }
 
-// ─── B2B Detail Modal ──────────────────────────────────────────────────────────
-
-function B2BDetailModal({ isOpen, onClose, partner }) {
-  if (!isOpen || !partner) return null;
-  return (
-    <div className="fixed inset-0 bg-black/60 z-50 flex items-center justify-center p-4">
-      <div className="bg-white rounded-3xl w-full max-w-md shadow-2xl">
-        <div className="flex items-center justify-between px-6 py-5 border-b border-gray-100">
-          <h2 className="text-lg font-bold text-dark">Detail Mitra B2B</h2>
-          <button
-            onClick={onClose}
-            className="p-2 hover:bg-gray-100 rounded-xl transition-colors text-gray-500"
-          >
-            <X size={18} />
-          </button>
-        </div>
-        <div className="p-6 space-y-4">
-          <div className="bg-gray-50 rounded-2xl p-5 space-y-4">
-            <p className="text-xs font-semibold text-gray-400 uppercase tracking-wider">
-              Informasi Perusahaan
-            </p>
-            <div className="grid grid-cols-2 gap-4">
-              {[
-                { label: "Nama Perusahaan", value: partner.company },
-                { label: "Jenis", value: partner.type },
-                { label: "PIC", value: partner.pic },
-                { label: "Telepon", value: partner.phone },
-                { label: "Email", value: partner.email },
-                { label: "Tgl Daftar", value: formatDate(partner.registered) },
-                {
-                  label: "Est. Pemesanan",
-                  value: `${partner.monthly} pax/bln`,
-                },
-              ].map(({ label, value }) => (
-                <div key={label}>
-                  <p className="text-xs text-gray-500 mb-0.5">{label}</p>
-                  <p className="text-sm font-semibold text-dark">{value}</p>
-                </div>
-              ))}
-              <div>
-                <p className="text-xs text-gray-500 mb-0.5">Status</p>
-                <StatusBadge status={partner.status} />
-              </div>
-            </div>
-          </div>
-          <button
-            onClick={onClose}
-            className="w-full px-4 py-2.5 border border-gray-200 rounded-xl text-sm font-medium text-gray-700 hover:bg-gray-50 transition-colors"
-          >
-            Tutup
-          </button>
-        </div>
-      </div>
-    </div>
-  );
-}
 
 // ─── Tab: Overview ─────────────────────────────────────────────────────────────
 
@@ -1905,6 +1849,33 @@ function B2BDetailModal({ isOpen, onClose, partner, onActivate, onReject }) {
             <div className="bg-gray-50 rounded-xl p-3 col-span-2">
               <p className="text-[10px] font-semibold text-gray-400 uppercase tracking-wide mb-1">Alamat Perusahaan</p>
               <p className="text-sm text-dark">{partner.address || <span className="text-gray-400 italic font-normal">Belum diisi</span>}</p>
+            </div>
+            {/* Dokumen Verifikasi */}
+            <div className="col-span-2 mt-2">
+              <p className="text-[10px] font-semibold text-gray-400 uppercase tracking-wide mb-2">Dokumen Verifikasi</p>
+              <div className="flex flex-col gap-2">
+                {partner.nib_url ? (
+                  <a href={partner.nib_url} target="_blank" rel="noreferrer" className="text-sm text-blue-600 hover:text-blue-800 flex items-center gap-2 bg-blue-50 p-2 rounded-lg border border-blue-100 transition-colors">
+                    📄 Lihat NIB (Nomor Induk Berusaha)
+                  </a>
+                ) : (
+                  <p className="text-sm text-gray-400 italic bg-gray-50 p-2 rounded-lg border border-gray-100">NIB belum diunggah</p>
+                )}
+                {partner.npwp_url ? (
+                  <a href={partner.npwp_url} target="_blank" rel="noreferrer" className="text-sm text-blue-600 hover:text-blue-800 flex items-center gap-2 bg-blue-50 p-2 rounded-lg border border-blue-100 transition-colors">
+                    📄 Lihat NPWP Perusahaan
+                  </a>
+                ) : (
+                  <p className="text-sm text-gray-400 italic bg-gray-50 p-2 rounded-lg border border-gray-100">NPWP belum diunggah</p>
+                )}
+                {partner.siup_url ? (
+                  <a href={partner.siup_url} target="_blank" rel="noreferrer" className="text-sm text-blue-600 hover:text-blue-800 flex items-center gap-2 bg-blue-50 p-2 rounded-lg border border-blue-100 transition-colors">
+                    📄 Lihat SIUP (Opsional)
+                  </a>
+                ) : (
+                  <p className="text-sm text-gray-400 italic bg-gray-50 p-2 rounded-lg border border-gray-100">SIUP belum diunggah</p>
+                )}
+              </div>
             </div>
           </div>
 

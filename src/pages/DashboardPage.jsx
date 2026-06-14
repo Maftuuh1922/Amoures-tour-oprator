@@ -231,15 +231,43 @@ function VerificationTab({ user, profile, onVerify }) {
     const formData = new FormData(e.target);
     const company_name = formData.get('company_name');
     const address = formData.get('address');
+    const nibFile = e.target.querySelector('[name="nib"]')?.files[0];
+    const npwpFile = e.target.querySelector('[name="npwp"]')?.files[0];
+    const siupFile = e.target.querySelector('[name="siup"]')?.files[0];
 
     try {
-      // Kita akali dengan update kolom 'role' karena kolom 'status' tidak ada di database user
-      const { error } = await supabase.from('profiles').update({
-        role: 'travel_agent_pending'
-      }).eq('id', user.id);
+      if (!user) throw new Error("User tidak ditemukan. Silakan login ulang.");
 
+      // Upload files to Supabase Storage bucket "dokumen-agent"
+      const uploadFile = async (file, name) => {
+        if (!file) return null;
+        const ext = file.name.split('.').pop();
+        const path = `${user.id}/${name}.${ext}`;
+        const { error } = await supabase.storage
+          .from('dokumen-agent')
+          .upload(path, file, { upsert: true });
+        if (error) throw new Error(`Gagal upload ${name}: ${error.message}`);
+        const { data: { publicUrl } } = supabase.storage.from('dokumen-agent').getPublicUrl(path);
+        return publicUrl;
+      };
+
+      const [nib_url, npwp_url, siup_url] = await Promise.all([
+        uploadFile(nibFile, 'nib'),
+        uploadFile(npwpFile, 'npwp'),
+        uploadFile(siupFile, 'siup'),
+      ]);
+
+      // Update profile: role → pending, simpan data perusahaan & URL dokumen
+      const updateData = { role: 'travel_agent_pending' };
+      if (company_name) updateData.company_name = company_name;
+      if (address) updateData.address = address;
+      if (nib_url) updateData.nib_url = nib_url;
+      if (npwp_url) updateData.npwp_url = npwp_url;
+      if (siup_url) updateData.siup_url = siup_url;
+
+      const { error } = await supabase.from('profiles').update(updateData).eq('id', user.id);
       if (error) throw error;
-      
+
       onVerify();
       toast.success('Dokumen verifikasi berhasil dikirim. Menunggu persetujuan admin.');
     } catch (err) {
@@ -248,6 +276,7 @@ function VerificationTab({ user, profile, onVerify }) {
       setLoading(false);
     }
   };
+
 
   if (status === 'approved') {
     return (
@@ -323,15 +352,15 @@ function VerificationTab({ user, profile, onVerify }) {
           <h3 className="font-semibold text-dark text-sm">Unggah Dokumen (PDF/JPG, Maks 2MB)</h3>
           <div>
             <label className="block text-xs font-medium text-gray-600 mb-1">NIB (Nomor Induk Berusaha) <span className="text-red-500">*</span></label>
-            <input required type="file" accept=".pdf,.jpg,.jpeg" className="w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-xl file:border-0 file:text-xs file:font-semibold file:bg-primary/10 file:text-primary hover:file:bg-primary/20 transition-colors" />
+            <input name="nib" required type="file" accept=".pdf,.jpg,.jpeg" className="w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-xl file:border-0 file:text-xs file:font-semibold file:bg-primary/10 file:text-primary hover:file:bg-primary/20 transition-colors" />
           </div>
           <div>
             <label className="block text-xs font-medium text-gray-600 mb-1">NPWP Perusahaan <span className="text-red-500">*</span></label>
-            <input required type="file" accept=".pdf,.jpg,.jpeg" className="w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-xl file:border-0 file:text-xs file:font-semibold file:bg-primary/10 file:text-primary hover:file:bg-primary/20 transition-colors" />
+            <input name="npwp" required type="file" accept=".pdf,.jpg,.jpeg" className="w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-xl file:border-0 file:text-xs file:font-semibold file:bg-primary/10 file:text-primary hover:file:bg-primary/20 transition-colors" />
           </div>
           <div>
             <label className="block text-xs font-medium text-gray-600 mb-1">SIUP (Opsional)</label>
-            <input type="file" accept=".pdf,.jpg,.jpeg" className="w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-xl file:border-0 file:text-xs file:font-semibold file:bg-primary/10 file:text-primary hover:file:bg-primary/20 transition-colors" />
+            <input name="siup" type="file" accept=".pdf,.jpg,.jpeg" className="w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-xl file:border-0 file:text-xs file:font-semibold file:bg-primary/10 file:text-primary hover:file:bg-primary/20 transition-colors" />
           </div>
         </div>
 
