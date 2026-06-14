@@ -1257,42 +1257,77 @@ function OverviewTab({ onNavigate }) {
 // ─── Tab: Paket Wisata ─────────────────────────────────────────────────────────
 
 function PackagesTab() {
-  const [packages, setPackages] = useState(DEMO_PACKAGES);
+  const [packages, setPackages] = useState([]);
+  const [loading, setLoading] = useState(true);
   const [showModal, setShowModal] = useState(false);
   const [editingPackage, setEditingPackage] = useState(null);
   const [deleteTarget, setDeleteTarget] = useState(null);
   const [searchQuery, setSearchQuery] = useState("");
 
+  // ── Fetch dari Supabase ──
+  const fetchPackages = async () => {
+    setLoading(true);
+    const { data, error } = await supabase
+      .from("tour_packages")
+      .select("*")
+      .order("created_at", { ascending: false });
+    if (error) {
+      toast.error("Gagal memuat paket: " + error.message);
+    } else {
+      setPackages(data || []);
+    }
+    setLoading(false);
+  };
+
+  useEffect(() => { fetchPackages(); }, []);
+
   const filtered = packages.filter(
     (p) =>
-      p.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      p.destination.toLowerCase().includes(searchQuery.toLowerCase()),
+      (p.title || "").toLowerCase().includes(searchQuery.toLowerCase()) ||
+      (p.destination || "").toLowerCase().includes(searchQuery.toLowerCase()),
   );
 
-  const handleSave = (data) => {
+  // ── Simpan (tambah / edit) ke Supabase ──
+  const handleSave = async (data) => {
     if (editingPackage) {
-      setPackages((prev) =>
-        prev.map((p) => (p.id === editingPackage.id ? { ...p, ...data } : p)),
-      );
+      const { error } = await supabase
+        .from("tour_packages")
+        .update({ ...data, updated_at: new Date().toISOString() })
+        .eq("id", editingPackage.id);
+      if (error) { toast.error("Gagal memperbarui: " + error.message); return; }
       toast.success("Paket berhasil diperbarui");
     } else {
-      setPackages((prev) => [...prev, { ...data, id: Date.now() }]);
-      toast.success("Paket baru berhasil ditambahkan");
+      const { error } = await supabase
+        .from("tour_packages")
+        .insert([{ ...data, created_at: new Date().toISOString() }]);
+      if (error) { toast.error("Gagal menyimpan: " + error.message); return; }
+      toast.success("Paket baru berhasil ditambahkan!");
     }
     setShowModal(false);
     setEditingPackage(null);
+    fetchPackages();
   };
 
-  const handleDelete = () => {
-    setPackages((prev) => prev.filter((p) => p.id !== deleteTarget.id));
+  // ── Hapus dari Supabase ──
+  const handleDelete = async () => {
+    const { error } = await supabase
+      .from("tour_packages")
+      .delete()
+      .eq("id", deleteTarget.id);
+    if (error) { toast.error("Gagal menghapus: " + error.message); return; }
     toast.success("Paket berhasil dihapus");
     setDeleteTarget(null);
+    fetchPackages();
   };
 
-  const toggleStatus = (id) => {
-    setPackages((prev) =>
-      prev.map((p) => (p.id === id ? { ...p, is_active: !p.is_active } : p)),
-    );
+  // ── Toggle status aktif/nonaktif ──
+  const toggleStatus = async (id, currentStatus) => {
+    const { error } = await supabase
+      .from("tour_packages")
+      .update({ is_active: !currentStatus })
+      .eq("id", id);
+    if (error) { toast.error("Gagal mengubah status"); return; }
+    fetchPackages();
   };
 
   const openAdd = () => {
@@ -1385,11 +1420,16 @@ function PackagesTab() {
                   className="hover:bg-gray-50/60 transition-colors"
                 >
                   <td className="px-4 py-3">
-                    <img
-                      src={pkg.image_url}
-                      alt={pkg.title}
-                      className="w-12 h-12 rounded-xl object-cover"
-                    />
+                    {pkg.image_url ? (
+                      <img
+                        src={pkg.image_url}
+                        alt={pkg.title}
+                        className="w-12 h-12 rounded-xl object-cover"
+                        onError={(e) => { e.currentTarget.style.display = 'none'; }}
+                      />
+                    ) : (
+                      <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-primary/30 to-primary/60 flex items-center justify-center text-lg">✈</div>
+                    )}
                   </td>
                   <td className="px-4 py-3">
                     <p className="font-semibold text-dark text-sm">
@@ -1413,7 +1453,7 @@ function PackagesTab() {
                   </td>
                   <td className="px-4 py-3">
                     <button
-                      onClick={() => toggleStatus(pkg.id)}
+                      onClick={() => toggleStatus(pkg.id, pkg.is_active)}
                       className={`inline-flex items-center px-3 py-1 rounded-full text-xs font-semibold transition-colors ${
                         pkg.is_active
                           ? "bg-green-100 text-green-700 hover:bg-green-200"
@@ -1443,13 +1483,20 @@ function PackagesTab() {
                   </td>
                 </tr>
               ))}
-              {filtered.length === 0 && (
+              {filtered.length === 0 && !loading && (
                 <tr>
                   <td
                     colSpan={8}
                     className="px-4 py-16 text-center text-sm text-gray-400"
                   >
                     Tidak ada paket ditemukan
+                  </td>
+                </tr>
+              )}
+              {loading && (
+                <tr>
+                  <td colSpan={8} className="px-4 py-16 text-center text-sm text-gray-400">
+                    Memuat data paket...
                   </td>
                 </tr>
               )}
