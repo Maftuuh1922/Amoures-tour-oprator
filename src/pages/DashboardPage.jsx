@@ -278,6 +278,45 @@ function VerificationTab({ user, profile, onVerify }) {
   };
 
 
+  const renderSubmittedData = () => (
+    <div className="bg-white rounded-2xl border border-gray-100 shadow-sm p-6 mt-6 space-y-5">
+      <h3 className="font-bold text-dark border-b border-gray-100 pb-3">Data Perusahaan Anda</h3>
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <div className="bg-gray-50 rounded-xl p-4">
+          <p className="text-[10px] font-semibold text-gray-400 uppercase tracking-wide mb-1">Nama Perusahaan</p>
+          <p className="text-sm font-semibold text-dark">{profile?.company_name || '-'}</p>
+        </div>
+        <div className="bg-gray-50 rounded-xl p-4">
+          <p className="text-[10px] font-semibold text-gray-400 uppercase tracking-wide mb-1">Alamat Perusahaan</p>
+          <p className="text-sm text-dark">{profile?.address || '-'}</p>
+        </div>
+        <div className="bg-gray-50 rounded-xl p-4 md:col-span-2">
+          <p className="text-[10px] font-semibold text-gray-400 uppercase tracking-wide mb-2">Dokumen Verifikasi Tersimpan</p>
+          <div className="flex flex-col gap-2">
+            {profile?.nib_url && (
+              <a href={profile.nib_url} target="_blank" rel="noreferrer" className="text-sm text-primary-hover hover:text-primary font-medium flex items-center gap-2">
+                📄 NIB (Nomor Induk Berusaha)
+              </a>
+            )}
+            {profile?.npwp_url && (
+              <a href={profile.npwp_url} target="_blank" rel="noreferrer" className="text-sm text-primary-hover hover:text-primary font-medium flex items-center gap-2">
+                📄 NPWP Perusahaan
+              </a>
+            )}
+            {profile?.siup_url && (
+              <a href={profile.siup_url} target="_blank" rel="noreferrer" className="text-sm text-primary-hover hover:text-primary font-medium flex items-center gap-2">
+                📄 SIUP (Opsional)
+              </a>
+            )}
+            {!profile?.nib_url && !profile?.npwp_url && (
+               <p className="text-sm text-gray-400 italic">Dokumen belum lengkap.</p>
+            )}
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+
   if (status === 'approved') {
     return (
       <div className="space-y-6">
@@ -287,12 +326,13 @@ function VerificationTab({ user, profile, onVerify }) {
             Dokumen Legalitas Terverifikasi
           </h2>
         </div>
-        <div className="bg-green-50 border border-green-100 rounded-xl p-4 flex gap-3">
-          <CheckCircle2 className="w-5 h-5 text-green-600 shrink-0" />
-          <p className="text-sm text-green-800 leading-relaxed">
+        <div className="bg-green-50 border border-green-100 rounded-xl p-4 flex gap-3 items-center">
+          <CheckCircle2 className="w-6 h-6 text-green-600 shrink-0" />
+          <p className="text-sm text-green-800 leading-relaxed font-medium">
             Akun B2B Anda telah disetujui. Anda sekarang memiliki akses penuh untuk memesan paket wisata dengan diskon B2B dan fasilitas invoice.
           </p>
         </div>
+        {renderSubmittedData()}
       </div>
     );
   }
@@ -300,13 +340,17 @@ function VerificationTab({ user, profile, onVerify }) {
   if (status === 'pending') {
     return (
       <div className="space-y-6">
-        <h2 className="text-xl font-bold text-dark">Verifikasi Akun B2B</h2>
+        <h2 className="text-xl font-bold text-dark flex items-center gap-2">
+          <Clock className="text-blue-500 w-6 h-6" />
+          Verifikasi Sedang Diproses
+        </h2>
         <div className="bg-blue-50 border border-blue-100 rounded-xl p-4 flex gap-3 items-center">
           <Clock className="w-5 h-5 text-blue-600 shrink-0 animate-pulse" />
           <p className="text-sm text-blue-800 font-medium">
-            🕐 Dokumen sedang diverifikasi oleh admin (1-3 hari kerja).
+            Dokumen sedang diverifikasi oleh admin (1-3 hari kerja). Kami akan memberi tahu Anda jika sudah disetujui.
           </p>
         </div>
+        {renderSubmittedData()}
       </div>
     );
   }

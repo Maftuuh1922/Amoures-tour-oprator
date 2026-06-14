@@ -1805,75 +1805,75 @@ function B2BDetailModal({ isOpen, onClose, partner, onActivate, onReject }) {
   return (
     <div className="fixed inset-0 bg-black/60 z-50 flex items-center justify-center p-4" onClick={onClose}>
       <div
-        className="bg-white rounded-2xl w-full max-w-lg shadow-2xl overflow-hidden"
+        className="bg-white rounded-2xl w-full max-w-md shadow-2xl overflow-hidden"
         onClick={(e) => e.stopPropagation()}
       >
         {/* Header */}
-        <div className="bg-gradient-to-r from-dark to-gray-800 px-6 py-5 flex items-center justify-between">
+        <div className="bg-gradient-to-r from-dark to-gray-800 px-5 py-4 flex items-center justify-between">
           <div>
-            <h3 className="text-white font-bold text-lg">Detail Mitra B2B</h3>
-            <p className="text-gray-400 text-sm mt-0.5">Data verifikasi agen travel</p>
+            <h3 className="text-white font-bold text-base">Detail Mitra B2B</h3>
+            <p className="text-gray-400 text-xs mt-0.5">Data verifikasi agen travel</p>
           </div>
           <button onClick={onClose} className="text-gray-400 hover:text-white transition-colors p-1.5 hover:bg-white/10 rounded-lg">
-            <X size={20} />
+            <X size={18} />
           </button>
         </div>
 
-        <div className="p-6 space-y-5">
+        <div className="p-5 space-y-4 max-h-[80vh] overflow-y-auto custom-scrollbar">
           {/* Status Badge */}
           <div className="flex items-center justify-between">
-            <span className={`inline-flex items-center px-3 py-1 rounded-full text-xs font-semibold border ${statusColor[status]}`}>
+            <span className={`inline-flex items-center px-2.5 py-1 rounded-full text-[11px] font-semibold border ${statusColor[status]}`}>
               {statusLabel[status]}
             </span>
             <span className="text-xs text-gray-400">ID: {partner.id?.slice(0,8)}...</span>
           </div>
 
           {/* Info Grid */}
-          <div className="grid grid-cols-2 gap-4">
-            <div className="bg-gray-50 rounded-xl p-3">
-              <p className="text-[10px] font-semibold text-gray-400 uppercase tracking-wide mb-1">Nama PIC</p>
+          <div className="grid grid-cols-2 gap-3">
+            <div className="bg-gray-50 rounded-xl p-2.5">
+              <p className="text-[9px] font-semibold text-gray-400 uppercase tracking-wide mb-1">Nama PIC</p>
               <p className="text-sm font-semibold text-dark">{partner.full_name || '-'}</p>
             </div>
-            <div className="bg-gray-50 rounded-xl p-3">
-              <p className="text-[10px] font-semibold text-gray-400 uppercase tracking-wide mb-1">No. Telepon</p>
+            <div className="bg-gray-50 rounded-xl p-2.5">
+              <p className="text-[9px] font-semibold text-gray-400 uppercase tracking-wide mb-1">No. Telepon</p>
               <p className="text-sm font-semibold text-dark">{partner.phone || '-'}</p>
             </div>
-            <div className="bg-gray-50 rounded-xl p-3 col-span-2">
-              <p className="text-[10px] font-semibold text-gray-400 uppercase tracking-wide mb-1">Email</p>
+            <div className="bg-gray-50 rounded-xl p-2.5 col-span-2">
+              <p className="text-[9px] font-semibold text-gray-400 uppercase tracking-wide mb-1">Email</p>
               <p className="text-sm font-semibold text-dark break-all">{partner.email || '-'}</p>
             </div>
-            <div className="bg-gray-50 rounded-xl p-3 col-span-2">
-              <p className="text-[10px] font-semibold text-gray-400 uppercase tracking-wide mb-1">Nama Perusahaan</p>
+            <div className="bg-gray-50 rounded-xl p-2.5 col-span-2">
+              <p className="text-[9px] font-semibold text-gray-400 uppercase tracking-wide mb-1">Nama Perusahaan</p>
               <p className="text-sm font-semibold text-dark">{partner.company_name || <span className="text-gray-400 italic font-normal">Belum diisi</span>}</p>
             </div>
-            <div className="bg-gray-50 rounded-xl p-3 col-span-2">
-              <p className="text-[10px] font-semibold text-gray-400 uppercase tracking-wide mb-1">Alamat Perusahaan</p>
+            <div className="bg-gray-50 rounded-xl p-2.5 col-span-2">
+              <p className="text-[9px] font-semibold text-gray-400 uppercase tracking-wide mb-1">Alamat Perusahaan</p>
               <p className="text-sm text-dark">{partner.address || <span className="text-gray-400 italic font-normal">Belum diisi</span>}</p>
             </div>
             {/* Dokumen Verifikasi */}
-            <div className="col-span-2 mt-2">
-              <p className="text-[10px] font-semibold text-gray-400 uppercase tracking-wide mb-2">Dokumen Verifikasi</p>
-              <div className="flex flex-col gap-2">
+            <div className="col-span-2 mt-1">
+              <p className="text-[9px] font-semibold text-gray-400 uppercase tracking-wide mb-2">Dokumen Verifikasi</p>
+              <div className="flex flex-col gap-1.5">
                 {partner.nib_url ? (
-                  <a href={partner.nib_url} target="_blank" rel="noreferrer" className="text-sm text-blue-600 hover:text-blue-800 flex items-center gap-2 bg-blue-50 p-2 rounded-lg border border-blue-100 transition-colors">
+                  <a href={partner.nib_url} target="_blank" rel="noreferrer" className="text-xs text-blue-600 hover:text-blue-800 flex items-center gap-2 bg-blue-50 p-2 rounded-lg border border-blue-100 transition-colors">
                     📄 Lihat NIB (Nomor Induk Berusaha)
                   </a>
                 ) : (
-                  <p className="text-sm text-gray-400 italic bg-gray-50 p-2 rounded-lg border border-gray-100">NIB belum diunggah</p>
+                  <p className="text-xs text-gray-400 italic bg-gray-50 p-2 rounded-lg border border-gray-100">NIB belum diunggah</p>
                 )}
                 {partner.npwp_url ? (
-                  <a href={partner.npwp_url} target="_blank" rel="noreferrer" className="text-sm text-blue-600 hover:text-blue-800 flex items-center gap-2 bg-blue-50 p-2 rounded-lg border border-blue-100 transition-colors">
+                  <a href={partner.npwp_url} target="_blank" rel="noreferrer" className="text-xs text-blue-600 hover:text-blue-800 flex items-center gap-2 bg-blue-50 p-2 rounded-lg border border-blue-100 transition-colors">
                     📄 Lihat NPWP Perusahaan
                   </a>
                 ) : (
-                  <p className="text-sm text-gray-400 italic bg-gray-50 p-2 rounded-lg border border-gray-100">NPWP belum diunggah</p>
+                  <p className="text-xs text-gray-400 italic bg-gray-50 p-2 rounded-lg border border-gray-100">NPWP belum diunggah</p>
                 )}
                 {partner.siup_url ? (
-                  <a href={partner.siup_url} target="_blank" rel="noreferrer" className="text-sm text-blue-600 hover:text-blue-800 flex items-center gap-2 bg-blue-50 p-2 rounded-lg border border-blue-100 transition-colors">
+                  <a href={partner.siup_url} target="_blank" rel="noreferrer" className="text-xs text-blue-600 hover:text-blue-800 flex items-center gap-2 bg-blue-50 p-2 rounded-lg border border-blue-100 transition-colors">
                     📄 Lihat SIUP (Opsional)
                   </a>
                 ) : (
-                  <p className="text-sm text-gray-400 italic bg-gray-50 p-2 rounded-lg border border-gray-100">SIUP belum diunggah</p>
+                  <p className="text-xs text-gray-400 italic bg-gray-50 p-2 rounded-lg border border-gray-100">SIUP belum diunggah</p>
                 )}
               </div>
             </div>
@@ -1886,25 +1886,25 @@ function B2BDetailModal({ isOpen, onClose, partner, onActivate, onReject }) {
 
           {/* Action Buttons */}
           {status === 'pending' && (
-            <div className="flex gap-3 pt-1">
+            <div className="flex gap-2 pt-1">
               <button
                 onClick={() => { onActivate(partner.id); onClose(); }}
-                className="flex-1 flex items-center justify-center gap-2 px-4 py-2.5 bg-green-600 hover:bg-green-700 text-white font-bold rounded-xl text-sm transition-colors"
+                className="flex-1 flex items-center justify-center gap-1.5 px-3 py-2 bg-green-600 hover:bg-green-700 text-white font-bold rounded-lg text-xs transition-colors"
               >
-                <Check size={16} /> Setujui Mitra
+                <Check size={14} /> Setujui Mitra
               </button>
               <button
                 onClick={() => { onReject(partner.id); onClose(); }}
-                className="flex-1 flex items-center justify-center gap-2 px-4 py-2.5 bg-red-100 hover:bg-red-200 text-red-700 font-bold rounded-xl text-sm transition-colors"
+                className="flex-1 flex items-center justify-center gap-1.5 px-3 py-2 bg-red-100 hover:bg-red-200 text-red-700 font-bold rounded-lg text-xs transition-colors"
               >
-                <X size={16} /> Tolak
+                <X size={14} /> Tolak
               </button>
             </div>
           )}
           {status !== 'pending' && (
             <button
               onClick={onClose}
-              className="w-full px-4 py-2.5 border border-gray-200 rounded-xl text-sm font-medium text-gray-600 hover:bg-gray-50 transition-colors"
+              className="w-full px-3 py-2 border border-gray-200 rounded-lg text-xs font-medium text-gray-600 hover:bg-gray-50 transition-colors"
             >
               Tutup
             </button>
