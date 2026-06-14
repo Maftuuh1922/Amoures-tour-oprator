@@ -226,6 +226,10 @@ const INTENTS = [
     intent: "complaint",
     pattern: /komplain|keluhan|laporan|masalah|tidak puas|kecewa dengan|buruk/i,
   },
+  {
+    intent: "agent_dashboard",
+    pattern: /dashboard|verifikasi|dokumen b2b|dokumen agen|status akun|akun b2b saya|cek status|menunggu review/i,
+  },
   { intent: "help", pattern: /bantuan|help|bisa apa|menu|apa saja|fitur/i },
 ];
 
@@ -447,6 +451,13 @@ function buildResponse(intent, sentiment, text, tours, conversationCtx) {
         text: `${prefix}*Cara Daftar Program Mitra B2B:*\n\n1. Buka halaman *Kemitraan B2B* di website\n2. Isi formulir data perusahaan\n3. Masukkan data PIC (Person in Charge)\n4. Tunggu verifikasi tim kami\n\nPersyaratan Dokumen:\n${KB.b2b.requirements.map((r) => `• ${r}`).join("\n")}\n\n*${KB.b2b.process}*\n\nSetelah disetujui, Anda langsung bisa akses portal B2B dan menikmati semua keuntungan mitra!`,
         quickReplies: ["Daftar sekarang", "Keuntungan mitra", "Hubungi kami"],
         nextCtx: { lastIntent: "b2b_register" },
+      };
+
+    case "agent_dashboard":
+      return {
+        text: `${prefix}*Status & Dokumen Verifikasi B2B*\n\nAnda dapat mengecek status persetujuan akun B2B Anda langsung di **Dashboard Agent**.\n\nJika status Anda "Menunggu Review", tim kami sedang memverifikasi dokumen (NIB, NPWP, SIUP) yang Anda unggah dalam 1-3 hari kerja.\n\nAnda juga dapat melihat kembali data perusahaan dan link dokumen yang telah Anda kirimkan di halaman tersebut.`,
+        quickReplies: ["Syarat pendaftaran", "Hubungi kami"],
+        nextCtx: { lastIntent: "agent_dashboard" },
       };
 
     case "visa":

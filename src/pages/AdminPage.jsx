@@ -528,7 +528,7 @@ const packageSchema = z.object({
   duration_days: z.coerce.number().min(1, "Durasi minimal 1 hari"),
   quota: z.coerce.number().min(1, "Kuota minimal 1"),
   departure_date: z.string().min(1, "Tanggal wajib diisi"),
-  image_url: z.string().url("URL gambar tidak valid"),
+  image_url: z.string().optional().or(z.literal('')),
   is_active: z.boolean(),
 });
 
@@ -561,6 +561,9 @@ function PackageModal({ isOpen, onClose, editingPackage, onSave }) {
     image_url: "",
     is_active: true,
   };
+  const [imageFile, setImageFile] = useState(null);
+  const [isUploading, setIsUploading] = useState(false);
+  
   const {
     register,
     handleSubmit,
@@ -576,9 +579,43 @@ function PackageModal({ isOpen, onClose, editingPackage, onSave }) {
   const isActive = watch("is_active");
 
   useEffect(() => {
-    if (isOpen) reset(editingPackage ? { ...editingPackage } : defaultVals);
+    if (isOpen) {
+      reset(editingPackage ? { ...editingPackage } : defaultVals);
+      setImageFile(null);
+    }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isOpen, editingPackage]);
+
+  const onSubmit = async (data) => {
+    try {
+      setIsUploading(true);
+      let finalImageUrl = data.image_url;
+
+      if (imageFile) {
+        const fileExt = imageFile.name.split('.').pop();
+        const fileName = `${Date.now()}_${Math.random().toString(36).substring(7)}.${fileExt}`;
+        const filePath = `${fileName}`;
+
+        const { error: uploadError } = await supabase.storage
+          .from('paket-wisata')
+          .upload(filePath, imageFile);
+
+        if (uploadError) throw uploadError;
+
+        const { data: { publicUrl } } = supabase.storage
+          .from('paket-wisata')
+          .getPublicUrl(filePath);
+
+        finalImageUrl = publicUrl;
+      }
+
+      onSave({ ...data, image_url: finalImageUrl });
+    } catch (error) {
+      toast.error('Gagal mengunggah gambar: ' + error.message);
+    } finally {
+      setIsUploading(false);
+    }
+  };
 
   if (!isOpen) return null;
 
@@ -598,7 +635,7 @@ function PackageModal({ isOpen, onClose, editingPackage, onSave }) {
           </button>
         </div>
 
-        <form onSubmit={handleSubmit(onSave)} className="p-6 space-y-4">
+        <form onSubmit={handleSubmit(onSubmit)} className="p-6 space-y-4">
           {/* Judul */}
           <div>
             <label className={LABEL_CLS}>Judul Paket</label>
@@ -701,31 +738,36 @@ function PackageModal({ isOpen, onClose, editingPackage, onSave }) {
             </div>
           </div>
 
-          {/* Image URL */}
+          {/* Image Upload */}
           <div>
-            <label className={LABEL_CLS}>URL Gambar Utama</label>
+            <label className={LABEL_CLS}>Gambar Utama Paket (Opsional jika sudah ada)</label>
             <input
-              {...register("image_url")}
-              className={INPUT_CLS}
-              placeholder="https://images.unsplash.com/..."
+              type="file"
+              accept="image/*"
+              onChange={(e) => {
+                if (e.target.files && e.target.files[0]) {
+                  setImageFile(e.target.files[0]);
+                }
+              }}
+              className="w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-primary/10 file:text-primary hover:file:bg-primary/20"
             />
             {errors.image_url && (
               <p className="text-red-500 text-xs mt-1">
                 {errors.image_url.message}
               </p>
             )}
-            {imageUrl &&
-              (imageUrl.startsWith("http://") ||
-                imageUrl.startsWith("https://")) && (
-                <img
-                  src={imageUrl}
-                  alt="Preview"
-                  className="w-full h-32 object-cover rounded-xl mt-2 border border-gray-100"
-                  onError={(e) => {
-                    e.currentTarget.style.display = "none";
-                  }}
-                />
-              )}
+            
+            {/* Preview Existing/New Image */}
+            {(imageFile || (imageUrl && (imageUrl.startsWith("http://") || imageUrl.startsWith("https://")))) && (
+              <img
+                src={imageFile ? URL.createObjectURL(imageFile) : imageUrl}
+                alt="Preview"
+                className="w-full h-32 object-cover rounded-xl mt-2 border border-gray-100"
+                onError={(e) => {
+                  e.currentTarget.style.display = "none";
+                }}
+              />
+            )}
           </div>
 
           {/* Deskripsi */}
@@ -746,9 +788,10 @@ function PackageModal({ isOpen, onClose, editingPackage, onSave }) {
 
           <button
             type="submit"
-            className="w-full bg-primary hover:bg-primary-hover text-dark font-bold py-3 rounded-xl transition-colors flex items-center justify-center gap-2 mt-2"
+            disabled={isUploading}
+            className="w-full bg-primary hover:bg-primary-hover text-dark font-bold py-3 rounded-xl transition-colors flex items-center justify-center gap-2 mt-2 disabled:opacity-50"
           >
-            <Save size={16} /> Simpan Paket
+            <Save size={16} /> {isUploading ? "Mengunggah..." : "Simpan Paket"}
           </button>
         </form>
       </div>
@@ -1805,21 +1848,21 @@ function B2BDetailModal({ isOpen, onClose, partner, onActivate, onReject }) {
   return (
     <div className="fixed inset-0 bg-black/60 z-50 flex items-center justify-center p-4" onClick={onClose}>
       <div
-        className="bg-white rounded-2xl w-full max-w-md shadow-2xl overflow-hidden"
+        className="bg-white rounded-2xl w-full max-w-sm shadow-2xl overflow-hidden"
         onClick={(e) => e.stopPropagation()}
       >
         {/* Header */}
-        <div className="bg-gradient-to-r from-dark to-gray-800 px-5 py-4 flex items-center justify-between">
+        <div className="bg-gradient-to-r from-gray-900 to-gray-800 px-4 py-3 flex items-center justify-between">
           <div>
-            <h3 className="text-white font-bold text-base">Detail Mitra B2B</h3>
-            <p className="text-gray-400 text-xs mt-0.5">Data verifikasi agen travel</p>
+            <h3 className="text-white font-bold text-sm">Detail Mitra B2B</h3>
+            <p className="text-gray-400 text-[10px] mt-0.5">Data verifikasi agen travel</p>
           </div>
-          <button onClick={onClose} className="text-gray-400 hover:text-white transition-colors p-1.5 hover:bg-white/10 rounded-lg">
-            <X size={18} />
+          <button onClick={onClose} className="text-gray-400 hover:text-white transition-colors p-1 hover:bg-white/10 rounded-md">
+            <X size={16} />
           </button>
         </div>
 
-        <div className="p-5 space-y-4 max-h-[80vh] overflow-y-auto custom-scrollbar">
+        <div className="p-4 space-y-3 max-h-[80vh] overflow-y-auto custom-scrollbar">
           {/* Status Badge */}
           <div className="flex items-center justify-between">
             <span className={`inline-flex items-center px-2.5 py-1 rounded-full text-[11px] font-semibold border ${statusColor[status]}`}>
