@@ -67,21 +67,16 @@ export default function HeroSection() {
       className="relative min-h-screen flex flex-col overflow-hidden"
     >
       {/* ── LCP Hero Image — real <img> tag so browser discovers it immediately ── */}
+      {/* Self-hosted di Vercel CDN — jauh lebih cepat dari Unsplash untuk LCP */}
       <img
-        src="https://images.unsplash.com/photo-1476514525535-07fb3b4ae5f1?w=1280&q=70&fm=webp&auto=format&fit=crop"
-        srcSet="
-          https://images.unsplash.com/photo-1476514525535-07fb3b4ae5f1?w=640&q=65&fm=webp&auto=format&fit=crop  640w,
-          https://images.unsplash.com/photo-1476514525535-07fb3b4ae5f1?w=1280&q=70&fm=webp&auto=format&fit=crop 1280w,
-          https://images.unsplash.com/photo-1476514525535-07fb3b4ae5f1?w=1920&q=70&fm=webp&auto=format&fit=crop 1920w
-        "
-        sizes="100vw"
+        src="/images/hero.webp"
         alt=""
         aria-hidden="true"
         fetchPriority="high"
         loading="eager"
         decoding="sync"
-        width={1920}
-        height={1080}
+        width={1600}
+        height={900}
         className="absolute inset-0 w-full h-full object-cover"
         style={{ objectPosition: "center 40%" }}
       />

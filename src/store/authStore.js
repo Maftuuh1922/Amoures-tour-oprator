@@ -1,77 +1,60 @@
-import { create } from 'zustand'
+import { create } from "zustand";
+import { supabase } from "../lib/supabase";
 
-// ─── Dummy Users ──────────────────────────────────────────────────────────────
-export const DUMMY_USERS = [
-  {
-    id: 'dummy-admin-001',
-    email: 'admin@moures.com',
-    password: 'admin123',
-    full_name: 'Admin Moures',
-    phone: '08123456789',
-    role: 'admin',
-    avatar: null,
-  },
-  {
-    id: 'dummy-user-001',
-    email: 'user@moures.com',
-    password: 'user123',
-    full_name: 'Budi Santoso',
-    phone: '08987654321',
-    role: 'travel_agent',
-    avatar: null,
-    company_name: 'PT Budi Tours',
-    business_type: 'Travel Agent',
-    pic_position: 'Direktur',
-    status: 'aktif',
-    monthly_travelers: '50-100',
-    destinations: ['Domestik'],
-  },
-  {
-    id: 'dummy-agent-001',
-    email: 'agent@cvkaryanusantara.com',
-    password: 'agent123',
-    full_name: 'Jane Smith',
-    phone: '087654321098',
-    role: 'travel_agent',
-    avatar: null,
-    company_name: 'CV Karya Nusantara',
-    business_type: 'Travel Agent',
-    pic_position: 'Travel Manager',
-    status: 'aktif',
-    monthly_travelers: '100-500',
-    destinations: ['Domestik', 'Internasional'],
-  },
-]
-
-// ─── Store ────────────────────────────────────────────────────────────────────
-const useAuthStore = create((set) => ({
+const useAuthStore = create((set, get) => ({
   user: null,
   profile: null,
-  loading: false,
+  loading: true,
 
   setUser: (user) => set({ user }),
   setProfile: (profile) => set({ profile }),
   setLoading: (loading) => set({ loading }),
 
-  initialize: () => {
-    // Restore session from localStorage (dummy persistence)
-    const saved = localStorage.getItem('dummy_auth_user')
-    if (saved) {
-      try {
-        const parsed = JSON.parse(saved)
-        set({ user: parsed, profile: parsed, loading: false })
-      } catch {
-        set({ loading: false })
-      }
-    } else {
-      set({ loading: false })
+  fetchProfile: async (userId) => {
+    try {
+      const { data, error } = await supabase
+        .from("profiles")
+        .select("*")
+        .eq("id", userId)
+        .single();
+      if (error) throw error;
+      set({ profile: data });
+    } catch (err) {
+      console.error("fetchProfile error:", err.message);
     }
   },
 
-  logout: () => {
-    localStorage.removeItem('dummy_auth_user')
-    set({ user: null, profile: null })
-  },
-}))
+  initialize: async () => {
+    set({ loading: true });
+    try {
+      const {
+        data: { session },
+      } = await supabase.auth.getSession();
+      if (session?.user) {
+        set({ user: session.user });
+        await get().fetchProfile(session.user.id);
+      }
+    } catch (err) {
+      console.error("initialize error:", err.message);
+    } finally {
+      set({ loading: false });
+    }
 
-export default useAuthStore
+    // Listen perubahan auth (login / logout / token refresh)
+    supabase.auth.onAuthStateChange(async (_event, session) => {
+      if (session?.user) {
+        set({ user: session.user });
+        await get().fetchProfile(session.user.id);
+      } else {
+        set({ user: null, profile: null });
+      }
+    });
+  },
+
+  logout: async () => {
+    await supabase.auth.signOut();
+    set({ user: null, profile: null });
+  },
+}));
+
+export default useAuthStore;

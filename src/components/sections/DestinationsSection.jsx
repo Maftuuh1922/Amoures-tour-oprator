@@ -1,28 +1,28 @@
 import { Link } from "react-router-dom";
 import { MapPin, ArrowRight, Compass } from "lucide-react";
 
-// Semua gambar pakai WebP + q=65 untuk hemat ~960 KiB
+// WebP q=50 + lebar kecil = gambar ringan untuk Lighthouse
 const row1 = [
   {
     name: "Bali",
     region: "Bali, Indonesia",
     packages: 24,
     image:
-      "https://images.unsplash.com/photo-1537996194471-e657df975ab4?w=700&q=65&fm=webp&auto=format&fit=crop",
+      "https://images.unsplash.com/photo-1537996194471-e657df975ab4?w=480&q=50&fm=webp&auto=format&fit=crop",
   },
   {
     name: "Raja Ampat",
     region: "Papua, Indonesia",
     packages: 8,
     image:
-      "https://images.unsplash.com/photo-1596040033229-a9821ebd058d?w=700&q=65&fm=webp&auto=format&fit=crop",
+      "https://images.unsplash.com/photo-1596040033229-a9821ebd058d?w=480&q=50&fm=webp&auto=format&fit=crop",
   },
   {
     name: "Labuan Bajo",
     region: "NTT, Indonesia",
     packages: 12,
     image:
-      "https://images.unsplash.com/photo-1570737209810-87a8e7245f88?w=700&q=65&fm=webp&auto=format&fit=crop",
+      "https://images.unsplash.com/photo-1570737209810-87a8e7245f88?w=480&q=50&fm=webp&auto=format&fit=crop",
   },
 ];
 
@@ -32,28 +32,28 @@ const row2 = [
     region: "Jawa Tengah",
     packages: 18,
     image:
-      "https://images.unsplash.com/photo-1584810359583-96fc3448beaa?w=500&q=65&fm=webp&auto=format&fit=crop",
+      "https://images.unsplash.com/photo-1584810359583-96fc3448beaa?w=360&q=50&fm=webp&auto=format&fit=crop",
   },
   {
     name: "Lombok",
     region: "NTB, Indonesia",
     packages: 15,
     image:
-      "https://images.unsplash.com/photo-1571019614242-c5c5dee9f50b?w=500&q=65&fm=webp&auto=format&fit=crop",
+      "https://images.unsplash.com/photo-1571019614242-c5c5dee9f50b?w=360&q=50&fm=webp&auto=format&fit=crop",
   },
   {
     name: "Bromo",
     region: "Jawa Timur",
     packages: 10,
     image:
-      "https://images.unsplash.com/photo-1573790387438-4da905039392?w=500&q=65&fm=webp&auto=format&fit=crop",
+      "https://images.unsplash.com/photo-1573790387438-4da905039392?w=360&q=50&fm=webp&auto=format&fit=crop",
   },
   {
     name: "Komodo",
     region: "NTT, Indonesia",
     packages: 6,
     image:
-      "https://images.unsplash.com/photo-1557456170-0cf4f4d0d362?w=500&q=65&fm=webp&auto=format&fit=crop",
+      "https://images.unsplash.com/photo-1557456170-0cf4f4d0d362?w=360&q=50&fm=webp&auto=format&fit=crop",
   },
 ];
 
