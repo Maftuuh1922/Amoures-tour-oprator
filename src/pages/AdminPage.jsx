@@ -454,6 +454,9 @@ const STATUS_STYLE = {
   cancelled: "bg-red-100 text-red-700",
   aktif: "bg-green-100 text-green-700",
   ditolak: "bg-red-100 text-red-700",
+  approved: "bg-green-100 text-green-700",
+  rejected: "bg-red-100 text-red-700",
+  unverified: "bg-gray-100 text-gray-700",
 };
 const STATUS_LABEL = {
   pending: "Pending",
@@ -461,6 +464,9 @@ const STATUS_LABEL = {
   cancelled: "Dibatalkan",
   aktif: "Aktif",
   ditolak: "Ditolak",
+  approved: "Disetujui",
+  rejected: "Ditolak",
+  unverified: "Unverified",
 };
 
 function StatusBadge({ status }) {
@@ -1838,22 +1844,66 @@ function BookingsTab() {
 // ─── Tab: Mitra B2B ────────────────────────────────────────────────────────────
 
 function B2BTab() {
-  const [partners, setPartners] = useState(DEMO_B2B);
+  const [partners, setPartners] = useState([]);
   const [selectedPartner, setSelectedPartner] = useState(null);
+  const [loading, setLoading] = useState(true);
 
-  const activatePartner = (id) => {
-    setPartners((prev) =>
-      prev.map((p) => (p.id === id ? { ...p, status: "aktif" } : p)),
-    );
-    toast.success("Mitra berhasil diaktifkan");
+  useEffect(() => {
+    fetchPartners();
+  }, []);
+
+  const fetchPartners = async () => {
+    try {
+      setLoading(true);
+      const { data, error } = await supabase
+        .from("profiles")
+        .select("*")
+        .eq("role", "travel_agent")
+        .order("created_at", { ascending: false });
+
+      if (error) throw error;
+      setPartners(data || []);
+    } catch (err) {
+      toast.error("Gagal mengambil data Mitra B2B");
+    } finally {
+      setLoading(false);
+    }
   };
 
-  const rejectPartner = (id) => {
-    setPartners((prev) =>
-      prev.map((p) => (p.id === id ? { ...p, status: "ditolak" } : p)),
-    );
-    toast.success("Mitra telah ditolak");
+  const activatePartner = async (id) => {
+    try {
+      const { error } = await supabase
+        .from("profiles")
+        .update({ status: "approved" })
+        .eq("id", id);
+      if (error) throw error;
+      toast.success("Mitra berhasil disetujui");
+      fetchPartners();
+    } catch (err) {
+      toast.error("Gagal menyetujui mitra");
+    }
   };
+
+  const rejectPartner = async (id) => {
+    const reason = prompt("Alasan penolakan dokumen:");
+    if (reason === null) return; // user cancelled
+
+    try {
+      const { error } = await supabase
+        .from("profiles")
+        .update({ status: "rejected", reject_reason: reason })
+        .eq("id", id);
+      if (error) throw error;
+      toast.success("Mitra telah ditolak");
+      fetchPartners();
+    } catch (err) {
+      toast.error("Gagal menolak mitra");
+    }
+  };
+
+  if (loading) {
+    return <div className="p-8 text-center text-gray-500">Memuat data mitra B2B...</div>;
+  }
 
   return (
     <div>
@@ -1900,18 +1950,18 @@ function B2BTab() {
                 >
                   <td className="px-4 py-4">
                     <p className="text-sm font-semibold text-dark">
-                      {p.company}
+                      {p.company_name || "-"}
                     </p>
                     <p className="text-xs text-gray-400">{p.phone}</p>
                   </td>
-                  <td className="px-4 py-4 text-sm text-gray-500">{p.type}</td>
-                  <td className="px-4 py-4 text-sm text-dark">{p.pic}</td>
-                  <td className="px-4 py-4 text-sm text-gray-500">{p.email}</td>
+                  <td className="px-4 py-4 text-sm text-gray-500">B2B Agent</td>
+                  <td className="px-4 py-4 text-sm text-dark">{p.full_name}</td>
+                  <td className="px-4 py-4 text-sm text-gray-500 max-w-[150px] truncate" title={p.address}>{p.address || "-"}</td>
                   <td className="px-4 py-4">
                     <StatusBadge status={p.status} />
                   </td>
                   <td className="px-4 py-4 text-sm text-gray-500">
-                    {formatDate(p.registered)}
+                    {formatDate(p.created_at || new Date().toISOString())}
                   </td>
                   <td className="px-4 py-4">
                     <div className="flex items-center gap-1 flex-wrap">

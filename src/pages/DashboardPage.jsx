@@ -219,15 +219,30 @@ function VerificationTab({ profile, onVerify }) {
   const [loading, setLoading] = useState(false);
   const status = profile?.status || 'unverified';
 
-  const onSubmit = (e) => {
+  const onSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
-    // Dummy simulate submit
-    setTimeout(() => {
-      setLoading(false);
+
+    const formData = new FormData(e.target);
+    const company_name = formData.get('company_name');
+    const address = formData.get('address');
+
+    try {
+      const { error } = await supabase.from('profiles').update({
+        status: 'pending',
+        company_name,
+        address
+      }).eq('id', profile.id);
+
+      if (error) throw error;
+      
       onVerify();
       toast.success('Dokumen verifikasi berhasil dikirim. Menunggu persetujuan admin.');
-    }, 1500);
+    } catch (err) {
+      toast.error('Gagal mengirim verifikasi: ' + err.message);
+    } finally {
+      setLoading(false);
+    }
   };
 
   if (status === 'approved') {
@@ -292,11 +307,11 @@ function VerificationTab({ profile, onVerify }) {
         <div className="space-y-4">
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-1.5">Nama Perusahaan <span className="text-red-500">*</span></label>
-            <input required type="text" placeholder="PT / CV Nama Perusahaan" className="w-full px-4 py-2.5 border border-gray-200 rounded-xl text-sm focus:ring-2 focus:ring-primary focus:outline-none" />
+            <input name="company_name" required type="text" placeholder="PT / CV Nama Perusahaan" className="w-full px-4 py-2.5 border border-gray-200 rounded-xl text-sm focus:ring-2 focus:ring-primary focus:outline-none" />
           </div>
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-1.5">Alamat Lengkap <span className="text-red-500">*</span></label>
-            <textarea required rows={3} placeholder="Alamat operasional perusahaan" className="w-full px-4 py-2.5 border border-gray-200 rounded-xl text-sm focus:ring-2 focus:ring-primary focus:outline-none resize-none"></textarea>
+            <textarea name="address" required rows={3} placeholder="Alamat operasional perusahaan" className="w-full px-4 py-2.5 border border-gray-200 rounded-xl text-sm focus:ring-2 focus:ring-primary focus:outline-none resize-none"></textarea>
           </div>
         </div>
 
@@ -1050,8 +1065,6 @@ export default function DashboardPage() {
                       useAuthStore.setState((s) => ({
                         profile: { ...s.profile, status: 'pending' }
                       }));
-                      const saved = JSON.parse(localStorage.getItem('dummy_auth_user') || '{}')
-                      localStorage.setItem('dummy_auth_user', JSON.stringify({ ...saved, status: 'pending' }))
                       window.location.reload();
                     }} 
                   />
