@@ -78,7 +78,7 @@ function DestinationCard({ dest, height }) {
 
       {/* Package count pill — top right */}
       <div className="absolute top-4 right-4 z-10">
-        <span className="bg-[#FFC107]/90 text-[#1A1A1A] text-xs font-bold px-2 py-0.5 rounded-full">
+        <span className="bg-primary/90 text-dark text-xs font-bold px-2 py-0.5 rounded-full">
           {dest.packages} Paket
         </span>
       </div>
@@ -86,14 +86,14 @@ function DestinationCard({ dest, height }) {
       {/* Bottom content */}
       <div className="absolute bottom-0 left-0 right-0 p-5 z-10">
         <h3 className="text-xl font-bold text-white mb-0.5">{dest.name}</h3>
-        <p className="text-[#FFC107] text-sm font-medium flex items-center gap-1 mb-3">
+        <p className="text-primary text-sm font-medium flex items-center gap-1 mb-3">
           <MapPin className="w-3 h-3 shrink-0" />
           {dest.region}
         </p>
 
         {/* Slide-up "Lihat Paket" button on hover */}
         <div className="overflow-hidden h-0 group-hover:h-9 transition-all duration-300 ease-out">
-          <button className="inline-flex items-center gap-2 bg-[#FFC107] hover:bg-[#FFB300] text-[#1A1A1A] text-sm font-semibold px-4 py-2 rounded-xl transition-colors">
+          <button className="inline-flex items-center gap-2 bg-primary hover:bg-primary-hover text-dark text-sm font-semibold px-4 py-2 rounded-xl transition-colors">
             Lihat Paket
             <ArrowRight className="w-4 h-4" />
           </button>
@@ -109,13 +109,13 @@ export default function DestinationsSection() {
       <div className="max-w-7xl mx-auto px-6">
         {/* Section header */}
         <div className="text-center mb-14">
-          <div className="inline-flex items-center gap-2 bg-[#FFC107]/20 border border-[#FFC107]/40 text-[#FFC107] px-4 py-1 rounded-full text-sm font-medium mb-5">
+          <div className="inline-flex items-center gap-2 bg-primary/15 border border-primary/30 text-primary px-4 py-1 rounded-full text-sm font-medium mb-5">
             <Compass className="w-4 h-4" />
             Destinasi Wisata
           </div>
           <h2 className="text-4xl md:text-5xl font-black text-white mb-4">
             <span className="block">Temukan Destinasi</span>
-            <span className="block text-[#FFC107]">Impian Anda</span>
+            <span className="block text-primary">Impian Anda</span>
           </h2>
           <p className="text-gray-400 max-w-xl mx-auto text-base leading-relaxed">
             Dari surga tropis yang tenang hingga petualangan alam yang

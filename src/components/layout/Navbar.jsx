@@ -216,7 +216,7 @@ export default function Navbar() {
                   </Link>
                   <Link
                     to="/register"
-                    className="px-5 py-2.5 bg-primary hover:bg-[#FFA000] text-dark text-sm font-bold rounded-xl shadow-md hover:shadow-lg transition-all active:scale-95"
+                    className="px-5 py-2.5 bg-primary hover:bg-primary-hover text-dark text-sm font-bold rounded-xl shadow-md hover:shadow-lg transition-all active:scale-95"
                   >
                     Daftar
                   </Link>
@@ -320,7 +320,7 @@ export default function Navbar() {
                   <Link
                     to="/register"
                     onClick={() => setMobileOpen(false)}
-                    className="block text-center px-4 py-3 rounded-xl bg-primary hover:bg-[#FFA000] text-dark font-bold text-sm shadow-md transition-all active:scale-95"
+                    className="block text-center px-4 py-3 rounded-xl bg-primary hover:bg-primary-hover text-dark font-bold text-sm shadow-md transition-all active:scale-95"
                   >
                     Daftar Sekarang
                   </Link>

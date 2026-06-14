@@ -40,7 +40,7 @@ function App() {
             borderRadius: "10px",
             padding: "12px 20px",
           },
-          success: { iconTheme: { primary: "#FFC107", secondary: "#1A1A1A" } },
+          success: { iconTheme: { primary: "#F59E0B", secondary: "#1A1A1A" } },
           error: { iconTheme: { primary: "#ef4444", secondary: "#fff" } },
         }}
       />

@@ -106,14 +106,8 @@ export default function ContactSection() {
         ))}
 
         {/* Ambient glow blobs */}
-        <div
-          className="absolute -top-24 -left-24 w-72 h-72 rounded-full blur-3xl opacity-20 pointer-events-none"
-          style={{ background: '#FFC107' }}
-        />
-        <div
-          className="absolute -bottom-16 -right-16 w-64 h-64 rounded-full blur-3xl opacity-15 pointer-events-none"
-          style={{ background: '#FF6F00' }}
-        />
+        <div className="absolute -top-24 -left-24 w-72 h-72 rounded-full blur-3xl opacity-20 pointer-events-none bg-primary" />
+        <div className="absolute -bottom-16 -right-16 w-64 h-64 rounded-full blur-3xl opacity-15 pointer-events-none bg-accent" />
 
         {/* Content */}
         <div className="relative z-10 max-w-4xl mx-auto px-6 py-20 flex flex-col items-center text-center">
@@ -128,15 +122,7 @@ export default function ContactSection() {
 
           <h2 className="text-4xl md:text-5xl font-black text-white mb-4 leading-tight">
             Siap Memulai{' '}
-            <span
-              className="relative inline-block"
-              style={{
-                background: 'linear-gradient(90deg, #FFC107, #FF6F00)',
-                WebkitBackgroundClip: 'text',
-                WebkitTextFillColor: 'transparent',
-                backgroundClip: 'text',
-              }}
-            >
+            <span className="relative inline-block bg-gradient-to-r from-primary to-accent bg-clip-text text-transparent">
               Petualangan?
             </span>
           </h2>
@@ -149,7 +135,7 @@ export default function ContactSection() {
           <div className="flex flex-col sm:flex-row gap-4">
             <button
               onClick={handleScrollToTours}
-              className="inline-flex items-center justify-center gap-2 bg-[#FFC107] hover:bg-[#FFA000] text-[#1A1A1A] font-bold text-base px-8 py-4 rounded-full shadow-xl transition-all duration-200 hover:scale-105 hover:shadow-2xl active:scale-95"
+              className="inline-flex items-center justify-center gap-2 bg-primary hover:bg-primary-hover text-dark font-bold text-base px-8 py-4 rounded-full shadow-xl transition-all duration-200 hover:scale-105 hover:shadow-2xl active:scale-95"
             >
               <MapPin className="w-5 h-5" />
               Lihat Paket Tur
@@ -182,10 +168,10 @@ export default function ContactSection() {
         <div className="max-w-6xl mx-auto px-6 py-16">
           {/* Section label */}
           <div className="flex flex-col items-center text-center mb-12">
-            <span className="inline-flex items-center gap-2 bg-[#FFC107]/15 text-[#FF6F00] font-semibold text-sm px-4 py-1.5 rounded-full mb-4 border border-[#FFC107]/40">
+            <span className="section-badge mb-4">
               📬 Kontak Kami
             </span>
-            <h3 className="text-3xl md:text-4xl font-black text-[#1A1A1A]">
+            <h3 className="text-3xl md:text-4xl font-black text-dark">
               Kami Siap Membantu Anda
             </h3>
             <p className="text-gray-500 mt-3 max-w-lg">
@@ -202,10 +188,10 @@ export default function ContactSection() {
                 {contactItems.map(({ icon: Icon, label, value, href }) => (
                   <div
                     key={label}
-                    className="flex items-start gap-4 bg-white rounded-2xl border border-gray-100 shadow-sm hover:shadow-md hover:border-[#FFC107]/40 p-5 transition-all duration-200 group"
+                    className="flex items-start gap-4 bg-white rounded-2xl border border-gray-100 shadow-sm hover:shadow-md hover:border-primary/40 p-5 transition-all duration-200 group"
                   >
-                    <div className="w-11 h-11 rounded-xl bg-[#FFC107]/15 group-hover:bg-[#FFC107]/25 flex items-center justify-center flex-shrink-0 transition-colors duration-200">
-                      <Icon className="w-5 h-5 text-[#FF6F00]" strokeWidth={2} />
+                    <div className="w-11 h-11 rounded-xl bg-primary/15 group-hover:bg-primary/25 flex items-center justify-center flex-shrink-0 transition-colors duration-200">
+                      <Icon className="w-5 h-5 text-accent" strokeWidth={2} />
                     </div>
                     <div className="min-w-0">
                       <p className="text-xs text-gray-400 font-medium mb-0.5">{label}</p>
@@ -214,12 +200,12 @@ export default function ContactSection() {
                           href={href}
                           target="_blank"
                           rel="noopener noreferrer"
-                          className="text-[#1A1A1A] font-semibold text-sm hover:text-[#FF6F00] transition-colors duration-150 break-all"
+                          className="text-dark font-semibold text-sm hover:text-accent transition-colors duration-150 break-all"
                         >
                           {value}
                         </a>
                       ) : (
-                        <p className="text-[#1A1A1A] font-semibold text-sm">{value}</p>
+                        <p className="text-dark font-semibold text-sm">{value}</p>
                       )}
                     </div>
                   </div>
@@ -246,11 +232,11 @@ export default function ContactSection() {
               className="bg-white rounded-2xl border border-gray-100 shadow-md p-8"
             >
               <div className="flex items-center gap-3 mb-7">
-                <div className="w-10 h-10 rounded-xl bg-[#FFC107]/15 flex items-center justify-center">
-                  <Send className="w-5 h-5 text-[#FF6F00]" strokeWidth={2} />
+                <div className="w-10 h-10 rounded-xl bg-primary/15 flex items-center justify-center">
+                  <Send className="w-5 h-5 text-accent" strokeWidth={2} />
                 </div>
                 <div>
-                  <h4 className="font-bold text-[#1A1A1A] text-lg leading-none">
+                  <h4 className="font-bold text-dark text-lg leading-none">
                     Kirim Pesan
                   </h4>
                   <p className="text-gray-400 text-xs mt-0.5">
@@ -276,7 +262,7 @@ export default function ContactSection() {
                     placeholder="Masukkan nama lengkap Anda"
                     value={form.nama}
                     onChange={handleChange}
-                    className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:outline-none focus:ring-2 focus:ring-[#FFC107]/50 focus:border-[#FFC107] text-sm text-gray-800 placeholder-gray-400 transition-all duration-200 bg-gray-50 hover:bg-white"
+                    className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary text-sm text-gray-800 placeholder-gray-400 transition-all duration-200 bg-gray-50 hover:bg-white"
                   />
                 </div>
 
@@ -297,7 +283,7 @@ export default function ContactSection() {
                       placeholder="email@contoh.com"
                       value={form.email}
                       onChange={handleChange}
-                      className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:outline-none focus:ring-2 focus:ring-[#FFC107]/50 focus:border-[#FFC107] text-sm text-gray-800 placeholder-gray-400 transition-all duration-200 bg-gray-50 hover:bg-white"
+                      className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary text-sm text-gray-800 placeholder-gray-400 transition-all duration-200 bg-gray-50 hover:bg-white"
                     />
                   </div>
                   <div>
@@ -314,7 +300,7 @@ export default function ContactSection() {
                       placeholder="+62 8xx-xxxx-xxxx"
                       value={form.phone}
                       onChange={handleChange}
-                      className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:outline-none focus:ring-2 focus:ring-[#FFC107]/50 focus:border-[#FFC107] text-sm text-gray-800 placeholder-gray-400 transition-all duration-200 bg-gray-50 hover:bg-white"
+                      className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary text-sm text-gray-800 placeholder-gray-400 transition-all duration-200 bg-gray-50 hover:bg-white"
                     />
                   </div>
                 </div>
@@ -333,7 +319,7 @@ export default function ContactSection() {
                     required
                     value={form.subjek}
                     onChange={handleChange}
-                    className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:outline-none focus:ring-2 focus:ring-[#FFC107]/50 focus:border-[#FFC107] text-sm text-gray-800 transition-all duration-200 bg-gray-50 hover:bg-white appearance-none cursor-pointer"
+                    className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary text-sm text-gray-800 transition-all duration-200 bg-gray-50 hover:bg-white appearance-none cursor-pointer"
                   >
                     {subjectOptions.map(({ value, label }) => (
                       <option key={value} value={value} disabled={value === ''}>
@@ -359,7 +345,7 @@ export default function ContactSection() {
                     placeholder="Tuliskan pesan atau pertanyaan Anda di sini..."
                     value={form.pesan}
                     onChange={handleChange}
-                    className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:outline-none focus:ring-2 focus:ring-[#FFC107]/50 focus:border-[#FFC107] text-sm text-gray-800 placeholder-gray-400 transition-all duration-200 bg-gray-50 hover:bg-white resize-none"
+                    className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary text-sm text-gray-800 placeholder-gray-400 transition-all duration-200 bg-gray-50 hover:bg-white resize-none"
                   />
                 </div>
 
@@ -367,7 +353,7 @@ export default function ContactSection() {
                 <button
                   type="submit"
                   disabled={loading}
-                  className="w-full inline-flex items-center justify-center gap-2 bg-[#FFC107] hover:bg-[#FFA000] disabled:opacity-60 disabled:cursor-not-allowed text-[#1A1A1A] font-bold text-base px-6 py-4 rounded-xl shadow-md hover:shadow-lg transition-all duration-200 hover:scale-[1.02] active:scale-95"
+                  className="w-full inline-flex items-center justify-center gap-2 bg-primary hover:bg-primary-hover disabled:opacity-60 disabled:cursor-not-allowed text-dark font-bold text-base px-6 py-4 rounded-xl shadow-md hover:shadow-lg transition-all duration-200 hover:scale-[1.02] active:scale-95"
                 >
                   {loading ? (
                     <>

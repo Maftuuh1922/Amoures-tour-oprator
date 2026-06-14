@@ -82,7 +82,7 @@ export default function LoginForm() {
 
   const inputBase =
     "w-full px-4 py-3 border rounded-xl bg-gray-50 text-[#1A1A1A] placeholder-gray-400 " +
-    "focus:bg-white focus:outline-none focus:ring-2 focus:ring-[#FFC107] focus:border-transparent " +
+    "focus:bg-white focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent " +
     "transition duration-200 disabled:opacity-60 disabled:cursor-not-allowed";
 
   return (
@@ -119,7 +119,7 @@ export default function LoginForm() {
           <Link
             to="/forgot-password"
             tabIndex={-1}
-            className="text-sm font-medium text-[#FF6F00] hover:text-[#FFA000] transition-colors"
+            className="text-sm font-medium text-accent hover:text-primary-hover transition-colors"
           >
             Lupa password?
           </Link>
@@ -153,8 +153,8 @@ export default function LoginForm() {
       <button
         type="submit"
         disabled={isSubmitting}
-        className="w-full py-3.5 px-6 bg-[#FFC107] hover:bg-[#FFA000] text-[#1A1A1A] font-semibold rounded-xl
-          transition-all duration-200 flex items-center justify-center gap-2
+        className="w-full py-3.5 px-6 bg-primary hover:bg-primary-hover text-dark font-semibold rounded-xl
+          shadow-md transition-all duration-200 flex items-center justify-center gap-2
           shadow-md hover:shadow-lg active:scale-[0.98]
           disabled:opacity-60 disabled:cursor-not-allowed disabled:active:scale-100"
       >

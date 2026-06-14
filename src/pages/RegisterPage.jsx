@@ -75,8 +75,7 @@ function CommunityPreview() {
 function HeroPanel() {
   return (
     <div
-      className="hidden lg:flex lg:w-5/12 relative flex-col justify-between p-12 overflow-hidden"
-      style={{ background: 'linear-gradient(145deg, #FFC107 0%, #FF8F00 55%, #FF6F00 100%)' }}
+      className="hidden lg:flex lg:w-5/12 relative flex-col justify-between p-12 overflow-hidden bg-gradient-to-br from-primary via-primary-hover to-accent"
     >
       {/* Decorative blobs */}
       <div className="absolute -top-24 -right-24 w-96 h-96 bg-white/10 rounded-full" />
@@ -86,7 +85,7 @@ function HeroPanel() {
       {/* Logo */}
       <div className="relative z-10 flex items-center gap-3">
         <div className="w-12 h-12 bg-white rounded-2xl flex items-center justify-center shadow-lg">
-          <Plane size={24} className="text-[#FF6F00]" />
+          <Plane size={24} className="text-accent" />
         </div>
         <div>
           <p className="text-white font-extrabold text-xl leading-none">Amoures</p>
@@ -166,7 +165,7 @@ export default function RegisterPage() {
         <div className="px-6 pt-6 pb-2 flex-shrink-0">
           <Link
             to="/"
-            className="inline-flex items-center gap-1.5 text-sm font-medium text-gray-400 hover:text-[#1A1A1A] transition-colors group"
+            className="inline-flex items-center gap-1.5 text-sm font-medium text-gray-400 hover:text-dark transition-colors group"
           >
             <ArrowLeft
               size={16}
@@ -182,15 +181,15 @@ export default function RegisterPage() {
 
             {/* Mobile-only logo */}
             <div className="flex items-center gap-2 mb-7 lg:hidden">
-              <div className="w-9 h-9 bg-[#FFC107] rounded-xl flex items-center justify-center shadow-sm">
-                <Plane size={18} className="text-[#1A1A1A]" />
+              <div className="w-9 h-9 bg-primary rounded-xl flex items-center justify-center shadow-sm">
+                <Plane size={18} className="text-dark" />
               </div>
-              <span className="font-extrabold text-lg text-[#1A1A1A]">Amoures Tour</span>
+              <span className="font-extrabold text-lg text-dark">Amoures Tour</span>
             </div>
 
             {/* Heading */}
             <div className="mb-7">
-              <h1 className="text-[1.85rem] font-extrabold text-[#1A1A1A] leading-tight">
+              <h1 className="text-[1.85rem] font-extrabold text-dark leading-tight">
                 Buat Akun Baru
               </h1>
               <p className="mt-1.5 text-gray-500">
@@ -206,7 +205,7 @@ export default function RegisterPage() {
               Sudah punya akun?{' '}
               <Link
                 to="/login"
-                className="font-semibold text-[#FF6F00] hover:text-[#FFA000] hover:underline transition-colors"
+                className="font-semibold text-accent hover:text-primary-hover hover:underline transition-colors"
               >
                 Masuk sekarang
               </Link>

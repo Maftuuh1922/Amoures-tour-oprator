@@ -100,7 +100,7 @@ function InputField({
             rightSlot ? 'pr-12' : 'pr-4',
             hasError
               ? 'border-red-400 bg-red-50 focus:ring-red-300'
-              : 'border-gray-200 focus:ring-[#FFC107]',
+              : 'border-gray-200 focus:ring-primary',
           ].join(' ')}
         />
         {rightSlot && (
@@ -249,9 +249,8 @@ export default function RegisterForm() {
             type="checkbox"
             {...register('terms')}
             disabled={isSubmitting}
-            className="mt-0.5 h-4 w-4 flex-shrink-0 rounded border-gray-300 text-[#FFC107]
-              focus:ring-[#FFC107] focus:ring-offset-0 cursor-pointer
-              disabled:cursor-not-allowed"
+            className="mt-0.5 h-4 w-4 flex-shrink-0 rounded border-gray-300 text-primary
+              focus:ring-primary focus:ring-offset-0 cursor-pointer disabled:cursor-not-allowed"
           />
           <span className="text-sm text-gray-600 leading-relaxed">
             Saya setuju dengan{' '}
@@ -259,7 +258,7 @@ export default function RegisterForm() {
               href="/terms"
               target="_blank"
               rel="noopener noreferrer"
-              className="font-semibold text-[#FF6F00] hover:underline"
+              className="font-semibold text-accent hover:underline"
               onClick={(e) => e.stopPropagation()}
             >
               Syarat & Ketentuan
@@ -269,7 +268,7 @@ export default function RegisterForm() {
               href="/privacy"
               target="_blank"
               rel="noopener noreferrer"
-              className="font-semibold text-[#FF6F00] hover:underline"
+              className="font-semibold text-accent hover:underline"
               onClick={(e) => e.stopPropagation()}
             >
               Kebijakan Privasi
@@ -283,8 +282,8 @@ export default function RegisterForm() {
       <button
         type="submit"
         disabled={isSubmitting}
-        className="w-full py-3.5 px-6 bg-[#FFC107] hover:bg-[#FFA000] text-[#1A1A1A] font-semibold rounded-xl
-          transition-all duration-200 flex items-center justify-center gap-2
+        className="w-full py-3.5 px-6 bg-primary hover:bg-primary-hover text-dark font-semibold rounded-xl
+          shadow-md transition-all duration-200 flex items-center justify-center gap-2
           shadow-md hover:shadow-lg active:scale-[0.98]
           disabled:opacity-60 disabled:cursor-not-allowed disabled:active:scale-100 mt-1"
       >

@@ -65,14 +65,14 @@ function DestCard({ icon: Icon, iconBg, name, country, rating, price }) {
         <Icon size={20} className="text-white" />
       </div>
       <div className="flex-1 min-w-0">
-        <p className="font-bold text-[#1A1A1A] text-sm">{name}</p>
+        <p className="font-bold text-dark text-sm">{name}</p>
         <p className="text-gray-400 text-xs">{country}</p>
         <div className="flex items-center justify-between mt-1">
           <span className="flex items-center gap-0.5 text-xs text-gray-500">
-            <Star size={11} fill="#FFC107" className="text-[#FFC107]" />
+            <Star size={11} fill="currentColor" className="text-primary" />
             {rating}
           </span>
-          <span className="text-xs font-bold text-[#FF6F00]">{price}</span>
+          <span className="text-xs font-bold text-accent">{price}</span>
         </div>
       </div>
     </div>
@@ -83,11 +83,7 @@ function DestCard({ icon: Icon, iconBg, name, country, rating, price }) {
 function HeroPanel() {
   return (
     <div
-      className="hidden lg:flex lg:w-[45%] relative flex-col justify-between p-12 overflow-hidden"
-      style={{
-        background:
-          "linear-gradient(145deg, #FFC107 0%, #FF8F00 55%, #FF6F00 100%)",
-      }}
+      className="hidden lg:flex lg:w-[45%] relative flex-col justify-between p-12 overflow-hidden bg-gradient-to-br from-primary via-primary-hover to-accent"
     >
       {/* Dekorasi bulat */}
       <div className="absolute -top-28 -right-28 w-96 h-96 bg-white/10 rounded-full" />
@@ -198,7 +194,7 @@ export default function LoginPage() {
         <div className="px-6 pt-6 pb-2">
           <Link
             to="/"
-            className="inline-flex items-center gap-1.5 text-sm font-medium text-gray-400 hover:text-[#1A1A1A] transition-colors group"
+            className="inline-flex items-center gap-1.5 text-sm font-medium text-gray-400 hover:text-dark transition-colors group"
           >
             <ArrowLeft
               size={16}
@@ -222,7 +218,7 @@ export default function LoginPage() {
 
             {/* Heading */}
             <div className="mb-7">
-              <h1 className="text-3xl font-black text-[#1A1A1A] leading-tight">
+              <h1 className="text-3xl font-black text-dark leading-tight">
                 Selamat Datang Kembali
               </h1>
               <p className="mt-1.5 text-gray-500 text-sm">
@@ -258,15 +254,15 @@ export default function LoginPage() {
             {/* Fitur keamanan */}
             <div className="mt-8 flex items-center justify-center gap-6 text-xs text-gray-400">
               <span className="flex items-center gap-1">
-                <Shield size={13} className="text-[#FFC107]" />
+                <Shield size={13} className="text-primary" />
                 SSL Terenkripsi
               </span>
               <span className="flex items-center gap-1">
-                <Headphones size={13} className="text-[#FFC107]" />
+                <Headphones size={13} className="text-primary" />
                 Support 24/7
               </span>
               <span className="flex items-center gap-1">
-                <Clock size={13} className="text-[#FFC107]" />
+                <Clock size={13} className="text-primary" />
                 Konfirmasi Cepat
               </span>
             </div>
@@ -276,7 +272,7 @@ export default function LoginPage() {
               Belum punya akun?{" "}
               <Link
                 to="/register"
-                className="font-bold text-[#FFC107] hover:text-[#FFA000] transition-colors"
+                className="font-bold text-primary hover:text-primary-hover transition-colors"
               >
                 Daftar sekarang
               </Link>

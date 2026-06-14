@@ -39,7 +39,7 @@ export default function WhyUs() {
       <div className="max-w-6xl mx-auto px-6">
         {/* Section header */}
         <div className="flex flex-col items-center text-center mb-14">
-          <span className="inline-flex items-center gap-2 bg-[#FFC107]/15 text-[#FF6F00] font-semibold text-sm px-4 py-1.5 rounded-full mb-4 border border-[#FFC107]/40">
+          <span className="section-badge">
             ⭐ Keunggulan Kami
           </span>
           <h2 className="text-4xl md:text-5xl font-black text-[#1A1A1A] mb-4">
@@ -47,8 +47,7 @@ export default function WhyUs() {
             <span className="relative inline-block">
               <span className="relative z-10">Amoures Tour?</span>
               <span
-                className="absolute left-0 bottom-1 w-full h-3 -z-0 rounded-full opacity-40"
-                style={{ background: "#FFC107" }}
+                className="absolute left-0 bottom-1 w-full h-3 -z-0 rounded-full opacity-40 bg-primary"
               />
             </span>
           </h2>
@@ -71,21 +70,21 @@ export default function WhyUs() {
 
 function FeatureCard({ Icon, title, desc, number }) {
   return (
-    <div className="group relative bg-white rounded-2xl shadow-md hover:shadow-xl border border-gray-100 hover:border-[#FFC107]/40 p-6 flex flex-col gap-4 transition-all duration-300 hover:-translate-y-1 overflow-hidden">
+    <div className="group relative bg-white rounded-2xl shadow-md hover:shadow-xl border border-gray-100 hover:border-primary/40 p-6 flex flex-col gap-4 transition-all duration-300 hover:-translate-y-1 overflow-hidden">
       {/* Hover accent bottom border via pseudo approach with a div */}
-      <div className="absolute bottom-0 left-0 w-full h-1 bg-gradient-to-r from-[#FFC107] to-[#FF6F00] rounded-b-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+      <div className="absolute bottom-0 left-0 w-full h-1 bg-gradient-to-r from-primary to-accent rounded-b-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
 
       {/* Subtle bg tint on hover */}
-      <div className="absolute inset-0 bg-[#FFC107]/0 group-hover:bg-[#FFC107]/[0.03] transition-colors duration-300 rounded-2xl pointer-events-none" />
+      <div className="absolute inset-0 bg-primary/0 group-hover:bg-primary/[0.03] transition-colors duration-300 rounded-2xl pointer-events-none" />
 
       {/* Number badge */}
-      <span className="absolute top-4 right-4 text-xs font-black text-[#FFC107]/60 group-hover:text-[#FFC107] transition-colors duration-200 select-none">
+      <span className="absolute top-4 right-4 text-xs font-black text-primary/50 group-hover:text-primary transition-colors duration-200 select-none">
         {String(number).padStart(2, "0")}
       </span>
 
       {/* Icon */}
-      <div className="w-12 h-12 rounded-xl bg-[#FFC107]/15 group-hover:bg-[#FFC107]/25 flex items-center justify-center transition-colors duration-300 flex-shrink-0">
-        <Icon className="w-6 h-6 text-[#FF6F00]" strokeWidth={2} />
+      <div className="w-12 h-12 rounded-xl bg-primary/15 group-hover:bg-primary/25 flex items-center justify-center transition-colors duration-300 flex-shrink-0">
+        <Icon className="w-6 h-6 text-accent" strokeWidth={2} />
       </div>
 
       {/* Text */}

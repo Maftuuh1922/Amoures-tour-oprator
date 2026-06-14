@@ -17,10 +17,10 @@ const achievements = [
 ];
 
 const stats = [
-  { icon: Award, label: "Tahun Berdiri", value: "2011", color: "#FFC107" },
-  { icon: Globe, label: "Destinasi", value: "150+", color: "#FF8F00" },
-  { icon: Users, label: "Pelanggan", value: "10K+", color: "#FF6F00" },
-  { icon: MapPin, label: "Pemandu", value: "50+", color: "#E65100" },
+  { icon: Award, label: "Tahun Berdiri", value: "2011", color: "primary" },
+  { icon: Globe, label: "Destinasi", value: "150+", color: "primary-hover" },
+  { icon: Users, label: "Pelanggan", value: "10K+", color: "accent" },
+  { icon: MapPin, label: "Pemandu", value: "50+", color: "accent-dark" },
 ];
 
 const misiList = [
@@ -42,12 +42,7 @@ export default function CompanyProfile() {
     >
       {/* Background decorative shapes */}
       <div
-        className="absolute top-0 right-0 w-[400px] h-[400px] rounded-full opacity-10 blur-3xl pointer-events-none"
-        style={{ background: "#FFC107" }}
-      />
-      <div
-        className="absolute bottom-0 left-0 w-[300px] h-[300px] rounded-full opacity-10 blur-3xl pointer-events-none"
-        style={{ background: "#FF8F00" }}
+        className="absolute top-0 right-0 w-[400px] h-[400px] rounded-full opacity-10 blur-3xl pointer-events-none bg-primary"
       />
 
       <div className="max-w-6xl mx-auto px-6 relative z-10">
@@ -55,23 +50,17 @@ export default function CompanyProfile() {
           {/* ── LEFT: Content ── */}
           <div className="flex flex-col">
             {/* Badge */}
-            <span className="inline-flex items-center gap-2 self-start bg-[#FFC107]/20 text-[#FF6F00] font-semibold text-sm px-4 py-1.5 rounded-full mb-5 border border-[#FFC107]/40">
+            <span className="inline-flex items-center gap-2 self-start section-badge mb-5">
               <Building2 className="w-4 h-4" />
               Tentang Amoures Tour
             </span>
 
             {/* Title */}
-            <h2 className="text-3xl md:text-4xl font-black text-[#1A1A1A] leading-tight mb-5">
+            <h2 className="text-3xl md:text-4xl font-black text-dark leading-tight mb-5">
               Mitra Perjalanan Terpercaya Anda{" "}
-              <span
-                className="relative inline-block"
-                style={{ color: "#FF6F00" }}
-              >
+              <span className="relative inline-block text-accent">
                 Sejak 2011
-                <span
-                  className="absolute left-0 bottom-0 w-full h-1 rounded-full"
-                  style={{ background: "#FFC107" }}
-                />
+                <span className="absolute left-0 bottom-0 w-full h-1 rounded-full bg-primary" />
               </span>
             </h2>
 
@@ -115,8 +104,7 @@ export default function CompanyProfile() {
                   {misiList.map((m) => (
                     <li key={m} className="flex items-start gap-2 text-gray-600 text-sm">
                       <CheckCircle2
-                        className="w-4 h-4 mt-0.5 flex-shrink-0"
-                        style={{ color: "#FFC107" }}
+                        className="w-4 h-4 mt-0.5 flex-shrink-0 text-primary"
                       />
                       {m}
                     </li>
@@ -129,8 +117,8 @@ export default function CompanyProfile() {
             <ul className="flex flex-col gap-2.5 mb-8">
               {achievements.map((item) => (
                 <li key={item} className="flex items-center gap-3">
-                  <CheckCircle2 className="w-5 h-5 flex-shrink-0" style={{ color: "#FFC107" }} />
-                  <span className="text-[#1A1A1A] font-medium text-sm">{item}</span>
+                  <CheckCircle2 className="w-5 h-5 flex-shrink-0 text-primary" />
+                  <span className="text-dark font-medium text-sm">{item}</span>
                 </li>
               ))}
             </ul>
@@ -138,7 +126,7 @@ export default function CompanyProfile() {
             {/* CTA */}
             <div>
               <button
-                className="inline-flex items-center gap-2 bg-[#FFC107] hover:bg-[#FFA000] text-[#1A1A1A] font-bold px-7 py-3.5 rounded-full shadow-lg hover:shadow-xl transition-all duration-200 hover:scale-105 active:scale-95"
+                className="inline-flex items-center gap-2 bg-primary hover:bg-primary-hover text-dark font-bold px-7 py-3.5 rounded-full shadow-lg hover:shadow-xl transition-all duration-200 hover:scale-105 active:scale-95"
                 onClick={() => {
                   const el = document.getElementById("contact");
                   if (el) el.scrollIntoView({ behavior: "smooth" });
@@ -154,7 +142,7 @@ export default function CompanyProfile() {
           <div className="relative flex items-center justify-center">
             {/* Decorative ring behind the card */}
             <div
-              className="absolute w-[340px] h-[340px] rounded-full border-[20px] border-[#FFC107]/20 pointer-events-none"
+              className="absolute w-[340px] h-[340px] rounded-full border-[20px] border-primary/20 pointer-events-none"
               style={{ top: "50%", left: "50%", transform: "translate(-50%, -50%)" }}
             />
             <div
@@ -163,13 +151,10 @@ export default function CompanyProfile() {
             />
 
             {/* Main card */}
-            <div className="relative w-full max-w-sm bg-white rounded-3xl shadow-2xl border border-[#FFC107]/20 p-8 z-10">
+            <div className="relative w-full max-w-sm bg-white rounded-3xl shadow-2xl border border-primary/20 p-8 z-10">
               {/* Card header */}
               <div className="flex items-center gap-3 mb-7">
-                <div
-                  className="w-12 h-12 rounded-2xl flex items-center justify-center flex-shrink-0"
-                  style={{ background: "linear-gradient(135deg, #FFC107, #FF6F00)" }}
-                >
+                <div className="w-12 h-12 rounded-2xl flex items-center justify-center flex-shrink-0 bg-gradient-to-br from-primary to-accent">
                   <Building2 className="w-6 h-6 text-white" />
                 </div>
                 <div>
@@ -194,21 +179,21 @@ export default function CompanyProfile() {
                     >
                       <Icon className="w-4 h-4" style={{ color }} />
                     </div>
-                    <p className="font-black text-[#1A1A1A] text-xl leading-none">{value}</p>
+                  <p className="font-black text-dark text-xl leading-none">{value}</p>
                     <p className="text-gray-500 text-xs">{label}</p>
                   </div>
                 ))}
               </div>
 
               {/* Rating pill */}
-              <div className="flex items-center justify-between bg-[#FFC107]/10 border border-[#FFC107]/30 rounded-2xl px-4 py-3">
+              <div className="flex items-center justify-between bg-primary/10 border border-primary/30 rounded-2xl px-4 py-3">
                 <div>
                   <p className="font-black text-[#1A1A1A]">98% Kepuasan</p>
                   <p className="text-gray-500 text-xs">Dari 10.000+ ulasan</p>
                 </div>
                 <div className="flex gap-0.5">
                   {[...Array(5)].map((_, i) => (
-                    <span key={i} className="text-[#FFC107] text-lg">★</span>
+                    <span key={i} className="text-primary text-lg">★</span>
                   ))}
                 </div>
               </div>
@@ -216,19 +201,19 @@ export default function CompanyProfile() {
 
             {/* Floating badge: Bandung */}
             <div
-              className="absolute top-4 -right-2 lg:-right-6 bg-white border border-[#FFC107]/40 shadow-lg rounded-full px-4 py-2 flex items-center gap-2 text-sm font-semibold text-[#1A1A1A] z-20"
+              className="absolute top-4 -right-2 lg:-right-6 bg-white border border-primary/40 shadow-lg rounded-full px-4 py-2 flex items-center gap-2 text-sm font-semibold text-dark z-20"
               style={{ animation: "floatBadge 3s ease-in-out infinite" }}
             >
-              <MapPin className="w-4 h-4 text-[#FF6F00]" />
+              <MapPin className="w-4 h-4 text-accent" />
               Bandung, Jawa Barat
             </div>
 
             {/* Floating badge: ASITA */}
             <div
-              className="absolute bottom-6 -left-2 lg:-left-6 bg-white border border-[#FFC107]/40 shadow-lg rounded-full px-4 py-2 flex items-center gap-2 text-sm font-semibold text-[#1A1A1A] z-20"
+              className="absolute bottom-6 -left-2 lg:-left-6 bg-white border border-primary/40 shadow-lg rounded-full px-4 py-2 flex items-center gap-2 text-sm font-semibold text-dark z-20"
               style={{ animation: "floatBadge 3.5s ease-in-out infinite", animationDelay: "1s" }}
             >
-              <Award className="w-4 h-4 text-[#FFC107]" />
+              <Award className="w-4 h-4 text-primary" />
               ASITA Partner
             </div>
           </div>
@@ -251,7 +236,7 @@ function AccordionCard({ id, open, onToggle, title, children }) {
     <div
       className={`rounded-2xl border transition-all duration-300 overflow-hidden ${
         open
-          ? "border-[#FFC107]/60 bg-[#FFF8E1] shadow-md"
+          ? "border-primary/60 bg-amber-50 shadow-md"
           : "border-gray-200 bg-white"
       }`}
     >
@@ -262,7 +247,7 @@ function AccordionCard({ id, open, onToggle, title, children }) {
       >
         <span className="font-bold text-[#1A1A1A] text-sm">{title}</span>
         <ChevronDown
-          className={`w-5 h-5 text-[#FF6F00] flex-shrink-0 transition-transform duration-300 ${
+          className={`w-5 h-5 text-accent flex-shrink-0 transition-transform duration-300 ${
             open ? "rotate-180" : ""
           }`}
         />

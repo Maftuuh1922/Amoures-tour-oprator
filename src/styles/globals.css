@@ -56,9 +56,19 @@
   .label {
     @apply block text-sm font-semibold text-gray-700 mb-1.5;
   }
+
+  /* Section badge — konsisten di semua section header terang */
+  .section-badge {
+    @apply inline-flex items-center gap-2 bg-primary/15 text-accent border border-primary/30 font-semibold text-sm px-4 py-1.5 rounded-full;
+  }
+
+  /* Section badge — varian untuk background gelap */
+  .section-badge-dark {
+    @apply inline-flex items-center gap-2 bg-white/15 text-white border border-white/25 font-semibold text-sm px-4 py-1.5 rounded-full;
+  }
 }
 
-/* Scrollbar custom */
+/* Scrollbar custom — warna primary brand (amber) */
 ::-webkit-scrollbar {
   width: 6px;
 }
@@ -66,18 +76,18 @@
   background: #f1f1f1;
 }
 ::-webkit-scrollbar-thumb {
-  background: #FFC107;
+  background: #F59E0B;
   border-radius: 3px;
 }
 ::-webkit-scrollbar-thumb:hover {
-  background: #FFA000;
+  background: #D97706;
 }
 
-/* Swiper overrides */
+/* Swiper overrides — warna primary brand */
 .swiper-pagination-bullet-active {
-  background: #FFC107 !important;
+  background: #F59E0B !important;
 }
 .swiper-button-next,
 .swiper-button-prev {
-  color: #FFC107 !important;
+  color: #F59E0B !important;
 }

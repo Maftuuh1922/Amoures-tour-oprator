@@ -668,7 +668,7 @@ function B2BAgentTab({ profile, bookings, bookingsLoading }) {
   return (
     <div className="space-y-6">
       {/* Header */}
-      <div className="bg-gradient-to-r from-[#1A1A1A] to-gray-800 rounded-2xl p-6 text-white">
+      <div className="bg-gradient-to-r from-dark to-gray-800 rounded-2xl p-6 text-white">
         <div className="flex items-start justify-between gap-4 flex-wrap">
           <div>
             <p className="text-amber-400 text-xs font-bold uppercase tracking-widest mb-1">Mitra B2B Aktif</p>
@@ -752,7 +752,7 @@ function B2BAgentTab({ profile, bookings, bookingsLoading }) {
         </p>
         <Link
           to="/tours"
-          className="inline-flex items-center gap-2 px-5 py-2.5 bg-primary hover:bg-[#FFA000] text-dark font-bold rounded-xl transition-all text-sm shadow-sm hover:shadow-md hover:scale-105 active:scale-95"
+          className="inline-flex items-center gap-2 px-5 py-2.5 bg-primary hover:bg-primary-hover text-dark font-bold rounded-xl transition-all text-sm shadow-sm hover:shadow-md hover:scale-105 active:scale-95"
         >
           Lihat Paket Wisata
           <ArrowRightIcon size={16} />
@@ -793,7 +793,7 @@ function B2BAgentTab({ profile, bookings, bookingsLoading }) {
             </div>
             <Link
               to="/tours"
-              className="inline-flex items-center gap-2 px-4 py-2 bg-primary hover:bg-[#FFA000] text-dark text-sm font-bold rounded-xl transition-all hover:scale-105 active:scale-95"
+              className="inline-flex items-center gap-2 px-4 py-2 bg-primary hover:bg-primary-hover text-dark text-sm font-bold rounded-xl transition-all hover:scale-105 active:scale-95"
             >
               Mulai Pesan <ArrowRightIcon size={14} />
             </Link>

@@ -191,7 +191,7 @@ export default function B2BRegisterPage() {
 
       <div className="flex flex-1 pt-20 min-h-screen">
         {/* ── Left panel (desktop only) ── */}
-        <aside className="hidden lg:flex flex-col lg:w-2/5 bg-[#1A1A1A] sticky top-0 h-screen overflow-y-auto p-12">
+        <aside className="hidden lg:flex flex-col lg:w-2/5 bg-dark sticky top-0 h-screen overflow-y-auto p-12">
           {/* Logo */}
           <div className="flex flex-col gap-2 mb-12">
             <Link to="/">
@@ -624,7 +624,7 @@ export default function B2BRegisterPage() {
                   <button
                     type="button"
                     onClick={goNext}
-                    className="bg-primary hover:bg-[#FFA000] text-dark font-bold px-6 py-3 rounded-xl inline-flex items-center gap-2 shadow-md shadow-primary/25 transition-all"
+                    className="bg-primary hover:bg-primary-hover text-dark font-bold px-6 py-3 rounded-xl inline-flex items-center gap-2 shadow-md shadow-primary/25 transition-all"
                   >
                     Lanjut
                     <ChevronRight className="w-4 h-4" />
@@ -633,7 +633,7 @@ export default function B2BRegisterPage() {
                   <button
                     type="submit"
                     disabled={isSubmitting}
-                    className="bg-primary hover:bg-[#FFA000] text-dark font-bold px-6 py-3 rounded-xl inline-flex items-center gap-2 shadow-md shadow-primary/25 transition-all disabled:opacity-60 disabled:cursor-not-allowed"
+                    className="bg-primary hover:bg-primary-hover text-dark font-bold px-6 py-3 rounded-xl inline-flex items-center gap-2 shadow-md shadow-primary/25 transition-all disabled:opacity-60 disabled:cursor-not-allowed"
                   >
                     {isSubmitting ? (
                       <>

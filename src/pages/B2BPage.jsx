@@ -111,7 +111,7 @@ const TIERS = [
     headingClass: 'text-dark',
     priceClass: 'text-primary',
     volClass: 'text-gray-500',
-    btnClass: 'bg-primary hover:bg-[#FFA000] text-dark shadow-lg shadow-primary/30',
+    btnClass: 'bg-primary hover:bg-primary-hover text-dark shadow-lg shadow-primary/30',
     features: [
       'Akses Portal B2B',
       'Diskon Mitra 15%',
@@ -127,7 +127,7 @@ const TIERS = [
     price: 'Rp 799.000',
     period: '/bulan',
     volume: 'Unlimited Booking',
-    cardClass: 'bg-[#1A1A1A] border border-white/10',
+    cardClass: 'bg-dark border border-white/10',
     headingClass: 'text-white',
     priceClass: 'text-primary',
     volClass: 'text-gray-400',
@@ -235,7 +235,7 @@ export default function B2BPage() {
 
       {/* ── 1. Hero ── */}
       {/* ── 1. Hero ── */}
-      <section className="min-h-[75vh] flex items-center pt-28 pb-20 relative overflow-hidden bg-[#1A1A1A]">
+      <section className="min-h-[75vh] flex items-center pt-28 pb-20 relative overflow-hidden bg-dark">
         {/* Fullscreen Video Background */}
         <video 
           autoPlay 
@@ -251,7 +251,7 @@ export default function B2BPage() {
         
         {/* Dark Overlays for Text Legibility */}
         <div className="absolute inset-0 bg-black/60 z-0" />
-        <div className="absolute inset-0 bg-gradient-to-t from-[#1A1A1A] via-black/40 to-transparent z-0" />
+        <div className="absolute inset-0 bg-gradient-to-t from-dark via-black/40 to-transparent z-0" />
 
         {/* Content */}
         <div className="relative z-10 max-w-7xl mx-auto px-6 w-full text-center flex flex-col items-center">
@@ -276,7 +276,7 @@ export default function B2BPage() {
             <div className="flex flex-wrap justify-center gap-4 mb-16">
               <Link
                 to="/b2b/register"
-                className="bg-primary hover:bg-[#FFA000] text-dark font-bold px-8 py-4 rounded-xl inline-flex items-center gap-2 shadow-lg shadow-primary/30 hover:shadow-primary/50 transition-all text-lg"
+                className="bg-primary hover:bg-primary-hover text-dark font-bold px-8 py-4 rounded-xl inline-flex items-center gap-2 shadow-lg shadow-primary/30 hover:shadow-primary/50 transition-all text-lg"
               >
                 Daftar Mitra Sekarang
                 <ArrowRight className="w-5 h-5" />
@@ -360,12 +360,12 @@ export default function B2BPage() {
       </section>
 
       {/* ── 3.5 Security & Trust ── */}
-      <section className="py-20 bg-[#1A1A1A] relative overflow-hidden">
+      <section className="py-20 bg-dark relative overflow-hidden">
         {/* Background grid */}
         <div
           className="absolute inset-0 opacity-[0.05]"
           style={{
-            backgroundImage: 'linear-gradient(#D4E000 1px, transparent 1px), linear-gradient(90deg, #D4E000 1px, transparent 1px)',
+            backgroundImage: 'linear-gradient(#F59E0B 1px, transparent 1px), linear-gradient(90deg, #F59E0B 1px, transparent 1px)',
             backgroundSize: '32px 32px',
           }}
         />
@@ -469,12 +469,12 @@ export default function B2BPage() {
       </section>
 
       {/* ── 6. CTA ── */}
-      <section className="py-20 bg-[#1A1A1A] relative overflow-hidden">
+      <section className="py-20 bg-dark relative overflow-hidden">
         <div
           className="absolute inset-0 pointer-events-none"
           style={{
             backgroundImage:
-              'radial-gradient(circle at 1px 1px, rgba(255,193,7,0.08) 1px, transparent 0)',
+              'radial-gradient(circle at 1px 1px, rgba(245,158,11,0.08) 1px, transparent 0)',
             backgroundSize: '32px 32px',
           }}
         />
@@ -489,7 +489,7 @@ export default function B2BPage() {
           <div className="flex flex-wrap justify-center gap-4">
             <Link
               to="/b2b/register"
-              className="bg-primary hover:bg-[#FFA000] text-dark font-bold px-8 py-4 rounded-xl inline-flex items-center gap-2 shadow-lg shadow-primary/30 hover:shadow-primary/50 transition-all text-lg"
+              className="bg-primary hover:bg-primary-hover text-dark font-bold px-8 py-4 rounded-xl inline-flex items-center gap-2 shadow-lg shadow-primary/30 hover:shadow-primary/50 transition-all text-lg"
             >
               Daftar Sebagai Mitra
               <ArrowRight className="w-5 h-5" />

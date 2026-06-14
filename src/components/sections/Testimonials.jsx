@@ -169,10 +169,7 @@ export default function Testimonials() {
   return (
     <section
       id="testimonials"
-      className="py-20"
-      style={{
-        background: 'linear-gradient(135deg, #111827 0%, #1A1A1A 100%)',
-      }}
+      className="py-20 bg-gradient-to-br from-gray-900 to-dark"
     >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Section header */}

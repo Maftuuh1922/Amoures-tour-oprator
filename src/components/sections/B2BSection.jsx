@@ -112,7 +112,7 @@ export default function B2BSection() {
           <div className="flex flex-wrap gap-4">
             <Link
               to="/b2b/register"
-              className="bg-primary hover:bg-[#FFA000] text-dark font-bold px-6 py-3 rounded-xl inline-flex items-center gap-2 shadow-lg shadow-primary/25 hover:shadow-primary/40 transition-all"
+              className="bg-primary hover:bg-primary-hover text-dark font-bold px-6 py-3 rounded-xl inline-flex items-center gap-2 shadow-lg shadow-primary/25 hover:shadow-primary/40 transition-all"
             >
               Daftar Sebagai Mitra
               <ArrowRight className="w-4 h-4" />
