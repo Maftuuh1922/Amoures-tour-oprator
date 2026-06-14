@@ -1,125 +1,125 @@
-import { Link } from 'react-router-dom'
-import { MapPin, Calendar, Clock, Users, ArrowRight, Star } from 'lucide-react'
-import { useTours } from '../../hooks/useTours'
+import { Link } from "react-router-dom";
+import { MapPin, Calendar, Clock, Users, ArrowRight, Star } from "lucide-react";
+import { useTours } from "../../hooks/useTours";
 
 // ─── Helpers ────────────────────────────────────────────────────────────────
 
 function formatPrice(price) {
-  if (!price && price !== 0) return 'Hubungi Kami'
-  return new Intl.NumberFormat('id-ID', {
-    style: 'currency',
-    currency: 'IDR',
+  if (!price && price !== 0) return "Hubungi Kami";
+  return new Intl.NumberFormat("id-ID", {
+    style: "currency",
+    currency: "IDR",
     minimumFractionDigits: 0,
     maximumFractionDigits: 0,
-  }).format(price)
+  }).format(price);
 }
 
 function formatDate(dateStr) {
-  if (!dateStr) return null
-  const date = new Date(dateStr)
-  if (isNaN(date)) return dateStr
-  return date.toLocaleDateString('id-ID', {
-    day: 'numeric',
-    month: 'long',
-    year: 'numeric',
-  })
+  if (!dateStr) return null;
+  const date = new Date(dateStr);
+  if (isNaN(date)) return dateStr;
+  return date.toLocaleDateString("id-ID", {
+    day: "numeric",
+    month: "long",
+    year: "numeric",
+  });
 }
 
 // ─── Fallback demo data ──────────────────────────────────────────────────────
 
 const DEMO_TOURS = [
   {
-    id: 'demo-1',
-    title: 'Bali Paradise Escape',
-    destination: 'Bali',
+    id: "demo-1",
+    title: "Bali Paradise Escape",
+    destination: "Bali",
     description:
-      'Nikmati keindahan Pulau Dewata dengan paket lengkap — pura sakral, sawah Ubud, pantai Seminyak, hingga sunset di Tanah Lot.',
+      "Nikmati keindahan Pulau Dewata dengan paket lengkap — pura sakral, sawah Ubud, pantai Seminyak, hingga sunset di Tanah Lot.",
     price: 2500000,
     duration_days: 5,
     duration_nights: 4,
-    departure_date: '2025-03-15',
+    departure_date: "2025-03-15",
     image_url: null,
     max_participants: 20,
   },
   {
-    id: 'demo-2',
-    title: 'Lombok Eksotis',
-    destination: 'Lombok',
+    id: "demo-2",
+    title: "Lombok Eksotis",
+    destination: "Lombok",
     description:
-      'Jelajahi keindahan Gili Trawangan, Pantai Pink, dan Gunung Rinjani yang megah bersama pemandu wisata berpengalaman.',
+      "Jelajahi keindahan Gili Trawangan, Pantai Pink, dan Gunung Rinjani yang megah bersama pemandu wisata berpengalaman.",
     price: 2200000,
     duration_days: 4,
     duration_nights: 3,
-    departure_date: '2025-03-22',
+    departure_date: "2025-03-22",
     image_url: null,
     max_participants: 15,
   },
   {
-    id: 'demo-3',
-    title: 'Labuan Bajo Adventure',
-    destination: 'Labuan Bajo',
+    id: "demo-3",
+    title: "Labuan Bajo Adventure",
+    destination: "Labuan Bajo",
     description:
-      'Berlayar di antara pulau-pulau eksotis, bertemu Komodo, dan menyelam di perairan kristal Taman Nasional Komodo.',
+      "Berlayar di antara pulau-pulau eksotis, bertemu Komodo, dan menyelam di perairan kristal Taman Nasional Komodo.",
     price: 4500000,
     duration_days: 5,
     duration_nights: 4,
-    departure_date: '2025-04-01',
+    departure_date: "2025-04-01",
     image_url: null,
     max_participants: 12,
   },
   {
-    id: 'demo-4',
-    title: 'Yogyakarta Heritage',
-    destination: 'Yogyakarta',
+    id: "demo-4",
+    title: "Yogyakarta Heritage",
+    destination: "Yogyakarta",
     description:
-      'Wisata budaya dan sejarah ke Candi Borobudur, Prambanan, Keraton Yogyakarta, dan pengalaman membatik.',
+      "Wisata budaya dan sejarah ke Candi Borobudur, Prambanan, Keraton Yogyakarta, dan pengalaman membatik.",
     price: 1800000,
     duration_days: 3,
     duration_nights: 2,
-    departure_date: '2025-04-10',
+    departure_date: "2025-04-10",
     image_url: null,
     max_participants: 25,
   },
   {
-    id: 'demo-5',
-    title: 'Raja Ampat Adventure',
-    destination: 'Raja Ampat',
+    id: "demo-5",
+    title: "Raja Ampat Adventure",
+    destination: "Raja Ampat",
     description:
-      'Surga penyelaman dunia dengan biodiversitas laut tertinggi — coral garden, manta ray, dan pantai pasir putih memukau.',
+      "Surga penyelaman dunia dengan biodiversitas laut tertinggi — coral garden, manta ray, dan pantai pasir putih memukau.",
     price: 7500000,
     duration_days: 7,
     duration_nights: 6,
-    departure_date: '2025-04-20',
+    departure_date: "2025-04-20",
     image_url: null,
     max_participants: 10,
   },
   {
-    id: 'demo-6',
-    title: 'Bromo Sunrise Spectacular',
-    destination: 'Bromo',
+    id: "demo-6",
+    title: "Bromo Sunrise Spectacular",
+    destination: "Bromo",
     description:
-      'Saksikan matahari terbit spektakuler di atas lautan pasir Gunung Bromo, pengalaman yang tak akan terlupakan seumur hidup.',
+      "Saksikan matahari terbit spektakuler di atas lautan pasir Gunung Bromo, pengalaman yang tak akan terlupakan seumur hidup.",
     price: 1500000,
     duration_days: 2,
     duration_nights: 1,
-    departure_date: '2025-05-05',
+    departure_date: "2025-05-05",
     image_url: null,
     max_participants: 20,
   },
-]
+];
 
 // Gradient placeholders per destination when no image is provided
 const DEST_GRADIENTS = {
-  Bali: 'from-emerald-400 to-teal-600',
-  Lombok: 'from-blue-400 to-cyan-600',
-  'Labuan Bajo': 'from-orange-400 to-red-600',
-  Yogyakarta: 'from-purple-400 to-indigo-600',
-  'Raja Ampat': 'from-sky-400 to-blue-700',
-  Bromo: 'from-amber-400 to-orange-600',
-}
+  Bali: "from-emerald-400 to-teal-600",
+  Lombok: "from-blue-400 to-cyan-600",
+  "Labuan Bajo": "from-orange-400 to-red-600",
+  Yogyakarta: "from-purple-400 to-indigo-600",
+  "Raja Ampat": "from-sky-400 to-blue-700",
+  Bromo: "from-amber-400 to-orange-600",
+};
 
 function cardGradient(destination) {
-  return DEST_GRADIENTS[destination] || 'from-primary to-secondary'
+  return DEST_GRADIENTS[destination] || "from-primary to-secondary";
 }
 
 // ─── Skeleton Card ───────────────────────────────────────────────────────────
@@ -142,19 +142,19 @@ function SkeletonCard() {
         </div>
       </div>
     </div>
-  )
+  );
 }
 
 // ─── Tour Card ───────────────────────────────────────────────────────────────
 
 function TourCard({ tour, index }) {
-  const isPopular = index < 3
+  const isPopular = index < 3;
   const durationLabel =
     tour.duration_days && tour.duration_nights
       ? `${tour.duration_days} Hari ${tour.duration_nights} Malam`
       : tour.duration_days
-      ? `${tour.duration_days} Hari`
-      : null
+        ? `${tour.duration_days} Hari`
+        : null;
 
   return (
     <div className="group bg-white rounded-2xl overflow-hidden shadow-md hover:shadow-xl hover:-translate-y-1 transition-all duration-300 flex flex-col">
@@ -164,6 +164,10 @@ function TourCard({ tour, index }) {
           <img
             src={tour.image_url}
             alt={tour.title}
+            loading="lazy"
+            decoding="async"
+            width={400}
+            height={192}
             className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
           />
         ) : (
@@ -247,13 +251,13 @@ function TourCard({ tour, index }) {
         </div>
       </div>
     </div>
-  )
+  );
 }
 
 // ─── Main Component ──────────────────────────────────────────────────────────
 
 export default function FeaturedTours() {
-  const { tours, loading } = useTours(6)
+  const { tours, loading } = useTours(6);
 
   return (
     <section id="tours" className="py-20 bg-gray-50">
@@ -267,8 +271,8 @@ export default function FeaturedTours() {
             Destinasi Terpopuler
           </h2>
           <p className="text-gray-500 text-lg max-w-xl mx-auto leading-relaxed">
-            Temukan paket wisata terbaik kami yang telah dipercaya ribuan pelanggan
-            untuk perjalanan yang aman, nyaman, dan berkesan.
+            Temukan paket wisata terbaik kami yang telah dipercaya ribuan
+            pelanggan untuk perjalanan yang aman, nyaman, dan berkesan.
           </p>
         </div>
 
@@ -293,5 +297,5 @@ export default function FeaturedTours() {
         </div>
       </div>
     </section>
-  )
+  );
 }

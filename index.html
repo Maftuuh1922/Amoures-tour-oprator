@@ -11,36 +11,20 @@
         <meta name="theme-color" content="#FFC107" />
         <title>Amoures Tour Operator</title>
 
-        <!-- ── Preconnect CDNs ── -->
-        <link rel="preconnect" href="https://fonts.googleapis.com" />
-        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+        <!-- Preconnect hanya ke CDN gambar & Supabase -->
         <link rel="preconnect" href="https://images.unsplash.com" />
         <link
             rel="preconnect"
             href="https://pmadqpbjtqnbloywparm.supabase.co"
         />
 
-        <!-- ── Hero image preload (LCP fix) ── -->
+        <!-- LCP fix: preload hero image dengan URL WebP yang sama persis dengan HeroSection -->
         <link
             rel="preload"
             as="image"
-            href="https://images.unsplash.com/photo-1476514525535-07fb3b4ae5f1?w=1920&q=85&auto=format&fit=crop"
+            href="https://images.unsplash.com/photo-1476514525535-07fb3b4ae5f1?w=1280&q=70&fm=webp&auto=format&fit=crop"
             fetchpriority="high"
         />
-
-        <!-- ── Non-blocking Google Fonts (print trick) ── -->
-        <link
-            rel="stylesheet"
-            href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap"
-            media="print"
-            onload="this.media = 'all'"
-        />
-        <noscript>
-            <link
-                rel="stylesheet"
-                href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap"
-            />
-        </noscript>
     </head>
     <body>
         <div id="root"></div>
