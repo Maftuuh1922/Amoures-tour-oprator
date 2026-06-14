@@ -1,14 +1,6 @@
 import { useState, useEffect, useRef } from "react";
 import { Link, useNavigate, useLocation } from "react-router-dom";
-import {
-  Menu,
-  X,
-  LogOut,
-  ChevronDown,
-  Plane,
-  Building2,
-  Shield,
-} from "lucide-react";
+import { Menu, X, LogOut, ChevronDown, Building2, Shield } from "lucide-react";
 import toast from "react-hot-toast";
 import useAuthStore from "../../store/authStore";
 
@@ -114,12 +106,11 @@ export default function Navbar() {
               onClick={() => setMobileOpen(false)}
               className="flex items-center gap-2 group flex-shrink-0"
             >
-              <div className="w-8 h-8 rounded-xl bg-primary flex items-center justify-center shadow-md group-hover:scale-105 transition-transform">
-                <Plane className="w-4 h-4 text-dark" strokeWidth={2.5} />
-              </div>
-              <span className={`font-black text-lg tracking-tight ${logoCls}`}>
-                Amoures<span className="text-primary">.</span>
-              </span>
+              <img
+                src="/logo.png"
+                alt="Amoures Tour Operator"
+                className="h-10 w-auto object-contain drop-shadow-sm group-hover:scale-105 transition-transform duration-200"
+              />
             </Link>
 
             {/* ── Desktop nav ── */}
