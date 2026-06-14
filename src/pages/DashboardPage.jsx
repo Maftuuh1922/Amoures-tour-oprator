@@ -216,7 +216,7 @@ function BookingCard({ booking, onCancel }) {
 
 // ─── Verification Tab (replaces Legal Documents Tab) ──────────────────────────
 
-function VerificationTab({ profile, onVerify }) {
+function VerificationTab({ user, profile, onVerify }) {
   const [loading, setLoading] = useState(false);
   const status = profile?.status || 'unverified';
 
@@ -229,11 +229,17 @@ function VerificationTab({ profile, onVerify }) {
     const address = formData.get('address');
 
     try {
-      const { error } = await supabase.from('profiles').update({
+      if (!user) throw new Error("User tidak ditemukan. Silakan login ulang.");
+      
+      const { error } = await supabase.from('profiles').upsert({
+        id: user.id,
+        role: profile?.role || 'travel_agent',
         status: 'pending',
         company_name,
-        address
-      }).eq('id', profile.id);
+        address,
+        full_name: profile?.full_name || user.user_metadata?.full_name || user.email,
+        phone: profile?.phone || user.user_metadata?.phone || '',
+      });
 
       if (error) throw error;
       
@@ -1061,6 +1067,7 @@ export default function DashboardPage() {
                 )}
                 {activeTab === 'verification' && (
                   <VerificationTab 
+                    user={user}
                     profile={profile} 
                     onVerify={() => {
                       useAuthStore.setState((s) => ({
