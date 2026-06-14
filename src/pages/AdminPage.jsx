@@ -1858,7 +1858,7 @@ function B2BTab() {
       const { data, error } = await supabase
         .from("profiles")
         .select("*")
-        .eq("role", "travel_agent")
+        .like("role", "travel_agent_%")
         .order("created_at", { ascending: false });
 
       if (error) throw error;
@@ -1874,7 +1874,7 @@ function B2BTab() {
     try {
       const { error } = await supabase
         .from("profiles")
-        .update({ status: "approved" })
+        .update({ role: "travel_agent_approved" })
         .eq("id", id);
       if (error) throw error;
       toast.success("Mitra berhasil disetujui");
@@ -1891,7 +1891,7 @@ function B2BTab() {
     try {
       const { error } = await supabase
         .from("profiles")
-        .update({ status: "rejected", reject_reason: reason })
+        .update({ role: "travel_agent_rejected" }) // We can't use reject_reason since column doesn't exist
         .eq("id", id);
       if (error) throw error;
       toast.success("Mitra telah ditolak");
@@ -1958,14 +1958,18 @@ function B2BTab() {
                   <td className="px-4 py-4 text-sm text-dark">{p.full_name}</td>
                   <td className="px-4 py-4 text-sm text-gray-500 max-w-[150px] truncate" title={p.address}>{p.address || "-"}</td>
                   <td className="px-4 py-4">
-                    <StatusBadge status={p.status} />
+                    <StatusBadge status={
+                      p.role === 'travel_agent_approved' ? 'approved' :
+                      p.role === 'travel_agent_pending' ? 'pending' :
+                      p.role === 'travel_agent_rejected' ? 'rejected' : 'unverified'
+                    } />
                   </td>
                   <td className="px-4 py-4 text-sm text-gray-500">
                     {formatDate(p.created_at || new Date().toISOString())}
                   </td>
                   <td className="px-4 py-4">
                     <div className="flex items-center gap-1 flex-wrap">
-                      {p.status === "pending" && (
+                      {p.role === "travel_agent_pending" && (
                         <>
                           <button
                             onClick={() => activatePartner(p.id)}

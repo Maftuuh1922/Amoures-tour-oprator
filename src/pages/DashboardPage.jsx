@@ -218,7 +218,11 @@ function BookingCard({ booking, onCancel }) {
 
 function VerificationTab({ user, profile, onVerify }) {
   const [loading, setLoading] = useState(false);
-  const status = profile?.status || 'unverified';
+  // Derive status dari role untuk menghindari error database
+  const status = profile?.role === 'travel_agent_approved' ? 'approved' 
+               : profile?.role === 'travel_agent_pending' ? 'pending'
+               : profile?.role === 'travel_agent_rejected' ? 'rejected'
+               : 'unverified';
 
   const onSubmit = async (e) => {
     e.preventDefault();
@@ -229,10 +233,9 @@ function VerificationTab({ user, profile, onVerify }) {
     const address = formData.get('address');
 
     try {
-      // Kita hanya update status agar tidak terkena error 400
-      // karena tabel profiles di Supabase user belum memiliki kolom company_name
+      // Kita akali dengan update kolom 'role' karena kolom 'status' tidak ada di database user
       const { error } = await supabase.from('profiles').update({
-        status: 'pending'
+        role: 'travel_agent_pending'
       }).eq('id', user.id);
 
       if (error) throw error;
@@ -839,9 +842,12 @@ export default function DashboardPage() {
   const navigate = useNavigate()
   const { user, profile, signOut } = useAuth()
   const { bookings, loading: bookingsLoading, refetch } = useUserBookings()
-  const status = profile?.status || 'unverified'
+  const status = profile?.role === 'travel_agent_approved' ? 'approved' 
+               : profile?.role === 'travel_agent_pending' ? 'pending'
+               : profile?.role === 'travel_agent_rejected' ? 'rejected'
+               : 'unverified';
   const isApproved = status === 'approved'
-  const isAgent = profile?.role === 'travel_agent' || true
+  const isAgent = profile?.role?.startsWith('travel_agent') || true
 
   // Restrict tabs if not approved
   const TABS = isApproved
