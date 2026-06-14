@@ -10,6 +10,7 @@ import {
 import toast from 'react-hot-toast'
 import LoginForm from '../components/auth/LoginForm'
 import useAuth from '../hooks/useAuth'
+import { KeyIcon } from '../components/ui/Icons'
 
 // ─── Google SVG Icon ──────────────────────────────────────────────────────────
 
@@ -191,18 +192,67 @@ export default function LoginPage() {
           <div className="w-full max-w-md">
 
             {/* Mobile-only logo */}
-            <div className="flex items-center gap-2 mb-8 lg:hidden">
+            <div className="flex items-center gap-2 mb-6 lg:hidden">
               <img src="/logo.png" alt="Amoures Tour Operator" className="h-12 w-auto object-contain" />
             </div>
 
             {/* Heading */}
-            <div className="mb-8">
+            <div className="mb-6">
               <h1 className="text-[1.85rem] font-extrabold text-[#1A1A1A] leading-tight">
                 Selamat Datang Kembali
               </h1>
               <p className="mt-1.5 text-gray-500">
                 Masuk ke akun Amoures Tour Anda
               </p>
+            </div>
+
+            {/* Demo Credentials */}
+            <div className="mb-6 rounded-2xl border border-amber-200 bg-amber-50 overflow-hidden">
+              {/* Header */}
+              <div className="flex items-center gap-2 px-4 py-2.5 bg-amber-100 border-b border-amber-200">
+                <span className="w-6 h-6 rounded-lg bg-amber-500 flex items-center justify-center flex-shrink-0">
+                  <KeyIcon size={13} className="text-white" />
+                </span>
+                <p className="text-xs font-bold text-amber-800 uppercase tracking-wide">Akun Demo</p>
+              </div>
+              {/* Credentials list */}
+              <div className="px-4 py-3 space-y-2">
+                {[
+                  {
+                    role: 'Admin',
+                    email: 'admin@moures.com',
+                    password: 'admin123',
+                    badge: 'bg-red-100 text-red-700 border border-red-200',
+                    dot: 'bg-red-400',
+                  },
+                  {
+                    role: 'User',
+                    email: 'user@moures.com',
+                    password: 'user123',
+                    badge: 'bg-blue-100 text-blue-700 border border-blue-200',
+                    dot: 'bg-blue-400',
+                  },
+                  {
+                    role: 'Travel Agent',
+                    email: 'agent@cvkaryanusantara.com',
+                    password: 'agent123',
+                    badge: 'bg-green-100 text-green-700 border border-green-200',
+                    dot: 'bg-green-400',
+                  },
+                ].map(({ role, email, password, badge, dot }) => (
+                  <div key={role} className="flex items-center gap-2.5 py-1">
+                    <span className={`inline-flex items-center gap-1.5 text-[10px] font-bold px-2 py-0.5 rounded-full flex-shrink-0 ${badge}`}>
+                      <span className={`w-1.5 h-1.5 rounded-full ${dot}`} />
+                      {role}
+                    </span>
+                    <div className="flex items-center gap-1 min-w-0 flex-wrap">
+                      <code className="text-[11px] text-gray-600 font-mono truncate">{email}</code>
+                      <span className="text-gray-300 text-xs flex-shrink-0">/</span>
+                      <code className="text-[11px] text-gray-600 font-mono flex-shrink-0">{password}</code>
+                    </div>
+                  </div>
+                ))}
+              </div>
             </div>
 
             {/* Login Form */}

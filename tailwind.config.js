@@ -8,12 +8,12 @@ export default {
     extend: {
       colors: {
         primary: {
-          DEFAULT: '#FFC107',
-          hover: '#FFA000',
-          light: '#FFE082',
+          DEFAULT: '#D4E000',
+          hover: '#BBCA00',
+          light: '#EEF5A0',
         },
-        secondary: '#FF8F00',
-        accent: '#FF6F00',
+        secondary: '#B8C400',
+        accent: '#9CAF00',
         dark: '#1A1A1A',
       },
       fontFamily: {

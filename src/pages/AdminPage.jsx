@@ -375,9 +375,9 @@ const DEMO_B2B = [
 const DEMO_USERS = [
   {
     id: 1,
-    name: "Budi Santoso",
+    name: "PT Budi Tours",
     email: "budi@email.com",
-    role: "user",
+    role: "travel_agent",
     joined: "2025-01-10",
     bookings: 5,
   },
@@ -391,17 +391,17 @@ const DEMO_USERS = [
   },
   {
     id: 3,
-    name: "Siti Rahayu",
+    name: "Siti Travel & Tour",
     email: "siti@email.com",
-    role: "user",
+    role: "travel_agent",
     joined: "2025-01-20",
     bookings: 3,
   },
   {
     id: 4,
-    name: "Ahmad Fauzi",
+    name: "Ahmad Holiday",
     email: "ahmad@email.com",
-    role: "user",
+    role: "travel_agent",
     joined: "2025-02-05",
     bookings: 2,
   },
@@ -1959,7 +1959,7 @@ function UsersTab() {
   const executeToggle = (id) => {
     setUsers((prev) =>
       prev.map((u) =>
-        u.id === id ? { ...u, role: u.role === "admin" ? "user" : "admin" } : u,
+        u.id === id ? { ...u, role: u.role === "admin" ? "travel_agent" : "admin" } : u,
       ),
     );
     toast.success("Role pengguna berhasil diubah");
@@ -1987,7 +1987,7 @@ function UsersTab() {
               </span>{" "}
               menjadi{" "}
               <span className="font-semibold text-dark">
-                {confirmToggle.role === "admin" ? "User" : "Admin"}
+                {confirmToggle.role === "admin" ? "Mitra B2B" : "Admin"}
               </span>
               ?
             </p>
@@ -2063,7 +2063,7 @@ function UsersTab() {
                       ) : (
                         <Users size={10} />
                       )}
-                      {u.role === "admin" ? "Admin" : "User"}
+                      {u.role === "admin" ? "Admin" : "Mitra B2B"}
                     </span>
                   </td>
                   <td className="px-4 py-4 text-sm text-gray-500">

@@ -193,13 +193,17 @@ export default function B2BRegisterPage() {
         {/* ── Left panel (desktop only) ── */}
         <aside className="hidden lg:flex flex-col lg:w-2/5 bg-[#1A1A1A] sticky top-0 h-screen overflow-y-auto p-12">
           {/* Logo */}
-          <div className="flex items-center gap-3 mb-10">
-            <div className="w-10 h-10 bg-primary rounded-xl flex items-center justify-center flex-shrink-0">
-              <Plane className="w-5 h-5 text-dark" strokeWidth={2.5} />
-            </div>
-            <div>
-              <p className="text-white font-black text-lg leading-tight">Amoures</p>
-              <p className="text-primary text-xs font-semibold tracking-wider uppercase">
+          <div className="flex flex-col gap-2 mb-12">
+            <Link to="/">
+              <img 
+                src="/logo.png" 
+                alt="Amoures Logo" 
+                className="h-10 w-auto object-contain hover:scale-105 transition-transform duration-200 origin-left" 
+              />
+            </Link>
+            <div className="flex items-center gap-2 mt-1">
+              <div className="w-8 h-[2px] bg-primary rounded-full"></div>
+              <p className="text-primary text-xs font-black tracking-widest uppercase">
                 Daftar Mitra B2B
               </p>
             </div>

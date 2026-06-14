@@ -171,7 +171,7 @@ export default function Testimonials() {
       id="testimonials"
       className="py-20"
       style={{
-        background: 'linear-gradient(135deg, #FFC107 0%, #FF8F00 100%)',
+        background: 'linear-gradient(135deg, #111827 0%, #1A1A1A 100%)',
       }}
     >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">

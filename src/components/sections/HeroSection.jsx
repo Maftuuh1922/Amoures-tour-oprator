@@ -97,7 +97,7 @@ export default function HeroSection() {
       className="relative min-h-screen flex flex-col overflow-hidden"
       style={{
         backgroundImage:
-          "url('https://images.unsplash.com/photo-1476514525535-07fb3b4ae5f1?w=1920&q=85&auto=format&fit=crop')",
+          "url('https://images.unsplash.com/photo-1501785888041-af3ef285b470?w=1920&q=85&auto=format&fit=crop')",
         backgroundSize: "cover",
         backgroundPosition: "center 40%",
       }}

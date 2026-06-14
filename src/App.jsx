@@ -13,6 +13,7 @@ import B2BPage from "./pages/B2BPage";
 import B2BRegisterPage from "./pages/B2BRegisterPage";
 import ProtectedRoute from "./components/auth/ProtectedRoute";
 import useAuthStore from "./store/authStore";
+import Chatbot from "./components/ui/Chatbot";
 
 function App() {
   const initialize = useAuthStore((s) => s.initialize);
@@ -50,6 +51,7 @@ function App() {
           <Route path="/admin" element={<AdminPage />} />
         </Route>
       </Routes>
+      <Chatbot />
     </BrowserRouter>
   );
 }

@@ -13,6 +13,7 @@ import {
 } from "lucide-react";
 import toast from "react-hot-toast";
 import useAuthStore from "../../store/authStore";
+import { HandshakeIcon } from '../ui/Icons';
 
 const NAV_LINKS = [
   { label: "Beranda", href: "#hero" },
@@ -86,6 +87,7 @@ export default function Navbar() {
     profile?.full_name || user?.email?.split("@")[0] || "Pengguna";
   const avatarLetter = displayName.charAt(0).toUpperCase();
   const isAdmin = profile?.role === "admin";
+  const isAgent = profile?.role === "travel_agent";
 
   /* ─────────────────────────────────────────────────────────────────────────
      Visual states
@@ -131,37 +133,41 @@ export default function Navbar() {
             </Link>
 
             {/* ── Desktop nav links ── */}
-            <div className="hidden md:flex items-center gap-0.5">
-              {NAV_LINKS.map(({ label, href }) => (
-                <a
-                  key={href}
-                  href={href}
-                  onClick={(e) => handleAnchorClick(e, href)}
-                  className={`
-                    relative px-3.5 py-2 rounded-xl text-sm font-medium
-                    transition-all duration-200
-                    hover:bg-white/20 hover:text-primary
-                    ${textColor}
-                    after:absolute after:bottom-1 after:left-1/2 after:-translate-x-1/2
-                    after:h-0.5 after:w-0 after:bg-primary after:rounded-full
-                    after:transition-all after:duration-200
-                    hover:after:w-4
-                  `}
-                >
-                  {label}
-                </a>
-              ))}
+            <div className="hidden md:flex items-center gap-1">
+              {NAV_LINKS.map(({ label, href }) => {
+                const isAnchorActive = location.pathname === '/' && (location.hash === href || (href === '#hero' && !location.hash));
+                return (
+                  <a
+                    key={href}
+                    href={href}
+                    onClick={(e) => handleAnchorClick(e, href)}
+                    className={`
+                      relative px-4 py-2 rounded-full text-sm font-medium
+                      transition-all duration-200
+                      ${isAnchorActive 
+                        ? 'bg-primary text-dark font-bold shadow-sm' 
+                        : `hover:bg-gray-500/10 hover:text-primary ${textColor}`
+                      }
+                    `}
+                  >
+                    {label}
+                  </a>
+                );
+              })}
 
               {/* B2B link — slightly accented */}
               <Link
                 to="/b2b"
                 className={`
-                  flex items-center gap-1.5 px-3.5 py-2 rounded-xl text-sm font-medium
-                  transition-all duration-200 hover:bg-primary/20 hover:text-primary
-                  ${textColor}
+                  flex items-center gap-1.5 px-4 py-2 rounded-full text-sm font-medium
+                  transition-all duration-200
+                  ${location.pathname === '/b2b'
+                    ? 'bg-primary text-dark font-bold shadow-sm'
+                    : `hover:bg-gray-500/10 hover:text-primary ${textColor}`
+                  }
                 `}
               >
-                <Building2 className="w-3.5 h-3.5" />
+                <Building2 className="w-4 h-4" />
                 B2B
               </Link>
             </div>
@@ -203,6 +209,13 @@ export default function Navbar() {
                         <p className="text-xs text-gray-400 truncate">
                           {user.email}
                         </p>
+                        {/* Partner Badge for all non-admins */}
+                        {!isAdmin && (
+                          <span className="mt-1.5 inline-flex items-center gap-1.5 px-2 py-0.5 rounded-full text-[10px] font-bold bg-green-100 text-green-700 border border-green-200">
+                            <HandshakeIcon size={11} />
+                            Mitra B2B
+                          </span>
+                        )}
                       </div>
 
                       {!isAdmin && (
@@ -212,7 +225,7 @@ export default function Navbar() {
                           className="flex items-center gap-3 px-4 py-3 text-sm text-gray-700 hover:bg-primary/10 hover:text-primary transition-colors"
                         >
                           <LayoutDashboard className="w-4 h-4" />
-                          Dashboard Saya
+                          Portal B2B
                         </Link>
                       )}
 
@@ -284,20 +297,31 @@ export default function Navbar() {
           `}
         >
           <div className="px-4 pt-1 pb-5 space-y-1 border-t border-white/20">
-            {NAV_LINKS.map(({ label, href }) => (
-              <a
-                key={href}
-                href={href}
-                onClick={(e) => handleAnchorClick(e, href)}
-                className={`block px-4 py-3 rounded-xl font-medium text-sm hover:bg-white/20 hover:text-primary transition-colors ${effectiveScrolled ? "text-gray-700" : "text-white"}`}
-              >
-                {label}
-              </a>
-            ))}
+            {NAV_LINKS.map(({ label, href }) => {
+              const isAnchorActive = location.pathname === '/' && (location.hash === href || (href === '#hero' && !location.hash));
+              return (
+                <a
+                  key={href}
+                  href={href}
+                  onClick={(e) => handleAnchorClick(e, href)}
+                  className={`block px-4 py-3 rounded-xl font-medium text-sm transition-colors ${
+                    isAnchorActive 
+                      ? 'bg-primary text-dark font-bold' 
+                      : `hover:bg-gray-500/10 hover:text-primary ${effectiveScrolled ? "text-gray-700" : "text-white"}`
+                  }`}
+                >
+                  {label}
+                </a>
+              );
+            })}
             <Link
               to="/b2b"
               onClick={() => setMobileOpen(false)}
-              className={`flex items-center gap-2 px-4 py-3 rounded-xl font-medium text-sm hover:bg-white/20 hover:text-primary transition-colors ${effectiveScrolled ? "text-gray-700" : "text-white"}`}
+              className={`flex items-center gap-2 px-4 py-3 rounded-xl font-medium text-sm transition-colors ${
+                location.pathname === '/b2b'
+                  ? 'bg-primary text-dark font-bold'
+                  : `hover:bg-gray-500/10 hover:text-primary ${effectiveScrolled ? "text-gray-700" : "text-white"}`
+              }`}
             >
               <Building2 className="w-4 h-4" />
               Kemitraan B2B

@@ -24,6 +24,11 @@ import {
   Save,
   Key,
 } from 'lucide-react'
+import {
+  PriceTagIcon, InvoiceIcon, BriefcaseIcon, SupportIcon,
+  ShoppingBagIcon, PackageBoxIcon, ShieldCheckIcon, ArrowRightIcon,
+  KeyIcon as CustomKeyIcon, HandshakeIcon,
+} from '../components/ui/Icons'
 import Navbar from '../components/layout/Navbar'
 import Footer from '../components/layout/Footer'
 import { useAuth } from '../hooks/useAuth'
@@ -652,9 +657,156 @@ function ProfileTab({ profile, user }) {
   )
 }
 
+// ─── B2B Agent Tab ────────────────────────────────────────────────────────────
+
+function B2BAgentTab({ profile, bookings, bookingsLoading }) {
+  const b2bBookings = bookings.filter((b) => b.order_method === 'b2b')
+  const totalSpent = b2bBookings
+    .filter((b) => b.status !== 'cancelled')
+    .reduce((s, b) => s + (b.total_price || 0), 0)
+
+  return (
+    <div className="space-y-6">
+      {/* Header */}
+      <div className="bg-gradient-to-r from-[#1A1A1A] to-gray-800 rounded-2xl p-6 text-white">
+        <div className="flex items-start justify-between gap-4 flex-wrap">
+          <div>
+            <p className="text-amber-400 text-xs font-bold uppercase tracking-widest mb-1">Mitra B2B Aktif</p>
+            <h2 className="text-2xl font-black">{profile?.company_name || 'Perusahaan Anda'}</h2>
+            <p className="text-gray-400 mt-1 text-sm">{profile?.business_type} · {profile?.pic_position}</p>
+          </div>
+          <span className="px-3 py-1.5 bg-green-500/20 text-green-400 border border-green-500/30 rounded-full text-xs font-bold">
+            ✓ Terverifikasi
+          </span>
+        </div>
+        <div className="mt-4 grid grid-cols-3 gap-4">
+          {[
+            { label: 'Total Order B2B', value: b2bBookings.length },
+            { label: 'Order Aktif', value: b2bBookings.filter((b) => b.status === 'confirmed').length },
+            { label: 'Total Pembayaran', value: formatPrice(totalSpent) },
+          ].map(({ label, value }) => (
+            <div key={label}>
+              <p className="text-xl font-black text-amber-400">{value}</p>
+              <p className="text-gray-400 text-xs mt-0.5">{label}</p>
+            </div>
+          ))}
+        </div>
+      </div>
+
+      {/* Benefits */}
+      <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
+        {[
+          {
+            Icon: PriceTagIcon,
+            title: 'Diskon 10%',
+            desc: 'Setiap pemesanan B2B',
+            color: 'bg-amber-50 text-amber-600',
+            border: 'border-amber-100',
+          },
+          {
+            Icon: InvoiceIcon,
+            title: 'Invoice NET',
+            desc: '7 / 14 / 30 hari',
+            color: 'bg-blue-50 text-blue-600',
+            border: 'border-blue-100',
+          },
+          {
+            Icon: BriefcaseIcon,
+            title: 'Account Manager',
+            desc: 'Dedikasi 24/7',
+            color: 'bg-purple-50 text-purple-600',
+            border: 'border-purple-100',
+          },
+          {
+            Icon: SupportIcon,
+            title: 'Priority Support',
+            desc: 'Respons < 1 jam',
+            color: 'bg-green-50 text-green-600',
+            border: 'border-green-100',
+          },
+        ].map(({ Icon, title, desc, color, border }) => (
+          <div
+            key={title}
+            className={`bg-white rounded-xl border ${border} shadow-sm p-4 flex flex-col items-center text-center gap-2 hover:shadow-md transition-shadow group`}
+          >
+            <div className={`w-10 h-10 rounded-xl flex items-center justify-center ${color} group-hover:scale-110 transition-transform`}>
+              <Icon size={20} />
+            </div>
+            <p className="font-bold text-dark text-sm leading-tight">{title}</p>
+            <p className="text-gray-400 text-xs">{desc}</p>
+          </div>
+        ))}
+      </div>
+
+      {/* Quick Order */}
+      <div className="bg-white rounded-2xl border border-gray-100 shadow-sm p-6">
+        <h3 className="font-bold text-dark mb-4 flex items-center gap-2.5">
+          <span className="w-8 h-8 rounded-xl bg-amber-50 flex items-center justify-center text-amber-600">
+            <ShoppingBagIcon size={18} />
+          </span>
+          Pesan Paket B2B
+        </h3>
+        <p className="text-sm text-gray-500 mb-4">
+          Sebagai mitra B2B, Anda mendapatkan <strong className="text-dark">diskon 10%</strong> dan
+          pembayaran via invoice untuk setiap pemesanan.
+        </p>
+        <Link
+          to="/tours"
+          className="inline-flex items-center gap-2 px-5 py-2.5 bg-primary hover:bg-[#FFA000] text-dark font-bold rounded-xl transition-all text-sm shadow-sm hover:shadow-md hover:scale-105 active:scale-95"
+        >
+          Lihat Paket Wisata
+          <ArrowRightIcon size={16} />
+        </Link>
+      </div>
+
+      {/* B2B Bookings */}
+      <div>
+        <h3 className="font-bold text-dark mb-3">Riwayat Order B2B</h3>
+        {bookingsLoading ? (
+          <Skeleton className="h-20" />
+        ) : b2bBookings.length > 0 ? (
+          <div className="space-y-3">
+            {b2bBookings.map((b) => (
+              <div key={b.id} className="bg-white rounded-xl border border-gray-100 shadow-sm p-4 flex items-center justify-between gap-4 flex-wrap">
+                <div>
+                  <p className="font-mono text-xs bg-gray-100 text-gray-700 px-2 py-0.5 rounded inline-block mb-1">{b.booking_code}</p>
+                  <p className="text-sm font-semibold text-dark">{b.tour_packages?.title || 'Paket Tur'}</p>
+                  {b.b2b_details && (
+                    <p className="text-xs text-gray-400 mt-0.5">{b.b2b_details.companyName} · {b.b2b_details.paymentTerm?.toUpperCase()}</p>
+                  )}
+                </div>
+                <div className="flex items-center gap-3">
+                  <p className="font-bold text-dark text-sm">{formatPrice(b.total_price)}</p>
+                  <StatusBadge status={b.status} />
+                </div>
+              </div>
+            ))}
+          </div>
+        ) : (
+          <div className="flex flex-col items-center justify-center py-12 bg-white rounded-2xl border border-gray-100 gap-4">
+            <div className="w-16 h-16 rounded-2xl bg-gray-50 border border-gray-100 flex items-center justify-center">
+              <PackageBoxIcon size={32} className="text-gray-300" />
+            </div>
+            <div className="text-center">
+              <p className="text-gray-700 font-semibold text-sm">Belum ada order B2B</p>
+              <p className="text-gray-400 text-xs mt-1">Mulai buat pemesanan pertama Anda</p>
+            </div>
+            <Link
+              to="/tours"
+              className="inline-flex items-center gap-2 px-4 py-2 bg-primary hover:bg-[#FFA000] text-dark text-sm font-bold rounded-xl transition-all hover:scale-105 active:scale-95"
+            >
+              Mulai Pesan <ArrowRightIcon size={14} />
+            </Link>
+          </div>
+        )}
+      </div>
+    </div>
+  )
+}
+
 // ─── main component ───────────────────────────────────────────────────────────
 
-const TABS = [
+const BASE_TABS = [
   { key: 'overview', label: 'Beranda', icon: LayoutGrid },
   { key: 'bookings', label: 'Pemesanan Saya', icon: Ticket },
   { key: 'profile', label: 'Profil', icon: User },
@@ -665,6 +817,17 @@ export default function DashboardPage() {
   const { user, profile, signOut } = useAuth()
   const { bookings, loading: bookingsLoading, refetch } = useUserBookings()
   const [activeTab, setActiveTab] = useState('overview')
+
+  const isAgent = profile?.role === 'travel_agent'
+
+  const TABS = isAgent
+    ? [
+        { key: 'overview', label: 'Beranda', icon: LayoutGrid },
+        { key: 'b2b', label: 'Portal B2B', icon: Package },
+        { key: 'bookings', label: 'Semua Pemesanan', icon: Ticket },
+        { key: 'profile', label: 'Profil', icon: User },
+      ]
+    : BASE_TABS
 
   useEffect(() => {
     if (profile?.role === 'admin') {
@@ -686,19 +849,64 @@ export default function DashboardPage() {
   }
 
   return (
-    <>
-      <Navbar />
+    <div className="min-h-screen bg-gray-50 flex flex-col">
 
-      <div className="min-h-screen bg-gray-50">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
-          {/* ── Breadcrumb ── */}
-          <nav className="flex items-center gap-1.5 text-sm text-gray-500 mb-6 flex-wrap">
-            <Link to="/" className="hover:text-primary transition-colors">
-              Beranda
+      {/* ── Dashboard Top Bar ── */}
+      <header className="bg-white border-b border-gray-100 shadow-sm sticky top-0 z-40">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between gap-4">
+          {/* Logo + back to site */}
+          <div className="flex items-center gap-3">
+            <Link to="/" className="flex items-center gap-2 group flex-shrink-0">
+              <img src="/logo.png" alt="Amoures" className="h-9 w-auto object-contain group-hover:scale-105 transition-transform" />
             </Link>
-            <ChevronRight className="w-4 h-4 flex-shrink-0" />
-            <span className="text-dark font-medium">Dashboard</span>
-          </nav>
+            <span className="hidden sm:block text-gray-200 text-lg font-light">|</span>
+            <Link
+              to="/"
+              className="hidden sm:flex items-center gap-1.5 text-xs text-gray-400 hover:text-primary transition-colors font-medium"
+            >
+              <ChevronRight className="w-3.5 h-3.5 rotate-180" />
+              Kembali ke Situs
+            </Link>
+          </div>
+
+          {/* Page title */}
+          <div className="flex-1 text-center hidden md:block">
+            <span className="text-sm font-semibold text-gray-500 tracking-wide uppercase">
+              {isAgent ? 'Portal B2B Mitra' : 'Dashboard Pengguna'}
+            </span>
+          </div>
+
+          {/* User info + logout */}
+          <div className="flex items-center gap-3">
+            {isAgent && (
+              <span className="hidden sm:inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-green-100 text-green-700 text-[11px] font-bold border border-green-200">
+                <HandshakeIcon size={11} />
+                Travel Agent
+              </span>
+            )}
+            <div className="flex items-center gap-2">
+              <div className="w-8 h-8 rounded-xl bg-primary flex items-center justify-center text-dark font-bold text-sm flex-shrink-0">
+                {initials}
+              </div>
+              <div className="hidden sm:block">
+                <p className="text-sm font-semibold text-dark leading-tight">{displayName}</p>
+                <p className="text-[11px] text-gray-400 truncate max-w-[140px]">{user?.email}</p>
+              </div>
+            </div>
+            <button
+              onClick={handleSignOut}
+              className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-semibold text-red-500 hover:bg-red-50 border border-red-100 hover:border-red-200 transition-all"
+            >
+              <LogOut className="w-3.5 h-3.5" />
+              <span className="hidden sm:inline">Keluar</span>
+            </button>
+          </div>
+        </div>
+      </header>
+
+      {/* ── Body ── */}
+      <div className="flex-1">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
 
           {/* ── Mobile Tab Nav ── */}
           <div className="flex gap-1 bg-white border border-gray-100 shadow-sm rounded-2xl p-1.5 mb-6 lg:hidden overflow-x-auto">
@@ -719,13 +927,6 @@ export default function DashboardPage() {
                 </button>
               )
             })}
-            <button
-              onClick={handleSignOut}
-              className="flex-1 flex items-center justify-center gap-1.5 px-3 py-2 rounded-xl text-xs font-semibold whitespace-nowrap text-red-500 hover:bg-red-50 transition-colors"
-            >
-              <LogOut className="w-4 h-4 flex-shrink-0" />
-              <span className="hidden xs:inline">Keluar</span>
-            </button>
           </div>
 
           <div className="grid grid-cols-1 lg:grid-cols-4 gap-6">
@@ -747,6 +948,12 @@ export default function DashboardPage() {
                   )}
                   <p className="font-bold text-dark text-base">{displayName}</p>
                   <p className="text-xs text-gray-500 mt-0.5 truncate">{user?.email}</p>
+                  {isAgent && (
+                    <span className="mt-2 inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-green-100 text-green-700 text-[10px] font-bold border border-green-200">
+                      <HandshakeIcon size={10} />
+                      Travel Agent
+                    </span>
+                  )}
                 </div>
 
                 {/* Nav items */}
@@ -792,6 +999,13 @@ export default function DashboardPage() {
                     bookingsLoading={bookingsLoading}
                   />
                 )}
+                {activeTab === 'b2b' && (
+                  <B2BAgentTab
+                    profile={profile}
+                    bookings={bookings}
+                    bookingsLoading={bookingsLoading}
+                  />
+                )}
                 {activeTab === 'bookings' && (
                   <BookingsTab
                     bookings={bookings}
@@ -807,8 +1021,6 @@ export default function DashboardPage() {
           </div>
         </div>
       </div>
-
-      <Footer />
-    </>
+    </div>
   )
 }

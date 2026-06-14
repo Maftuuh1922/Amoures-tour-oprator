@@ -38,10 +38,7 @@ export default function CompanyProfile() {
   return (
     <section
       id="about"
-      className="py-20 relative overflow-hidden"
-      style={{
-        background: "linear-gradient(135deg, #FFE082 0%, #FFF8E1 40%, #ffffff 100%)",
-      }}
+      className="py-20 relative overflow-hidden bg-white"
     >
       {/* Background decorative shapes */}
       <div

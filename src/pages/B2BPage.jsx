@@ -15,6 +15,10 @@ import {
   Star,
   ChevronDown,
   ChevronUp,
+  Lock,
+  Server,
+  ShieldCheck,
+  CreditCard,
 } from 'lucide-react'
 import Navbar from '../components/layout/Navbar'
 import Footer from '../components/layout/Footer'
@@ -141,6 +145,29 @@ const TIERS = [
   },
 ]
 
+const SECURITY_FEATURES = [
+  {
+    icon: ShieldCheck,
+    title: 'PCI-DSS Compliant',
+    desc: 'Semua transaksi pembayaran korporat dienkripsi penuh sesuai standar keamanan level bank internasional.',
+  },
+  {
+    icon: Lock,
+    title: 'Enkripsi SSL/TLS 256-Bit',
+    desc: 'Data identitas perusahaan dan informasi rahasia agen tersimpan dengan enkripsi mutakhir.',
+  },
+  {
+    icon: Server,
+    title: 'Cloudflare WAF Protection',
+    desc: 'Perlindungan Anti-DDoS dan Web Application Firewall untuk memastikan portal selalu online 99.9%.',
+  },
+  {
+    icon: CreditCard,
+    title: 'Gateway Pembayaran Resmi',
+    desc: 'Terintegrasi hanya dengan penyedia pembayaran yang diawasi oleh Bank Indonesia (BI).',
+  },
+]
+
 const FAQS = [
   {
     q: 'Bagaimana proses pendaftaran mitra B2B?',
@@ -207,36 +234,45 @@ export default function B2BPage() {
       <Navbar />
 
       {/* ── 1. Hero ── */}
-      <section className="min-h-[60vh] bg-[#1A1A1A] flex items-center pt-24 relative overflow-hidden">
-        {/* dot-grid overlay */}
-        <div
-          className="absolute inset-0 pointer-events-none"
-          style={{
-            backgroundImage:
-              'radial-gradient(circle at 1px 1px, rgba(255,193,7,0.08) 1px, transparent 0)',
-            backgroundSize: '32px 32px',
-          }}
-        />
-        <div className="relative max-w-7xl mx-auto px-6 py-20 w-full">
-          <div className="max-w-3xl">
+      {/* ── 1. Hero ── */}
+      <section className="min-h-[75vh] flex items-center pt-28 pb-20 relative overflow-hidden bg-[#1A1A1A]">
+        {/* Fullscreen Video Background */}
+        <video 
+          autoPlay 
+          loop 
+          muted 
+          playsInline
+          poster="https://images.unsplash.com/photo-1469854523086-cc02fe5d8800?w=1920&q=80"
+          className="absolute inset-0 w-full h-full object-cover z-0 opacity-90"
+        >
+          <source src="https://storage.googleapis.com/gtv-videos-bucket/sample/ForBiggerEscapes.mp4" type="video/mp4" />
+        </video>
+        
+        {/* Dark Overlays for Text Legibility */}
+        <div className="absolute inset-0 bg-black/60 z-0" />
+        <div className="absolute inset-0 bg-gradient-to-t from-[#1A1A1A] via-black/40 to-transparent z-0" />
+
+        {/* Content */}
+        <div className="relative z-10 max-w-7xl mx-auto px-6 w-full text-center flex flex-col items-center">
+          <div className="max-w-4xl flex flex-col items-center">
             <SectionBadge>
               <Building2 className="w-4 h-4" />
               Platform Perjalanan Bisnis
             </SectionBadge>
 
-            <h1 className="text-5xl md:text-6xl font-black text-white leading-tight mb-6">
+            <h1 className="text-5xl md:text-7xl font-black text-white leading-tight mb-6">
               Kelola Perjalanan
               <br />
               <span className="text-primary">Bisnis Lebih Cerdas</span>
             </h1>
 
-            <p className="text-gray-400 text-xl leading-relaxed mb-10 max-w-2xl">
+            <p className="text-white/90 text-lg md:text-xl leading-relaxed mb-10 max-w-2xl">
               Platform B2B khusus untuk perusahaan, travel agent, dan event organizer.
               Akses ribuan paket wisata dengan harga mitra, invoice otomatis, dan
               dukungan account manager dedikasi.
             </p>
 
-            <div className="flex flex-wrap gap-4 mb-14">
+            <div className="flex flex-wrap justify-center gap-4 mb-16">
               <Link
                 to="/b2b/register"
                 className="bg-primary hover:bg-[#FFA000] text-dark font-bold px-8 py-4 rounded-xl inline-flex items-center gap-2 shadow-lg shadow-primary/30 hover:shadow-primary/50 transition-all text-lg"
@@ -246,21 +282,21 @@ export default function B2BPage() {
               </Link>
               <a
                 href="#how-it-works"
-                className="border border-white/20 text-white hover:border-primary hover:text-primary font-semibold px-8 py-4 rounded-xl inline-flex items-center gap-2 transition-all text-lg"
+                className="bg-white/10 backdrop-blur-md border border-white/20 text-white hover:bg-white/20 hover:border-white/40 font-semibold px-8 py-4 rounded-xl inline-flex items-center gap-2 transition-all text-lg"
               >
                 Pelajari Cara Kerjanya
               </a>
             </div>
 
             {/* Stats row */}
-            <div className="flex flex-wrap gap-4">
+            <div className="flex flex-wrap justify-center gap-4 md:gap-6">
               {HERO_STATS.map(({ value, label }) => (
                 <div
                   key={label}
-                  className="bg-white/5 backdrop-blur-sm border border-white/10 rounded-2xl px-6 py-4 text-center min-w-[130px]"
+                  className="bg-white/10 backdrop-blur-xl border border-white/20 rounded-3xl px-8 py-5 text-center min-w-[160px] shadow-2xl"
                 >
-                  <p className="text-2xl font-black text-primary">{value}</p>
-                  <p className="text-gray-400 text-sm mt-0.5">{label}</p>
+                  <p className="text-3xl md:text-4xl font-black text-primary mb-1">{value}</p>
+                  <p className="text-white/90 font-medium text-sm uppercase tracking-wide">{label}</p>
                 </div>
               ))}
             </div>
@@ -316,6 +352,47 @@ export default function B2BPage() {
                 </div>
                 <h3 className="text-dark font-bold text-lg mb-2">{title}</h3>
                 <p className="text-gray-500 text-sm leading-relaxed">{desc}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* ── 3.5 Security & Trust ── */}
+      <section className="py-20 bg-[#1A1A1A] relative overflow-hidden">
+        {/* Background grid */}
+        <div
+          className="absolute inset-0 opacity-[0.05]"
+          style={{
+            backgroundImage: 'linear-gradient(#D4E000 1px, transparent 1px), linear-gradient(90deg, #D4E000 1px, transparent 1px)',
+            backgroundSize: '32px 32px',
+          }}
+        />
+        <div className="relative max-w-7xl mx-auto px-6">
+          <div className="text-center mb-14">
+            <span className="inline-flex items-center gap-2 bg-primary/20 text-primary text-sm font-semibold px-4 py-1.5 rounded-full mb-4">
+              <Shield className="w-4 h-4" />
+              Keamanan Tingkat Enterprise
+            </span>
+            <h2 className="text-3xl md:text-4xl font-black text-white">
+              Data & Transaksi Anda Sangat Aman
+            </h2>
+            <p className="text-gray-400 mt-3 max-w-2xl mx-auto">
+              Kami menggunakan infrastruktur teknologi terdepan tanpa mengandalkan gambar berat agar situs berjalan kilat dan anti-lelet (lag-free).
+            </p>
+          </div>
+
+          <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-6">
+            {SECURITY_FEATURES.map(({ icon: Icon, title, desc }) => (
+              <div
+                key={title}
+                className="bg-white/5 backdrop-blur-sm border border-white/10 rounded-2xl p-6 hover:bg-white/10 transition-colors group"
+              >
+                <div className="w-12 h-12 bg-primary/10 rounded-xl flex items-center justify-center mb-5 group-hover:bg-primary/20 transition-colors">
+                  <Icon className="w-6 h-6 text-primary" />
+                </div>
+                <h3 className="text-white font-bold text-lg mb-2">{title}</h3>
+                <p className="text-gray-400 text-sm leading-relaxed">{desc}</p>
               </div>
             ))}
           </div>
