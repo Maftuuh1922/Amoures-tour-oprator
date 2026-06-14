@@ -1,19 +1,22 @@
-import { Navigate, Link } from 'react-router-dom'
+import { Navigate, Link } from "react-router-dom";
 import {
   ArrowLeft,
   MapPin,
   Star,
   Users,
   Globe,
+  Award,
+  Clock,
+  Shield,
+  Headphones,
   TrendingUp,
-} from 'lucide-react'
-import toast from 'react-hot-toast'
-import LoginForm from '../components/auth/LoginForm'
-import useAuth from '../hooks/useAuth'
-import { KeyIcon } from '../components/ui/Icons'
+  Plane,
+} from "lucide-react";
+import toast from "react-hot-toast";
+import LoginForm from "../components/auth/LoginForm";
+import useAuthStore from "../store/authStore";
 
 // ─── Google SVG Icon ──────────────────────────────────────────────────────────
-
 function GoogleIcon() {
   return (
     <svg viewBox="0 0 24 24" width="20" height="20" aria-hidden="true">
@@ -26,7 +29,7 @@ function GoogleIcon() {
         fill="#34A853"
       />
       <path
-        d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"
+        d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l3.66-2.84z"
         fill="#FBBC05"
       />
       <path
@@ -34,146 +37,164 @@ function GoogleIcon() {
         fill="#EA4335"
       />
     </svg>
-  )
+  );
 }
 
-// ─── Left Panel Sub-components ────────────────────────────────────────────────
-
+// ─── Stat badge ───────────────────────────────────────────────────────────────
 function StatBadge({ Icon, value, label }) {
   return (
     <div className="flex items-center gap-3 bg-white/20 backdrop-blur-sm rounded-2xl px-4 py-3">
-      <div className="w-9 h-9 bg-white/30 rounded-xl flex items-center justify-center flex-shrink-0">
-        <Icon size={18} className="text-white" />
+      <div className="w-9 h-9 bg-white/25 rounded-xl flex items-center justify-center shrink-0">
+        <Icon size={17} className="text-white" />
       </div>
       <div>
         <p className="text-white font-bold text-base leading-none">{value}</p>
-        <p className="text-white/75 text-xs mt-0.5">{label}</p>
+        <p className="text-white/70 text-xs mt-0.5">{label}</p>
       </div>
     </div>
-  )
+  );
 }
 
-function DestinationCard({ flag, name, country, rating, price }) {
+// ─── Destination card — pakai icon bukan emoji ────────────────────────────────
+function DestCard({ icon: Icon, iconBg, name, country, rating, price }) {
   return (
-    <div className="bg-white rounded-2xl shadow-lg p-3 flex items-center gap-3 w-56">
-      <div className="text-3xl leading-none">{flag}</div>
+    <div className="bg-white rounded-2xl shadow-md px-4 py-3 flex items-center gap-3 w-60">
+      <div
+        className={`w-11 h-11 rounded-xl flex items-center justify-center shrink-0 ${iconBg}`}
+      >
+        <Icon size={20} className="text-white" />
+      </div>
       <div className="flex-1 min-w-0">
-        <p className="font-semibold text-[#1A1A1A] text-sm truncate">{name}</p>
+        <p className="font-bold text-[#1A1A1A] text-sm">{name}</p>
         <p className="text-gray-400 text-xs">{country}</p>
         <div className="flex items-center justify-between mt-1">
           <span className="flex items-center gap-0.5 text-xs text-gray-500">
             <Star size={11} fill="#FFC107" className="text-[#FFC107]" />
             {rating}
           </span>
-          <span className="text-xs font-semibold text-[#FF6F00]">{price}</span>
+          <span className="text-xs font-bold text-[#FF6F00]">{price}</span>
         </div>
       </div>
     </div>
-  )
+  );
 }
 
-// ─── Left Panel ───────────────────────────────────────────────────────────────
-
+// ─── Kiri: branding panel ─────────────────────────────────────────────────────
 function HeroPanel() {
   return (
     <div
-      className="hidden lg:flex lg:w-1/2 relative flex-col justify-between p-12 overflow-hidden"
-      style={{ background: 'linear-gradient(145deg, #FFC107 0%, #FF8F00 55%, #FF6F00 100%)' }}
+      className="hidden lg:flex lg:w-[45%] relative flex-col justify-between p-12 overflow-hidden"
+      style={{
+        background:
+          "linear-gradient(145deg, #FFC107 0%, #FF8F00 55%, #FF6F00 100%)",
+      }}
     >
-      {/* Decorative blobs */}
-      <div className="absolute -top-24 -right-24 w-96 h-96 bg-white/10 rounded-full" />
-      <div className="absolute -bottom-20 -left-20 w-72 h-72 bg-white/10 rounded-full" />
-      <div className="absolute top-1/3 right-8 w-24 h-24 bg-white/10 rounded-full" />
+      {/* Dekorasi bulat */}
+      <div className="absolute -top-28 -right-28 w-96 h-96 bg-white/10 rounded-full" />
+      <div className="absolute -bottom-24 -left-24 w-80 h-80 bg-white/10 rounded-full" />
+      <div className="absolute top-1/2 right-10 w-20 h-20 bg-white/10 rounded-full" />
 
       {/* Logo */}
-      <div className="relative z-10 flex items-center">
-        <img src="/logo.png" alt="Amoures Tour Operator" className="h-16 w-auto object-contain" />
+      <div className="relative z-10">
+        <img
+          src="/logo.png"
+          alt="Amoures Tour Operator"
+          className="h-16 w-auto object-contain drop-shadow-md"
+        />
       </div>
 
-      {/* Hero Text */}
-      <div className="relative z-10 space-y-7">
+      {/* Konten tengah */}
+      <div className="relative z-10 space-y-8">
+        {/* Headline — TANPA emoji */}
         <div>
-          <h1 className="text-[2.6rem] font-extrabold text-white leading-tight tracking-tight">
-            Jelajahi Dunia<br />Bersama Kami ✈️
+          <h1 className="text-[2.5rem] font-black text-white leading-tight tracking-tight">
+            Jelajahi Dunia
+            <br />
+            Bersama Kami
           </h1>
-          <p className="mt-3 text-white/80 text-lg leading-relaxed">
-            Temukan pengalaman perjalanan tak terlupakan ke lebih dari 500 destinasi eksotis di seluruh dunia.
+          <p className="mt-3 text-white/80 text-base leading-relaxed max-w-xs">
+            Pengalaman perjalanan tak terlupakan ke ratusan destinasi eksotis di
+            seluruh dunia.
           </p>
         </div>
 
-        {/* Stats Grid */}
+        {/* Stats */}
         <div className="grid grid-cols-2 gap-3">
-          <StatBadge Icon={Users}      value="10K+"  label="Pelanggan Puas" />
-          <StatBadge Icon={Globe}      value="500+"  label="Destinasi Wisata" />
-          <StatBadge Icon={Star}       value="4.9★"  label="Rating Layanan" />
-          <StatBadge Icon={TrendingUp} value="98%"   label="Kepuasan Tamu" />
+          <StatBadge Icon={Users} value="10.000+" label="Pelanggan Puas" />
+          <StatBadge Icon={Globe} value="150+" label="Destinasi Wisata" />
+          <StatBadge Icon={Award} value="12+" label="Tahun Pengalaman" />
+          <StatBadge Icon={TrendingUp} value="98%" label="Kepuasan Tamu" />
         </div>
 
-        {/* Floating Destination Cards */}
+        {/* Destination cards — TANPA emoji, pakai icon */}
         <div>
-          <p className="text-white/70 text-xs font-semibold uppercase tracking-widest mb-3">
+          <p className="text-white/70 text-[11px] font-bold uppercase tracking-widest mb-3">
             Destinasi Terpopuler
           </p>
           <div className="space-y-2.5">
-            <DestinationCard
-              flag="🗼" name="Paris" country="Prancis"
-              rating="4.9" price="Rp 12 Jt"
+            <DestCard
+              icon={Globe}
+              iconBg="bg-blue-500"
+              name="Paris"
+              country="Prancis"
+              rating="4.9"
+              price="Rp 12 Jt"
             />
-            <div className="ml-10">
-              <DestinationCard
-                flag="🌸" name="Tokyo" country="Jepang"
-                rating="4.8" price="Rp 9 Jt"
+            <div className="ml-8">
+              <DestCard
+                icon={Plane}
+                iconBg="bg-rose-500"
+                name="Tokyo"
+                country="Jepang"
+                rating="4.8"
+                price="Rp 9 Jt"
               />
             </div>
-            <DestinationCard
-              flag="🏝️" name="Bali" country="Indonesia"
-              rating="4.9" price="Rp 3 Jt"
+            <DestCard
+              icon={MapPin}
+              iconBg="bg-emerald-500"
+              name="Bali"
+              country="Indonesia"
+              rating="4.9"
+              price="Rp 3 Jt"
             />
           </div>
         </div>
       </div>
 
-      {/* Bottom Link */}
+      {/* Bottom */}
       <div className="relative z-10">
         <p className="text-white/75 text-sm">
-          Belum punya akun?{' '}
+          Belum punya akun?{" "}
           <Link to="/register" className="text-white font-bold hover:underline">
-            Daftar gratis sekarang →
+            Daftar gratis sekarang
           </Link>
         </p>
       </div>
     </div>
-  )
+  );
 }
 
 // ─── Page ─────────────────────────────────────────────────────────────────────
-
 export default function LoginPage() {
-  const { user, loginWithGoogle } = useAuth()
+  const { user } = useAuthStore();
 
-  if (user) return <Navigate to="/dashboard" replace />
+  if (user) return <Navigate to="/dashboard" replace />;
 
-  const handleGoogleLogin = async () => {
-    if (typeof loginWithGoogle !== 'function') {
-      toast.error('Login dengan Google belum tersedia.')
-      return
-    }
-    try {
-      await loginWithGoogle()
-      toast.success('Login dengan Google berhasil!')
-    } catch (error) {
-      toast.error(error?.message || 'Login dengan Google gagal.')
-    }
-  }
+  const handleGoogleLogin = () => {
+    toast.error(
+      "Login dengan Google belum tersedia. Gunakan email & password.",
+    );
+  };
 
   return (
     <div className="min-h-screen flex bg-white">
-      {/* Left: Branding panel */}
+      {/* Panel kiri */}
       <HeroPanel />
 
-      {/* Right: Form panel */}
-      <div className="flex-1 flex flex-col">
-        {/* Back to Home */}
+      {/* Panel kanan */}
+      <div className="flex-1 flex flex-col overflow-y-auto">
+        {/* Kembali ke Beranda */}
         <div className="px-6 pt-6 pb-2">
           <Link
             to="/"
@@ -187,72 +208,26 @@ export default function LoginPage() {
           </Link>
         </div>
 
-        {/* Centered Form */}
-        <div className="flex-1 flex items-center justify-center px-6 py-8">
+        {/* Form */}
+        <div className="flex-1 flex items-center justify-center px-6 py-10">
           <div className="w-full max-w-md">
-
-            {/* Mobile-only logo */}
-            <div className="flex items-center gap-2 mb-6 lg:hidden">
-              <img src="/logo.png" alt="Amoures Tour Operator" className="h-12 w-auto object-contain" />
+            {/* Logo mobile */}
+            <div className="flex items-center gap-2 mb-7 lg:hidden">
+              <img
+                src="/logo.png"
+                alt="Amoures Tour Operator"
+                className="h-12 w-auto object-contain"
+              />
             </div>
 
             {/* Heading */}
-            <div className="mb-6">
-              <h1 className="text-[1.85rem] font-extrabold text-[#1A1A1A] leading-tight">
+            <div className="mb-7">
+              <h1 className="text-3xl font-black text-[#1A1A1A] leading-tight">
                 Selamat Datang Kembali
               </h1>
-              <p className="mt-1.5 text-gray-500">
+              <p className="mt-1.5 text-gray-500 text-sm">
                 Masuk ke akun Amoures Tour Anda
               </p>
-            </div>
-
-            {/* Demo Credentials */}
-            <div className="mb-6 rounded-2xl border border-amber-200 bg-amber-50 overflow-hidden">
-              {/* Header */}
-              <div className="flex items-center gap-2 px-4 py-2.5 bg-amber-100 border-b border-amber-200">
-                <span className="w-6 h-6 rounded-lg bg-amber-500 flex items-center justify-center flex-shrink-0">
-                  <KeyIcon size={13} className="text-white" />
-                </span>
-                <p className="text-xs font-bold text-amber-800 uppercase tracking-wide">Akun Demo</p>
-              </div>
-              {/* Credentials list */}
-              <div className="px-4 py-3 space-y-2">
-                {[
-                  {
-                    role: 'Admin',
-                    email: 'admin@moures.com',
-                    password: 'admin123',
-                    badge: 'bg-red-100 text-red-700 border border-red-200',
-                    dot: 'bg-red-400',
-                  },
-                  {
-                    role: 'User',
-                    email: 'user@moures.com',
-                    password: 'user123',
-                    badge: 'bg-blue-100 text-blue-700 border border-blue-200',
-                    dot: 'bg-blue-400',
-                  },
-                  {
-                    role: 'Travel Agent',
-                    email: 'agent@cvkaryanusantara.com',
-                    password: 'agent123',
-                    badge: 'bg-green-100 text-green-700 border border-green-200',
-                    dot: 'bg-green-400',
-                  },
-                ].map(({ role, email, password, badge, dot }) => (
-                  <div key={role} className="flex items-center gap-2.5 py-1">
-                    <span className={`inline-flex items-center gap-1.5 text-[10px] font-bold px-2 py-0.5 rounded-full flex-shrink-0 ${badge}`}>
-                      <span className={`w-1.5 h-1.5 rounded-full ${dot}`} />
-                      {role}
-                    </span>
-                    <div className="flex items-center gap-1 min-w-0 flex-wrap">
-                      <code className="text-[11px] text-gray-600 font-mono truncate">{email}</code>
-                      <span className="text-gray-300 text-xs flex-shrink-0">/</span>
-                      <code className="text-[11px] text-gray-600 font-mono flex-shrink-0">{password}</code>
-                    </div>
-                  </div>
-                ))}
-              </div>
             </div>
 
             {/* Login Form */}
@@ -274,21 +249,34 @@ export default function LoginPage() {
             <button
               type="button"
               onClick={handleGoogleLogin}
-              className="w-full py-3 px-5 flex items-center justify-center gap-3 rounded-xl border-2 border-gray-200
-                text-gray-700 font-medium text-sm
-                hover:bg-gray-50 hover:border-gray-300 active:scale-[0.98]
-                transition-all duration-200"
+              className="w-full py-3 px-5 flex items-center justify-center gap-3 rounded-xl border-2 border-gray-200 text-gray-700 font-medium text-sm hover:bg-gray-50 hover:border-gray-300 active:scale-[0.98] transition-all duration-200"
             >
               <GoogleIcon />
               Masuk dengan Google
             </button>
 
-            {/* Register Link */}
+            {/* Fitur keamanan */}
+            <div className="mt-8 flex items-center justify-center gap-6 text-xs text-gray-400">
+              <span className="flex items-center gap-1">
+                <Shield size={13} className="text-[#FFC107]" />
+                SSL Terenkripsi
+              </span>
+              <span className="flex items-center gap-1">
+                <Headphones size={13} className="text-[#FFC107]" />
+                Support 24/7
+              </span>
+              <span className="flex items-center gap-1">
+                <Clock size={13} className="text-[#FFC107]" />
+                Konfirmasi Cepat
+              </span>
+            </div>
+
+            {/* Daftar link */}
             <p className="mt-6 text-center text-sm text-gray-500">
-              Belum punya akun?{' '}
+              Belum punya akun?{" "}
               <Link
                 to="/register"
-                className="font-semibold text-[#FF6F00] hover:text-[#FFA000] hover:underline transition-colors"
+                className="font-bold text-[#FFC107] hover:text-[#FFA000] transition-colors"
               >
                 Daftar sekarang
               </Link>
@@ -297,5 +285,5 @@ export default function LoginPage() {
         </div>
       </div>
     </div>
-  )
+  );
 }

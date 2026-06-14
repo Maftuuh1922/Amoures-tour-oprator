@@ -1,42 +1,41 @@
-import { useState } from 'react'
-import { useForm } from 'react-hook-form'
-import { z } from 'zod'
-import { zodResolver } from '@hookform/resolvers/zod'
-import { Eye, EyeOff, Loader2, AlertCircle } from 'lucide-react'
-import toast from 'react-hot-toast'
-import { Link, useNavigate } from 'react-router-dom'
-import useAuth from '../../hooks/useAuth'
+import { useState } from "react";
+import { useForm } from "react-hook-form";
+import { z } from "zod";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { Eye, EyeOff, Loader2, AlertCircle } from "lucide-react";
+import toast from "react-hot-toast";
+import { Link, useNavigate } from "react-router-dom";
+import useAuth from "../../hooks/useAuth";
+import { supabase } from "../../lib/supabase";
 
 // ─── Validation Schema ────────────────────────────────────────────────────────
 
 const loginSchema = z.object({
   email: z
     .string()
-    .min(1, 'Email wajib diisi')
-    .email('Format email tidak valid'),
-  password: z
-    .string()
-    .min(6, 'Password minimal 6 karakter'),
-})
+    .min(1, "Email wajib diisi")
+    .email("Format email tidak valid"),
+  password: z.string().min(6, "Password minimal 6 karakter"),
+});
 
 // ─── Field Error ──────────────────────────────────────────────────────────────
 
 function FieldError({ message }) {
-  if (!message) return null
+  if (!message) return null;
   return (
     <p className="mt-1.5 flex items-center gap-1.5 text-sm text-red-500">
       <AlertCircle size={13} className="flex-shrink-0" />
       {message}
     </p>
-  )
+  );
 }
 
 // ─── Component ────────────────────────────────────────────────────────────────
 
 export default function LoginForm() {
-  const [showPassword, setShowPassword] = useState(false)
-  const { login } = useAuth()
-  const navigate = useNavigate()
+  const [showPassword, setShowPassword] = useState(false);
+  const { login } = useAuth();
+  const navigate = useNavigate();
 
   const {
     register,
@@ -44,30 +43,50 @@ export default function LoginForm() {
     formState: { errors, isSubmitting },
   } = useForm({
     resolver: zodResolver(loginSchema),
-  })
+  });
 
   const onSubmit = async (data) => {
     try {
-      const user = await login({ email: data.email, password: data.password })
-      toast.success('Login berhasil! Selamat datang kembali.')
-      if (user?.role === 'admin') {
-        navigate('/admin')
+      // Login via Supabase Auth
+      const result = await login({
+        email: data.email,
+        password: data.password,
+      });
+      const userId = result?.user?.id;
+
+      // Fetch profile dari tabel profiles untuk cek role
+      let role = "user";
+      if (userId) {
+        const { data: profile } = await supabase
+          .from("profiles")
+          .select("role")
+          .eq("id", userId)
+          .single();
+        role = profile?.role || "user";
+      }
+
+      toast.success("Login berhasil! Selamat datang kembali.");
+
+      // Redirect berdasarkan role dari tabel profiles
+      if (role === "admin") {
+        navigate("/admin");
       } else {
-        navigate('/dashboard')
+        navigate("/dashboard");
       }
     } catch (error) {
-      toast.error(error?.message || 'Login gagal. Periksa email dan password Anda.')
+      toast.error(
+        error?.message || "Login gagal. Periksa email dan password Anda.",
+      );
     }
-  }
+  };
 
   const inputBase =
-    'w-full px-4 py-3 border rounded-xl bg-gray-50 text-[#1A1A1A] placeholder-gray-400 ' +
-    'focus:bg-white focus:outline-none focus:ring-2 focus:ring-[#FFC107] focus:border-transparent ' +
-    'transition duration-200 disabled:opacity-60 disabled:cursor-not-allowed'
+    "w-full px-4 py-3 border rounded-xl bg-gray-50 text-[#1A1A1A] placeholder-gray-400 " +
+    "focus:bg-white focus:outline-none focus:ring-2 focus:ring-[#FFC107] focus:border-transparent " +
+    "transition duration-200 disabled:opacity-60 disabled:cursor-not-allowed";
 
   return (
     <form onSubmit={handleSubmit(onSubmit)} noValidate className="space-y-5">
-
       {/* ── Email ── */}
       <div>
         <label
@@ -82,8 +101,8 @@ export default function LoginForm() {
           autoComplete="email"
           placeholder="nama@email.com"
           disabled={isSubmitting}
-          {...register('email')}
-          className={`${inputBase} ${errors.email ? 'border-red-400 bg-red-50 focus:ring-red-300' : 'border-gray-200'}`}
+          {...register("email")}
+          className={`${inputBase} ${errors.email ? "border-red-400 bg-red-50 focus:ring-red-300" : "border-gray-200"}`}
         />
         <FieldError message={errors.email?.message} />
       </div>
@@ -108,18 +127,20 @@ export default function LoginForm() {
         <div className="relative">
           <input
             id="login-password"
-            type={showPassword ? 'text' : 'password'}
+            type={showPassword ? "text" : "password"}
             autoComplete="current-password"
             placeholder="Masukkan password Anda"
             disabled={isSubmitting}
-            {...register('password')}
-            className={`${inputBase} pr-12 ${errors.password ? 'border-red-400 bg-red-50 focus:ring-red-300' : 'border-gray-200'}`}
+            {...register("password")}
+            className={`${inputBase} pr-12 ${errors.password ? "border-red-400 bg-red-50 focus:ring-red-300" : "border-gray-200"}`}
           />
           <button
             type="button"
             onClick={() => setShowPassword((prev) => !prev)}
             disabled={isSubmitting}
-            aria-label={showPassword ? 'Sembunyikan password' : 'Tampilkan password'}
+            aria-label={
+              showPassword ? "Sembunyikan password" : "Tampilkan password"
+            }
             className="absolute right-3 top-1/2 -translate-y-1/2 p-1 text-gray-400 hover:text-gray-600 transition-colors"
           >
             {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
@@ -143,9 +164,9 @@ export default function LoginForm() {
             Memproses...
           </>
         ) : (
-          'Masuk'
+          "Masuk"
         )}
       </button>
     </form>
-  )
+  );
 }
