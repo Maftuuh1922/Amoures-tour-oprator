@@ -132,13 +132,6 @@ export default function Navbar() {
                   {label}
                 </a>
               ))}
-              <Link
-                to="/b2b"
-                className={`flex items-center gap-1.5 px-3.5 py-2 rounded-xl text-sm font-medium transition-all hover:bg-primary/15 hover:text-primary ${textCls}`}
-              >
-                <Building2 className="w-3.5 h-3.5" />
-                B2B
-              </Link>
             </div>
 
             {/* ── Desktop right ── */}
@@ -254,14 +247,6 @@ export default function Navbar() {
                 {label}
               </a>
             ))}
-            <Link
-              to="/b2b"
-              onClick={() => setMobileOpen(false)}
-              className={`flex items-center gap-2 px-4 py-3 rounded-xl font-medium text-sm transition-colors hover:bg-primary/15 hover:text-primary ${textCls}`}
-            >
-              <Building2 className="w-4 h-4" />
-              Kemitraan B2B
-            </Link>
 
             <div className="pt-3 border-t border-white/20 space-y-2">
               {user ? (

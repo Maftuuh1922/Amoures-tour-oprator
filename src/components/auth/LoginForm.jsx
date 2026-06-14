@@ -7,6 +7,7 @@ import toast from "react-hot-toast";
 import { Link, useNavigate } from "react-router-dom";
 import useAuth from "../../hooks/useAuth";
 import { supabase } from "../../lib/supabase";
+import useAuthStore from "../../store/authStore";
 
 // ─── Validation Schema ────────────────────────────────────────────────────────
 
@@ -46,6 +47,34 @@ export default function LoginForm() {
   });
 
   const onSubmit = async (data) => {
+    // ─── Dummy Authentication Bypass ───
+    const DUMMY_ACCOUNTS = {
+      "admin@amoures.id": { role: "admin", status: "approved", full_name: "Admin", pic: "Admin", company: "Amoures Admin" },
+      "ahmadtour@gmail.com": { role: "travel_agent", status: "unverified", full_name: "Ahmad Fauzi", pic: "Ahmad Fauzi", company: "" },
+      "galaxytour@gmail.com": { role: "travel_agent", status: "pending", full_name: "Budi Santoso", pic: "Budi Santoso", company: "CV Galaxy Tour & Travel" },
+      "sunriseholiday@gmail.com": { role: "travel_agent", status: "approved", full_name: "Siti Rahayu", pic: "Siti Rahayu", company: "PT Sunrise Holiday Indonesia" },
+      "donitour@gmail.com": { role: "travel_agent", status: "rejected", full_name: "Doni Kusuma", pic: "Doni Kusuma", company: "UD Doni Travel", reject_reason: "Dokumen NPWP tidak terbaca, harap upload ulang" }
+    };
+
+    if (DUMMY_ACCOUNTS[data.email]) {
+      const acc = DUMMY_ACCOUNTS[data.email];
+      useAuthStore.setState({
+        user: { id: "dummy-" + data.email, email: data.email },
+        profile: {
+          id: "dummy-" + data.email,
+          role: acc.role,
+          status: acc.status,
+          full_name: acc.full_name,
+          company_name: acc.company,
+          pic_name: acc.pic,
+          reject_reason: acc.reject_reason || null
+        },
+      });
+      toast.success("Login Data Buatan berhasil! Selamat datang kembali.");
+      navigate(acc.role === "admin" ? "/admin" : "/dashboard");
+      return;
+    }
+
     try {
       // Login via Supabase Auth
       const result = await login({
@@ -171,37 +200,66 @@ export default function LoginForm() {
       {/* ── Dummy Credentials Helpers ── */}
       <div className="mt-6 p-4 bg-primary/5 border border-primary/20 rounded-xl space-y-3">
         <p className="text-xs text-center font-semibold text-gray-500 uppercase tracking-widest">
-          Data Buatan (Testing)
+          Data Buatan (Testing Alur B2B)
         </p>
-        <div className="grid grid-cols-2 gap-3">
+        <div className="grid grid-cols-2 gap-2">
           <button
             type="button"
             onClick={() => {
-              const elEmail = document.getElementById("login-email");
-              const elPass = document.getElementById("login-password");
-              if (elEmail) elEmail.value = "admin@moures.com";
-              if (elPass) elPass.value = "admin123";
-              toast.success("Kredensial Admin diisi otomatis.");
+              document.getElementById("login-email").value = "admin@amoures.id";
+              document.getElementById("login-password").value = "Admin@123";
+              toast.success("Admin diisi.");
             }}
-            className="py-2 px-3 bg-white border border-gray-200 hover:bg-gray-50 text-xs font-semibold text-gray-700 rounded-lg transition-colors"
+            className="py-2 px-2 bg-white border border-gray-200 hover:bg-gray-50 text-[10px] font-semibold text-gray-700 rounded-lg transition-colors"
           >
             Isi Admin
           </button>
           <button
             type="button"
             onClick={() => {
-              const elEmail = document.getElementById("login-email");
-              const elPass = document.getElementById("login-password");
-              if (elEmail) elEmail.value = "agent@b2b.com";
-              if (elPass) elPass.value = "agent123";
-              toast.success("Kredensial B2B diisi otomatis.");
+              document.getElementById("login-email").value = "ahmadtour@gmail.com";
+              document.getElementById("login-password").value = "Agent@123";
+              toast.success("Agent Unverified diisi.");
             }}
-            className="py-2 px-3 bg-white border border-gray-200 hover:bg-gray-50 text-xs font-semibold text-gray-700 rounded-lg transition-colors"
+            className="py-2 px-2 bg-white border border-gray-200 hover:bg-gray-50 text-[10px] font-semibold text-gray-700 rounded-lg transition-colors"
           >
-            Isi B2B Agent
+            Agent (Unverified)
+          </button>
+          <button
+            type="button"
+            onClick={() => {
+              document.getElementById("login-email").value = "galaxytour@gmail.com";
+              document.getElementById("login-password").value = "Agent@123";
+              toast.success("Agent Pending diisi.");
+            }}
+            className="py-2 px-2 bg-white border border-gray-200 hover:bg-gray-50 text-[10px] font-semibold text-gray-700 rounded-lg transition-colors"
+          >
+            Agent (Pending)
+          </button>
+          <button
+            type="button"
+            onClick={() => {
+              document.getElementById("login-email").value = "sunriseholiday@gmail.com";
+              document.getElementById("login-password").value = "Agent@123";
+              toast.success("Agent Approved diisi.");
+            }}
+            className="py-2 px-2 bg-white border border-gray-200 hover:bg-gray-50 text-[10px] font-semibold text-gray-700 rounded-lg transition-colors"
+          >
+            Agent (Approved)
+          </button>
+          <button
+            type="button"
+            onClick={() => {
+              document.getElementById("login-email").value = "donitour@gmail.com";
+              document.getElementById("login-password").value = "Agent@123";
+              toast.success("Agent Rejected diisi.");
+            }}
+            className="col-span-2 py-2 px-2 bg-white border border-gray-200 hover:bg-gray-50 text-[10px] font-semibold text-gray-700 rounded-lg transition-colors"
+          >
+            Agent (Rejected)
           </button>
         </div>
-        <p className="text-[10px] text-gray-400 text-center">Klik tombol di atas, lalu klik "Masuk". Gunakan sembarang password jika Supabase tidak terhubung.</p>
+        <p className="text-[10px] text-gray-400 text-center">Klik tombol di atas, lalu klik "Masuk".</p>
       </div>
     </form>
   );

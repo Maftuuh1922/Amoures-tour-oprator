@@ -213,55 +213,125 @@ function BookingCard({ booking, onCancel }) {
 
 // ─── Legal Documents Tab ────────────────────────────────────────────────────────
 
-function LegalDocumentsTab({ profile }) {
+// ─── Verification Tab (replaces Legal Documents Tab) ──────────────────────────
+
+function VerificationTab({ profile, onVerify }) {
+  const [loading, setLoading] = useState(false);
+  const status = profile?.status || 'unverified';
+
+  const onSubmit = (e) => {
+    e.preventDefault();
+    setLoading(true);
+    // Dummy simulate submit
+    setTimeout(() => {
+      setLoading(false);
+      onVerify();
+      toast.success('Dokumen verifikasi berhasil dikirim. Menunggu persetujuan admin.');
+    }, 1500);
+  };
+
+  if (status === 'approved') {
+    return (
+      <div className="space-y-6">
+        <div>
+          <h2 className="text-xl font-bold text-dark flex items-center gap-2">
+            <ShieldCheckIcon className="text-primary w-6 h-6" />
+            Dokumen Legalitas Terverifikasi
+          </h2>
+        </div>
+        <div className="bg-green-50 border border-green-100 rounded-xl p-4 flex gap-3">
+          <CheckCircle2 className="w-5 h-5 text-green-600 shrink-0" />
+          <p className="text-sm text-green-800 leading-relaxed">
+            Akun B2B Anda telah disetujui. Anda sekarang memiliki akses penuh untuk memesan paket wisata dengan diskon B2B dan fasilitas invoice.
+          </p>
+        </div>
+      </div>
+    );
+  }
+
+  if (status === 'pending') {
+    return (
+      <div className="space-y-6">
+        <h2 className="text-xl font-bold text-dark">Verifikasi Akun B2B</h2>
+        <div className="bg-blue-50 border border-blue-100 rounded-xl p-4 flex gap-3 items-center">
+          <Clock className="w-5 h-5 text-blue-600 shrink-0 animate-pulse" />
+          <p className="text-sm text-blue-800 font-medium">
+            🕐 Dokumen sedang diverifikasi oleh admin (1-3 hari kerja).
+          </p>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className="space-y-6">
       <div>
         <h2 className="text-xl font-bold text-dark flex items-center gap-2">
           <ShieldCheckIcon className="text-primary w-6 h-6" />
-          Dokumen Legalitas
+          Verifikasi Perusahaan B2B
         </h2>
         <p className="text-sm text-gray-500 mt-1">
-          Kelola berkas legalitas perusahaan Anda untuk kemitraan B2B.
+          Lengkapi data perusahaan dan unggah dokumen legalitas untuk mengaktifkan fitur pemesanan B2B.
         </p>
       </div>
 
-      <div className="bg-white rounded-2xl border border-gray-100 shadow-sm p-6 space-y-5">
-        {[
-          { label: "NIB (Nomor Induk Berusaha)", status: "Terverifikasi", statusCls: "bg-green-100 text-green-700" },
-          { label: "NPWP Perusahaan", status: "Terverifikasi", statusCls: "bg-green-100 text-green-700" },
-          { label: "KTP Direktur / Penanggung Jawab", status: "Terverifikasi", statusCls: "bg-green-100 text-green-700" },
-        ].map((doc, idx) => (
-          <div key={idx} className="flex items-center justify-between p-4 border border-gray-100 rounded-xl hover:bg-gray-50 transition-colors">
-            <div className="flex items-center gap-3">
-              <div className="w-10 h-10 bg-primary/10 rounded-lg flex items-center justify-center text-primary">
-                <FileText className="w-5 h-5" />
-              </div>
-              <div>
-                <p className="font-semibold text-dark text-sm">{doc.label}</p>
-                <p className="text-xs text-gray-400 mt-0.5">Format: PDF/JPG • Diunggah 14 Jan 2026</p>
-              </div>
-            </div>
-            <div className="flex items-center gap-3">
-              <span className={`px-2.5 py-1 rounded-full text-xs font-bold ${doc.statusCls}`}>
-                {doc.status}
-              </span>
-              <button className="text-primary hover:text-primary-hover text-sm font-semibold hover:underline">
-                Perbarui
-              </button>
-            </div>
+      {status === 'rejected' && (
+        <div className="bg-red-50 border border-red-200 rounded-xl p-4 flex gap-3 items-start">
+          <AlertCircle className="w-5 h-5 text-red-600 shrink-0 mt-0.5" />
+          <div>
+            <p className="text-sm font-bold text-red-800">❌ Verifikasi ditolak</p>
+            <p className="text-sm text-red-700 mt-1">
+              Alasan: {profile?.reject_reason || 'Dokumen tidak valid.'}
+            </p>
+            <p className="text-xs text-red-600 mt-2 font-medium">Silakan upload ulang dokumen Anda.</p>
           </div>
-        ))}
-      </div>
-      
-      <div className="bg-blue-50 border border-blue-100 rounded-xl p-4 flex gap-3">
-        <AlertCircle className="w-5 h-5 text-blue-600 shrink-0" />
-        <p className="text-sm text-blue-800 leading-relaxed">
-          Dokumen legalitas Anda telah diverifikasi oleh tim Amoures. Anda dapat melakukan pemesanan paket B2B dan menikmati berbagai kemudahan fasilitas Tempo/Invoice.
-        </p>
-      </div>
+        </div>
+      )}
+
+      <form onSubmit={onSubmit} className="bg-white rounded-2xl border border-gray-100 shadow-sm p-6 space-y-5">
+        <div className="space-y-4">
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1.5">Nama Perusahaan <span className="text-red-500">*</span></label>
+            <input required type="text" placeholder="PT / CV Nama Perusahaan" className="w-full px-4 py-2.5 border border-gray-200 rounded-xl text-sm focus:ring-2 focus:ring-primary focus:outline-none" />
+          </div>
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1.5">Alamat Lengkap <span className="text-red-500">*</span></label>
+            <textarea required rows={3} placeholder="Alamat operasional perusahaan" className="w-full px-4 py-2.5 border border-gray-200 rounded-xl text-sm focus:ring-2 focus:ring-primary focus:outline-none resize-none"></textarea>
+          </div>
+        </div>
+
+        <div className="pt-4 border-t border-gray-100 space-y-4">
+          <h3 className="font-semibold text-dark text-sm">Unggah Dokumen (PDF/JPG, Maks 2MB)</h3>
+          <div>
+            <label className="block text-xs font-medium text-gray-600 mb-1">NIB (Nomor Induk Berusaha) <span className="text-red-500">*</span></label>
+            <input required type="file" accept=".pdf,.jpg,.jpeg" className="w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-xl file:border-0 file:text-xs file:font-semibold file:bg-primary/10 file:text-primary hover:file:bg-primary/20 transition-colors" />
+          </div>
+          <div>
+            <label className="block text-xs font-medium text-gray-600 mb-1">NPWP Perusahaan <span className="text-red-500">*</span></label>
+            <input required type="file" accept=".pdf,.jpg,.jpeg" className="w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-xl file:border-0 file:text-xs file:font-semibold file:bg-primary/10 file:text-primary hover:file:bg-primary/20 transition-colors" />
+          </div>
+          <div>
+            <label className="block text-xs font-medium text-gray-600 mb-1">SIUP (Opsional)</label>
+            <input type="file" accept=".pdf,.jpg,.jpeg" className="w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-xl file:border-0 file:text-xs file:font-semibold file:bg-primary/10 file:text-primary hover:file:bg-primary/20 transition-colors" />
+          </div>
+        </div>
+
+        <div className="pt-4 border-t border-gray-100">
+          <label className="flex items-start gap-3 cursor-pointer group">
+            <input required type="checkbox" className="mt-0.5 h-4 w-4 flex-shrink-0 rounded border-gray-300 text-primary focus:ring-primary" />
+            <span className="text-sm text-gray-600">
+              Saya menyatakan bahwa data dan dokumen yang diunggah adalah asli dan valid, serta menyetujui syarat & ketentuan kemitraan B2B Amoures Tour.
+            </span>
+          </label>
+        </div>
+
+        <button disabled={loading} type="submit" className="w-full mt-4 flex items-center justify-center gap-2 px-6 py-3 bg-primary hover:bg-primary-hover text-dark font-bold rounded-xl transition-colors text-sm disabled:opacity-60 disabled:cursor-not-allowed">
+          {loading ? <Loader2 className="w-4 h-4 animate-spin" /> : <Save className="w-4 h-4" />}
+          Kirim Dokumen Verifikasi
+        </button>
+      </form>
     </div>
-  )
+  );
 }
 
 
@@ -742,10 +812,10 @@ function B2BAgentTab({ profile, bookings, bookingsLoading }) {
 
 // ─── main component ───────────────────────────────────────────────────────────
 
-const TABS = [
+const FULL_TABS = [
   { key: 'b2b', label: 'Dashboard Mitra', icon: LayoutGrid },
   { key: 'bookings', label: 'Semua Pemesanan', icon: Ticket },
-  { key: 'legal', label: 'Legalitas', icon: PackageBoxIcon },
+  { key: 'verification', label: 'Verifikasi', icon: ShieldCheckIcon },
   { key: 'profile', label: 'Profil', icon: User },
 ]
 
@@ -753,9 +823,22 @@ export default function DashboardPage() {
   const navigate = useNavigate()
   const { user, profile, signOut } = useAuth()
   const { bookings, loading: bookingsLoading, refetch } = useUserBookings()
-  const [activeTab, setActiveTab] = useState('b2b')
+  const status = profile?.status || 'unverified'
+  const isApproved = status === 'approved'
+  const isAgent = profile?.role === 'travel_agent' || true
 
-  const isAgent = true // Selalu B2B di sistem ini
+  // Restrict tabs if not approved
+  const TABS = isApproved
+    ? FULL_TABS.filter(t => t.key !== 'verification') // If approved, hide verification tab
+    : FULL_TABS.filter(t => t.key === 'verification' || t.key === 'profile') // If not, only allow verification & profile
+    
+  const [activeTab, setActiveTab] = useState(isApproved ? 'b2b' : 'verification')
+
+  useEffect(() => {
+    if (!isApproved && activeTab !== 'verification' && activeTab !== 'profile') {
+      setActiveTab('verification')
+    }
+  }, [isApproved, activeTab])
 
   useEffect(() => {
     const isAdmin = profile?.role?.toLowerCase() === 'admin' || user?.email === 'admin@moures.com';
@@ -832,6 +915,38 @@ export default function DashboardPage() {
           </div>
         </div>
       </header>
+
+      {/* ── Verification Banners ── */}
+      {!isApproved && (
+        <div className="w-full">
+          {status === 'unverified' && (
+            <div className="bg-amber-100 border-b border-amber-200 p-4 w-full flex items-center justify-center gap-3">
+              <AlertCircle className="text-amber-600 w-5 h-5 shrink-0" />
+              <p className="text-amber-800 text-sm font-medium text-center">
+                ⚠️ Akun Anda belum terverifikasi. Lengkapi dokumen verifikasi untuk mengakses semua fitur.{' '}
+                <button onClick={() => setActiveTab('verification')} className="underline font-bold hover:text-amber-900 ml-1">Klik di sini untuk verifikasi →</button>
+              </p>
+            </div>
+          )}
+          {status === 'pending' && (
+            <div className="bg-blue-100 border-b border-blue-200 p-4 w-full flex items-center justify-center gap-3">
+              <Clock className="text-blue-600 w-5 h-5 shrink-0 animate-pulse" />
+              <p className="text-blue-800 text-sm font-medium text-center">
+                🕐 Dokumen sedang diverifikasi oleh admin (1-3 hari kerja).
+              </p>
+            </div>
+          )}
+          {status === 'rejected' && (
+            <div className="bg-red-100 border-b border-red-200 p-4 w-full flex items-center justify-center gap-3">
+              <AlertCircle className="text-red-600 w-5 h-5 shrink-0" />
+              <p className="text-red-800 text-sm font-medium text-center">
+                ❌ Verifikasi ditolak. Alasan: {profile?.reject_reason || 'Dokumen tidak valid'}.{' '}
+                <button onClick={() => setActiveTab('verification')} className="underline font-bold hover:text-red-900 ml-1">Upload Ulang Dokumen</button>
+              </p>
+            </div>
+          )}
+        </div>
+      )}
 
       {/* ── Body ── */}
       <div className="flex-1">
@@ -928,8 +1043,18 @@ export default function DashboardPage() {
                     bookingsLoading={bookingsLoading}
                   />
                 )}
-                {activeTab === 'legal' && (
-                  <LegalDocumentsTab profile={profile} />
+                {activeTab === 'verification' && (
+                  <VerificationTab 
+                    profile={profile} 
+                    onVerify={() => {
+                      useAuthStore.setState((s) => ({
+                        profile: { ...s.profile, status: 'pending' }
+                      }));
+                      const saved = JSON.parse(localStorage.getItem('dummy_auth_user') || '{}')
+                      localStorage.setItem('dummy_auth_user', JSON.stringify({ ...saved, status: 'pending' }))
+                      window.location.reload();
+                    }} 
+                  />
                 )}
                 {activeTab === 'bookings' && (
                   <BookingsTab
