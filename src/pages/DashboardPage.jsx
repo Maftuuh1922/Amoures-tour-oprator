@@ -830,7 +830,7 @@ export default function DashboardPage() {
     : BASE_TABS
 
   useEffect(() => {
-    if (profile?.role === 'admin') {
+    if (profile?.role?.toLowerCase() === 'admin') {
       navigate('/admin')
     }
   }, [profile, navigate])

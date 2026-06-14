@@ -2115,7 +2115,7 @@ export default function AdminPage() {
 
   // ── Auth Guard ───────────────────────────────────────────────────────────────
   useEffect(() => {
-    if (!loading && (!user || profile?.role !== "admin")) {
+    if (!loading && (!user || profile?.role?.toLowerCase() !== "admin")) {
       toast.error("Akses ditolak. Halaman ini khusus administrator.");
       navigate("/");
     }
@@ -2143,7 +2143,7 @@ export default function AdminPage() {
       </div>
     );
   }
-  if (!user || profile?.role !== "admin") return null;
+  if (!user || profile?.role?.toLowerCase() !== "admin") return null;
 
   const handleLogout = () => {
     logout();
