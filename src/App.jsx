@@ -4,11 +4,10 @@ import { Toaster } from "react-hot-toast";
 import HomePage from "./pages/HomePage";
 import LoginPage from "./pages/LoginPage";
 import ProtectedRoute from "./components/auth/ProtectedRoute";
+import ChatBot from "./components/ChatBot";
 import useAuthStore from "./store/authStore";
-import Chatbot from "./components/ui/Chatbot";
 
-// Lazy-loaded routes for Code Splitting (Reduces main bundle size & fixes PageSpeed Insights)
-const ToursPage = lazy(() => import("./pages/ToursPage"));
+// Lazy-loaded untuk code splitting
 const TourDetailPage = lazy(() => import("./pages/TourDetailPage"));
 const BookingPage = lazy(() => import("./pages/BookingPage"));
 const RegisterPage = lazy(() => import("./pages/RegisterPage"));
@@ -16,6 +15,12 @@ const DashboardPage = lazy(() => import("./pages/DashboardPage"));
 const AdminPage = lazy(() => import("./pages/AdminPage"));
 const B2BPage = lazy(() => import("./pages/B2BPage"));
 const B2BRegisterPage = lazy(() => import("./pages/B2BRegisterPage"));
+
+const Loader = () => (
+  <div className="fixed inset-0 flex items-center justify-center bg-[#1A1A1A]">
+    <div className="w-10 h-10 border-4 border-primary/30 border-t-primary rounded-full animate-spin" />
+  </div>
+);
 
 function App() {
   const initialize = useAuthStore((s) => s.initialize);
@@ -39,10 +44,13 @@ function App() {
           error: { iconTheme: { primary: "#ef4444", secondary: "#fff" } },
         }}
       />
-      <Suspense fallback={<div className="fixed inset-0 flex items-center justify-center bg-[#1A1A1A]"><div className="w-10 h-10 border-4 border-primary/30 border-t-primary rounded-full animate-spin"></div></div>}>
+
+      {/* Chatbot muncul di semua halaman */}
+      <ChatBot />
+
+      <Suspense fallback={<Loader />}>
         <Routes>
           <Route path="/" element={<HomePage />} />
-          <Route path="/tours" element={<ToursPage />} />
           <Route path="/tour/:id" element={<TourDetailPage />} />
           <Route path="/login" element={<LoginPage />} />
           <Route path="/register" element={<RegisterPage />} />
@@ -55,7 +63,6 @@ function App() {
           </Route>
         </Routes>
       </Suspense>
-      <Chatbot />
     </BrowserRouter>
   );
 }

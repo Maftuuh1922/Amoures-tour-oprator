@@ -1,6 +1,5 @@
 /**
- * Icons.jsx — alias untuk lucide-react icons yang dipakai di project
- * Agar tidak import langsung dari lucide di setiap file
+ * Icons.jsx — re-export lucide-react dengan nama alias project
  */
 export {
   Tag as PriceTagIcon,
@@ -12,6 +11,14 @@ export {
   ShieldCheck as ShieldCheckIcon,
   ArrowRight as ArrowRightIcon,
   Key as KeyIcon,
-  Users as HandshakeIcon, // Handshake fallback
+  Users as HandshakeIcon,
   Handshake as HandshakeRealIcon,
+  MessageCircle as ChatIcon,
+  X as CloseIcon,
+  Send as SendIcon,
+  Bot as BotIcon,
+  Minimize2 as MinimizeIcon,
+  ChevronDown as ChevronDownIcon,
+  Globe as GlobeIcon,
+  Phone as PhoneIcon,
 } from "lucide-react";
