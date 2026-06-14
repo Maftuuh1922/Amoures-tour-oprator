@@ -23,7 +23,7 @@ dist-ssr
 *.sln
 *.sw?
 
-# Environment variables
+# Environment variables — JANGAN PERNAH di-commit!
 .env
-.env.local
-.env.production
+.env.*
+!.env.example
