@@ -35,6 +35,7 @@ import Footer from '../components/layout/Footer'
 import { useAuth } from '../hooks/useAuth'
 import { useUserBookings, useBooking } from '../hooks/useBooking'
 import useAuthStore from '../store/authStore'
+import { supabase } from '../lib/supabase'
 
 // ─── helpers ─────────────────────────────────────────────────────────────────
 
