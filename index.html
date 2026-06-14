@@ -22,7 +22,27 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet" />
   </head>
   <body>
-    <div id="root"></div>
+    <div id="root">
+      <!-- ── Pre-render Skeleton untuk PageSpeed FCP/LCP Score ── -->
+      <style>
+        body { margin: 0; background-color: #1A1A1A; font-family: 'Inter', sans-serif; }
+        .ssr-loader {
+          display: flex; flex-direction: column; align-items: center; justify-content: center;
+          height: 100vh; width: 100vw; background: #1A1A1A; color: white;
+        }
+        .ssr-spinner {
+          width: 40px; height: 40px; border: 4px solid rgba(255, 193, 7, 0.3);
+          border-top-color: #D4E000; border-radius: 50%;
+          animation: spin 1s linear infinite; margin-bottom: 20px;
+        }
+        @keyframes spin { 100% { transform: rotate(360deg); } }
+      </style>
+      <div class="ssr-loader">
+        <div class="ssr-spinner"></div>
+        <h1 style="font-size: 24px; font-weight: 900; margin: 0; letter-spacing: 1px;">Amoures</h1>
+        <p style="color: #D4E000; font-size: 12px; font-weight: 600; text-transform: uppercase; letter-spacing: 2px; margin-top: 5px;">Memuat Pengalaman...</p>
+      </div>
+    </div>
     <script type="module" src="/src/main.jsx"></script>
   </body>
 </html>

@@ -242,6 +242,7 @@ export default function B2BPage() {
           loop 
           muted 
           playsInline
+          fetchpriority="high"
           poster="https://images.unsplash.com/photo-1469854523086-cc02fe5d8800?w=1920&q=80"
           className="absolute inset-0 w-full h-full object-cover z-0 opacity-90"
         >
