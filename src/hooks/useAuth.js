@@ -33,7 +33,8 @@ export function useAuth() {
         id: data.user.id,
         full_name,
         phone,
-        role: "user",
+        role: "travel_agent",
+        status: "unverified",
       });
     }
 

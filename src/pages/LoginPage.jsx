@@ -178,14 +178,7 @@ export default function LoginPage() {
   if (user) {
     const isAdmin = profile?.role?.toLowerCase() === "admin" || user.email === "admin@moures.com";
     if (isAdmin) return <Navigate to="/admin" replace />;
-    if (profile) return <Navigate to="/dashboard" replace />;
-    
-    // Tampilkan loader saat memuat profile untuk mencegah redirect prematur ke dashboard
-    return (
-      <div className="min-h-screen flex items-center justify-center bg-gray-50">
-        <div className="animate-spin w-8 h-8 border-4 border-primary border-t-transparent rounded-full" />
-      </div>
-    );
+    return <Navigate to="/dashboard" replace />;
   }
 
   const handleGoogleLogin = () => {
