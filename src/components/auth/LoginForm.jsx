@@ -67,8 +67,8 @@ export default function LoginForm() {
 
       toast.success("Login berhasil! Selamat datang kembali.");
 
-      // Redirect berdasarkan role dari tabel profiles
-      if (role === "admin") {
+      // Redirect berdasarkan role dari tabel profiles atau fallback email
+      if (role === "admin" || data.email === "admin@moures.com") {
         navigate("/admin");
       } else {
         navigate("/dashboard");

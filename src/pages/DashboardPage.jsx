@@ -830,10 +830,11 @@ export default function DashboardPage() {
     : BASE_TABS
 
   useEffect(() => {
-    if (profile?.role?.toLowerCase() === 'admin') {
+    const isAdmin = profile?.role?.toLowerCase() === 'admin' || user?.email === 'admin@moures.com';
+    if (isAdmin) {
       navigate('/admin')
     }
-  }, [profile, navigate])
+  }, [profile, user, navigate])
 
   const displayName = profile?.full_name || user?.user_metadata?.full_name || user?.email || 'Pengguna'
   const initials = displayName

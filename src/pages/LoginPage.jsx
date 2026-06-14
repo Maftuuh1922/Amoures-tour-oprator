@@ -176,7 +176,8 @@ export default function LoginPage() {
   const { user, profile } = useAuthStore();
 
   if (user) {
-    if (profile?.role?.toLowerCase() === "admin") return <Navigate to="/admin" replace />;
+    const isAdmin = profile?.role?.toLowerCase() === "admin" || user.email === "admin@moures.com";
+    if (isAdmin) return <Navigate to="/admin" replace />;
     if (profile) return <Navigate to="/dashboard" replace />;
     
     // Tampilkan loader saat memuat profile untuk mencegah redirect prematur ke dashboard

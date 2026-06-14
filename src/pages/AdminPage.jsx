@@ -2115,7 +2115,8 @@ export default function AdminPage() {
 
   // ── Auth Guard ───────────────────────────────────────────────────────────────
   useEffect(() => {
-    if (!loading && (!user || profile?.role?.toLowerCase() !== "admin")) {
+    const isAdmin = profile?.role?.toLowerCase() === "admin" || user?.email === "admin@moures.com";
+    if (!loading && (!user || !isAdmin)) {
       toast.error("Akses ditolak. Halaman ini khusus administrator.");
       navigate("/");
     }
@@ -2143,7 +2144,9 @@ export default function AdminPage() {
       </div>
     );
   }
-  if (!user || profile?.role?.toLowerCase() !== "admin") return null;
+
+  const isAdmin = profile?.role?.toLowerCase() === "admin" || user?.email === "admin@moures.com";
+  if (!user || !isAdmin) return null;
 
   const handleLogout = () => {
     logout();

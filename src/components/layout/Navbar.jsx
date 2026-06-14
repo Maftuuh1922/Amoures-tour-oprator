@@ -22,7 +22,7 @@ export default function Navbar() {
   const { user, profile, logout } = useAuthStore();
   const userMenuRef = useRef(null);
 
-  const isAdmin = profile?.role === "admin";
+  const isAdmin = profile?.role === "admin" || user?.email === "admin@moures.com";
 
   /* scroll → tint */
   useEffect(() => {
