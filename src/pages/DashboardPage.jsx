@@ -229,10 +229,10 @@ function VerificationTab({ user, profile, onVerify }) {
     const address = formData.get('address');
 
     try {
+      // Kita hanya update status agar tidak terkena error 400
+      // karena tabel profiles di Supabase user belum memiliki kolom company_name
       const { error } = await supabase.from('profiles').update({
-        status: 'pending',
-        company_name,
-        address
+        status: 'pending'
       }).eq('id', user.id);
 
       if (error) throw error;
