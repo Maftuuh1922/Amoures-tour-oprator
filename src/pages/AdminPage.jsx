@@ -537,12 +537,12 @@ const destinationSchema = z.object({
   province: z.string().min(2, "Provinsi minimal 2 karakter"),
   country: z.string().min(2, "Negara minimal 2 karakter"),
   description: z.string().optional().default(""),
-  image_url: z.string().url("URL gambar tidak valid"),
+  image_url: z.string().optional().or(z.literal('')),
   featured: z.boolean(),
 });
 
 const gallerySchema = z.object({
-  url: z.string().url("URL gambar tidak valid"),
+  url: z.string().optional().or(z.literal('')),
   alt: z.string().min(2, "Deskripsi minimal 2 karakter"),
   category: z.string().min(1, "Kategori wajib dipilih"),
 });
@@ -810,6 +810,9 @@ function DestinationModal({ isOpen, onClose, editingDest, onSave }) {
     image_url: "",
     featured: false,
   };
+  const [imageFile, setImageFile] = useState(null);
+  const [isUploading, setIsUploading] = useState(false);
+
   const {
     register,
     handleSubmit,
@@ -825,9 +828,34 @@ function DestinationModal({ isOpen, onClose, editingDest, onSave }) {
   const isFeatured = watch("featured");
 
   useEffect(() => {
-    if (isOpen) reset(editingDest ? { ...editingDest } : defaultVals);
+    if (isOpen) {
+      reset(editingDest ? { ...editingDest } : defaultVals);
+      setImageFile(null);
+    }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isOpen, editingDest]);
+
+  const onSubmit = async (data) => {
+    try {
+      setIsUploading(true);
+      let finalImageUrl = data.image_url;
+      if (imageFile) {
+        const fileExt = imageFile.name.split('.').pop();
+        const fileName = `${Date.now()}_${Math.random().toString(36).substring(7)}.${fileExt}`;
+        const { error: uploadError } = await supabase.storage
+          .from('destinasi')
+          .upload(fileName, imageFile);
+        if (uploadError) throw uploadError;
+        const { data: { publicUrl } } = supabase.storage.from('destinasi').getPublicUrl(fileName);
+        finalImageUrl = publicUrl;
+      }
+      onSave({ ...data, image_url: finalImageUrl });
+    } catch (error) {
+      toast.error('Gagal mengunggah gambar: ' + error.message);
+    } finally {
+      setIsUploading(false);
+    }
+  };
 
   if (!isOpen) return null;
 
@@ -840,13 +868,14 @@ function DestinationModal({ isOpen, onClose, editingDest, onSave }) {
           </h2>
           <button
             onClick={onClose}
-            className="p-2 hover:bg-gray-100 rounded-xl transition-colors text-gray-500"
+            disabled={isUploading}
+            className="p-2 hover:bg-gray-100 rounded-xl transition-colors text-gray-500 disabled:opacity-50"
           >
             <X size={18} />
           </button>
         </div>
 
-        <form onSubmit={handleSubmit(onSave)} className="p-6 space-y-4">
+        <form onSubmit={handleSubmit(onSubmit)} className="p-6 space-y-4">
           <div className="grid grid-cols-2 gap-4">
             <div>
               <label className={LABEL_CLS}>Nama Destinasi</label>
@@ -890,30 +919,25 @@ function DestinationModal({ isOpen, onClose, editingDest, onSave }) {
             )}
           </div>
 
+          {/* Image Upload */}
           <div>
-            <label className={LABEL_CLS}>URL Gambar</label>
+            <label className={LABEL_CLS}>Upload Gambar Destinasi</label>
             <input
-              {...register("image_url")}
-              className={INPUT_CLS}
-              placeholder="https://images.unsplash.com/..."
+              type="file"
+              accept="image/*"
+              onChange={(e) => {
+                if (e.target.files && e.target.files[0]) setImageFile(e.target.files[0]);
+              }}
+              className="w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-primary/10 file:text-primary hover:file:bg-primary/20"
             />
-            {errors.image_url && (
-              <p className="text-red-500 text-xs mt-1">
-                {errors.image_url.message}
-              </p>
+            {(imageFile || (imageUrl && (imageUrl.startsWith("http://") || imageUrl.startsWith("https://")))) && (
+              <img
+                src={imageFile ? URL.createObjectURL(imageFile) : imageUrl}
+                alt="Preview"
+                className="w-full h-32 object-cover rounded-xl mt-2"
+                onError={(e) => { e.currentTarget.style.display = "none"; }}
+              />
             )}
-            {imageUrl &&
-              (imageUrl.startsWith("http://") ||
-                imageUrl.startsWith("https://")) && (
-                <img
-                  src={imageUrl}
-                  alt="Preview"
-                  className="w-full h-32 object-cover rounded-xl mt-2"
-                  onError={(e) => {
-                    e.currentTarget.style.display = "none";
-                  }}
-                />
-              )}
           </div>
 
           <div>
@@ -938,9 +962,10 @@ function DestinationModal({ isOpen, onClose, editingDest, onSave }) {
 
           <button
             type="submit"
-            className="w-full bg-primary hover:bg-primary-hover text-dark font-bold py-3 rounded-xl transition-colors flex items-center justify-center gap-2"
+            disabled={isUploading}
+            className="w-full bg-primary hover:bg-primary-hover text-dark font-bold py-3 rounded-xl transition-colors flex items-center justify-center gap-2 disabled:opacity-50"
           >
-            <Save size={16} /> Simpan Destinasi
+            <Save size={16} /> {isUploading ? "Mengunggah..." : "Simpan Destinasi"}
           </button>
         </form>
       </div>
@@ -951,10 +976,12 @@ function DestinationModal({ isOpen, onClose, editingDest, onSave }) {
 // ─── Gallery Modal ─────────────────────────────────────────────────────────────
 
 function GalleryModal({ isOpen, onClose, onSave }) {
+  const [imageFile, setImageFile] = useState(null);
+  const [isUploading, setIsUploading] = useState(false);
+
   const {
     register,
     handleSubmit,
-    watch,
     reset,
     formState: { errors },
   } = useForm({
@@ -962,11 +989,34 @@ function GalleryModal({ isOpen, onClose, onSave }) {
     defaultValues: { url: "", alt: "", category: "Destinasi" },
   });
 
-  const imageUrl = watch("url");
-
   useEffect(() => {
-    if (isOpen) reset({ url: "", alt: "", category: "Destinasi" });
+    if (isOpen) {
+      reset({ url: "", alt: "", category: "Destinasi" });
+      setImageFile(null);
+    }
   }, [isOpen, reset]);
+
+  const onSubmit = async (data) => {
+    if (!imageFile) {
+      toast.error('Pilih file gambar terlebih dahulu.');
+      return;
+    }
+    try {
+      setIsUploading(true);
+      const fileExt = imageFile.name.split('.').pop();
+      const fileName = `${Date.now()}_${Math.random().toString(36).substring(7)}.${fileExt}`;
+      const { error: uploadError } = await supabase.storage
+        .from('galeri')
+        .upload(fileName, imageFile);
+      if (uploadError) throw uploadError;
+      const { data: { publicUrl } } = supabase.storage.from('galeri').getPublicUrl(fileName);
+      onSave({ ...data, url: publicUrl });
+    } catch (error) {
+      toast.error('Gagal mengunggah gambar: ' + error.message);
+    } finally {
+      setIsUploading(false);
+    }
+  };
 
   if (!isOpen) return null;
 
@@ -977,35 +1027,32 @@ function GalleryModal({ isOpen, onClose, onSave }) {
           <h2 className="text-lg font-bold text-dark">Tambah Gambar</h2>
           <button
             onClick={onClose}
-            className="p-2 hover:bg-gray-100 rounded-xl transition-colors text-gray-500"
+            disabled={isUploading}
+            className="p-2 hover:bg-gray-100 rounded-xl transition-colors text-gray-500 disabled:opacity-50"
           >
             <X size={18} />
           </button>
         </div>
 
-        <form onSubmit={handleSubmit(onSave)} className="p-6 space-y-4">
+        <form onSubmit={handleSubmit(onSubmit)} className="p-6 space-y-4">
+          {/* File Upload */}
           <div>
-            <label className={LABEL_CLS}>URL Gambar</label>
+            <label className={LABEL_CLS}>Upload Gambar</label>
             <input
-              {...register("url")}
-              className={INPUT_CLS}
-              placeholder="https://images.unsplash.com/..."
+              type="file"
+              accept="image/*"
+              onChange={(e) => {
+                if (e.target.files && e.target.files[0]) setImageFile(e.target.files[0]);
+              }}
+              className="w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-primary/10 file:text-primary hover:file:bg-primary/20"
             />
-            {errors.url && (
-              <p className="text-red-500 text-xs mt-1">{errors.url.message}</p>
+            {imageFile && (
+              <img
+                src={URL.createObjectURL(imageFile)}
+                alt="Preview"
+                className="w-full h-40 object-cover rounded-xl mt-2"
+              />
             )}
-            {imageUrl &&
-              (imageUrl.startsWith("http://") ||
-                imageUrl.startsWith("https://")) && (
-                <img
-                  src={imageUrl}
-                  alt="Preview"
-                  className="w-full h-40 object-cover rounded-xl mt-2"
-                  onError={(e) => {
-                    e.currentTarget.style.display = "none";
-                  }}
-                />
-              )}
           </div>
           <div>
             <label className={LABEL_CLS}>Deskripsi / Alt Text</label>
@@ -1028,9 +1075,10 @@ function GalleryModal({ isOpen, onClose, onSave }) {
           </div>
           <button
             type="submit"
-            className="w-full bg-primary hover:bg-primary-hover text-dark font-bold py-3 rounded-xl transition-colors flex items-center justify-center gap-2"
+            disabled={isUploading}
+            className="w-full bg-primary hover:bg-primary-hover text-dark font-bold py-3 rounded-xl transition-colors flex items-center justify-center gap-2 disabled:opacity-50"
           >
-            <Upload size={16} /> Tambah Gambar
+            <Upload size={16} /> {isUploading ? "Mengunggah..." : "Tambah Gambar"}
           </button>
         </form>
       </div>
