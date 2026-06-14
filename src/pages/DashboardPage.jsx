@@ -229,17 +229,11 @@ function VerificationTab({ user, profile, onVerify }) {
     const address = formData.get('address');
 
     try {
-      if (!user) throw new Error("User tidak ditemukan. Silakan login ulang.");
-      
-      const { error } = await supabase.from('profiles').upsert({
-        id: user.id,
-        role: profile?.role || 'travel_agent',
+      const { error } = await supabase.from('profiles').update({
         status: 'pending',
         company_name,
-        address,
-        full_name: profile?.full_name || user.user_metadata?.full_name || user.email,
-        phone: profile?.phone || user.user_metadata?.phone || '',
-      });
+        address
+      }).eq('id', user.id);
 
       if (error) throw error;
       
